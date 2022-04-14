@@ -40,8 +40,8 @@ namespace Headstart.API.Controllers
             {
                 Username = Guid.NewGuid().ToString(),
                 Email = jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value,
-                FirstName = jwt.Claims.FirstOrDefault(c => c.Type == "given_name")?.Value,
-                LastName = jwt.Claims.FirstOrDefault(c => c.Type == "family_name")?.Value,
+                FirstName = jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value.Split(' ')[0],
+                LastName = jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value.Split(' ')[1],
                 Active = true
             }, integrationEvent.OrderCloudAccessToken);
 
@@ -60,8 +60,8 @@ namespace Headstart.API.Controllers
             var existingUser = integrationEvent.ExistingUser;
             var jwt = new JwtSecurityToken(integrationEvent.TokenResponse.id_token);
             var email = jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
-            var firstName = jwt.Claims.FirstOrDefault(c => c.Type == "given_name")?.Value;
-            var lastName = jwt.Claims.FirstOrDefault(c => c.Type == "family_name")?.Value;
+            var firstName = jwt.Claims.FirstOrDefault(c => c.Type == "given_name")?.Value.Split(' ')[0];
+            var lastName = jwt.Claims.FirstOrDefault(c => c.Type == "family_name")?.Value.Split(' ')[1];
 
             // cant sync username due to bug in platform: https://four51.atlassian.net/browse/EX-2155
             var shouldSyncUser = firstName != existingUser.FirstName || lastName != existingUser.LastName || email != existingUser.Email;

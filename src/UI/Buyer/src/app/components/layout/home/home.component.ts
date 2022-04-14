@@ -12,9 +12,7 @@ export class OCMHomePage implements OnInit {
   faBullhorn = faBullhorn
   URL = '../../../assets/jumbotron.svg'
 
-  constructor(
-    private context: ShopperContextService,
-  ) { }
+  constructor(private context: ShopperContextService) {}
 
   async ngOnInit(): Promise<void> {
     const user = this.context.currentUser.get()

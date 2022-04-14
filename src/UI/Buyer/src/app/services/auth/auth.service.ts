@@ -32,11 +32,10 @@ export class AuthService {
   private rememberMeCookieName = `${this.appConfig.appname
     .replace(/ /g, '_')
     .toLowerCase()}_rememberMe`
-  private loggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-    false
-  )
+  private loggedInSubject: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(false)
 
-  appInsightsService: ApplicationInsightsService;
+  appInsightsService: ApplicationInsightsService
 
   constructor(
     private cookieService: CookieService,
@@ -49,8 +48,7 @@ export class AuthService {
     private activatedRoute: ActivatedRoute,
     private baseResolveService: BaseResolveService,
     private injector: Injector
-  ) {
-  }
+  ) {}
 
   // All this isLoggedIn stuff is only used in the header wrapper component
   // remove once its no longer needed.
@@ -98,18 +96,25 @@ export class AuthService {
 
   async register(me: MeUser): Promise<AccessTokenBasic> {
     const anonToken = await this.getAnonymousToken()
-    const anonUser = this.currentUser.get();
+    const anonUser = this.currentUser.get()
     const countryPatchObj = {
       xp: {
-        Country: anonUser?.xp?.Country || "US"
-      }
+        Country: anonUser?.xp?.Country || 'US',
+      },
     }
-    const token = await Me.Register(me, { anonUserToken: anonToken.access_token })
-    const newUser = await Me.Patch(countryPatchObj, { accessToken: token.access_token })
+    const token = await Me.Register(me, {
+      anonUserToken: anonToken.access_token,
+    })
+    const newUser = await Me.Patch(countryPatchObj, {
+      accessToken: token.access_token,
+    })
     // temporary workaround for platform issue
     // need to remove and reset userGroups for newly registered user to see products
     // issue: https://four51.atlassian.net/browse/EX-2222
-    await HeadStartSDK.BuyerLocations.ReassignUserGroups(newUser.Buyer.ID, newUser.ID)
+    await HeadStartSDK.BuyerLocations.ReassignUserGroups(
+      newUser.Buyer.ID,
+      newUser.ID
+    )
     this.loginWithTokens(token.access_token)
     return token
   }
@@ -125,7 +130,7 @@ export class AuthService {
       this.appConfig.clientID,
       this.appConfig.scope
     )
-    this.appInsightsService = this.injector.get(ApplicationInsightsService);
+    this.appInsightsService = this.injector.get(ApplicationInsightsService)
 
     this.appInsightsService.setUserID(userName)
     this.loginWithTokens(
@@ -175,16 +180,13 @@ export class AuthService {
   }
 
   async getAnonymousToken(): Promise<AccessToken> {
-    return await Auth.Anonymous(
-      this.appConfig.clientID,
-      this.appConfig.scope
-    )
+    return await Auth.Anonymous(this.appConfig.clientID, this.appConfig.scope)
   }
 
   async logout(): Promise<void> {
     Tokens.RemoveAccessToken()
     this.isLoggedIn = false
-    this.appInsightsService = this.injector.get(ApplicationInsightsService);
+    this.appInsightsService = this.injector.get(ApplicationInsightsService)
     this.appInsightsService.clearUser()
     if (this.appConfig.anonymousShoppingEnabled) {
       await this.anonymousLogin()

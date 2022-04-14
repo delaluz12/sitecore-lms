@@ -198,7 +198,7 @@ export class OCMProductDetails implements OnInit {
       this.quantity,
       this.specs,
       this.specForm,
-      this._product?.PriceSchedule?.IsOnSale
+      false
     )
     if (this.priceBreaks?.length) {
       const basePrice = this.quantity * this.priceBreaks[0].Price
