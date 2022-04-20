@@ -38,7 +38,7 @@
           >
           </ocm-toggle-favorite>
         </div>
-        <small class="d-block">SKU: {{ _product?.ID }}</small>
+        <!-- <small class="d-block">SKU: {{ _product?.ID }}</small> -->
         <!-- TODO: Uncomment when grid bugs are fixed -->
         <div
           class="btn-group float-right"
@@ -88,7 +88,7 @@
           Quote Product</span
         >
         <!-- TODO: Plug in unit of measure when data is in OC. -->
-        <p class="text-muted">{{ _product | UofM }}</p>
+        <!-- <p class="text-muted">{{ _product | UofM }}</p> -->
         <span class="badge badge-pill badge-warning" *ngIf="percentSavings > 0">
           <span translate>PRODUCTS.DETAILS.SAVINGS</span> {{ percentSavings }}%!
         </span>
