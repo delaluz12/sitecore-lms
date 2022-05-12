@@ -22,7 +22,7 @@
   "sitecoreCDPPointOfSale": "xxxxxxxxxxxxxxxxxxxxxxxx",
   "sitecoreCDPWebFlowTarget": "xxxxxxxxxxxxxxxxxxxxxxxx",
   "theme": {
-    "logoSrc": "assets/generic-logo.png"
+    "logoSrc": "assets/Sitecore_2022_Logo_RGB.svg"
   },
   "appInsightsInstrumentationKey": null,
   "anonymousShoppingEnabled": true,
