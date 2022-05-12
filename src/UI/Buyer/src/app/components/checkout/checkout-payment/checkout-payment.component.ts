@@ -9,7 +9,10 @@ import { groupBy as _groupBy } from 'lodash'
 import { uniqBy as _uniqBy } from 'lodash'
 import { CheckoutService } from 'src/app/services/order/checkout.service'
 import { ShopperContextService } from 'src/app/services/shopper-context/shopper-context.service'
-import { SelectedCreditCard } from 'src/app/models/credit-card.types'
+import {
+  SelectedCreditCard,
+  StripeIntent,
+} from 'src/app/models/credit-card.types'
 import { AcceptedPaymentTypes } from 'src/app/models/checkout.types'
 import { OrderSummaryMeta } from 'src/app/models/order.types'
 import { AppConfig } from 'src/app/models/environment.types'
@@ -25,7 +28,7 @@ export class OCMCheckoutPayment implements OnInit {
   @Input() order: HSOrder
   @Input() paymentError: string
   @Input() orderSummaryMeta: OrderSummaryMeta
-  @Output() cardSelected = new EventEmitter<SelectedCreditCard>()
+  @Output() cardSelected = new EventEmitter<StripeIntent>()
   @Output() continue = new EventEmitter<void>()
   @Output() promosChanged = new EventEmitter<OrderPromotion[]>()
   checkout: CheckoutService = this.context.order.checkout
@@ -37,7 +40,7 @@ export class OCMCheckoutPayment implements OnInit {
   constructor(
     private context: ShopperContextService,
     private appConfig: AppConfig
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this._orderCurrency = this.context.currentUser.get().Currency
@@ -68,7 +71,7 @@ export class OCMCheckoutPayment implements OnInit {
     this.POTermsAccepted = true
   }
 
-  onCardSelected(card: SelectedCreditCard): void {
+  onStripeCardSuccess(card: StripeIntent): void {
     this.cardSelected.emit(card)
   }
 

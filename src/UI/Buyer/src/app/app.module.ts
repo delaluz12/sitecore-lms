@@ -206,6 +206,7 @@ import {
 } from '@fortawesome/free-brands-svg-icons'
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons'
 import { ProductPriceDisplayComponent } from './components/products/product-price-display/product-price-display.component'
+import { StripePaymentComponent } from './components/payments/stripe-payment/stripe-payment.component'
 
 export function HttpLoaderFactory(
   http: HttpClient,
@@ -340,6 +341,7 @@ const components = [
     UnitOfMeasurePipe,
     SafeHTMLPipe,
     ...components,
+    StripePaymentComponent,
   ],
   imports: [
     BrowserModule,

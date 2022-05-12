@@ -91,7 +91,7 @@
               </div>
             </ng-template>
           </ngb-panel>
-          <ngb-panel id="shippingAddress">
+          <!-- <ngb-panel id="shippingAddress">
             <ng-template ngbPanelTitle>
               <h2 class="h5 mb-0 py-2 text-secondary" translate>
                 CHECKOUT.CHECKOUT.SHIPPING_ADDRESS
@@ -120,8 +120,8 @@
               >
               </ocm-checkout-address>
             </ng-template>
-          </ngb-panel>
-          <ngb-panel id="shippingSelection">
+          </ngb-panel> -->
+          <!-- <ngb-panel id="shippingSelection">
             <ng-template ngbPanelTitle>
               <h2 class="h5 mb-0 py-2 text-secondary" translate>
                 CHECKOUT.CHECKOUT.SHIPPING_SELECTION
@@ -161,7 +161,7 @@
               >
               </ocm-checkout-shipping>
             </ng-template>
-          </ngb-panel>
+          </ngb-panel> -->
           <ngb-panel id="payment">
             <ng-template ngbPanelTitle>
               <h2 class="h5 mb-0 py-2 text-secondary" translate>
@@ -195,13 +195,13 @@
                 [cards]="cards"
                 [orderSummaryMeta]="orderSummaryMeta"
                 [paymentError]="paymentError"
-                (cardSelected)="onCardSelected($event.detail)"
+                (cardSelected)="onStripeCardSuccess($event.detail)"
                 (continue)="onAcknowledgePurchaseOrder()"
               >
               </ocm-checkout-payment>
             </ng-template>
           </ngb-panel>
-          <ngb-panel id="confirm">
+          <!-- <ngb-panel id="confirm">
             <ng-template ngbPanelTitle>
               <h2 class="h5 mb-0 py-2 text-secondary" translate>
                 CHECKOUT.CHECKOUT.CONFIRM
@@ -229,7 +229,7 @@
               >
               </ocm-checkout-confirm>
             </ng-template>
-          </ngb-panel>
+          </ngb-panel> -->
         </ngb-accordion>
       </div>
     </div>

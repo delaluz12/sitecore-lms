@@ -2,6 +2,7 @@ using ordercloud.integrations.cardconnect;
 using ordercloud.integrations.exchangerates;
 using ordercloud.integrations.library;
 using ordercloud.integrations.smartystreets;
+using ordercloud.integrations.stripe.Models;
 using ordercloud.integrations.taxjar;
 using ordercloud.integrations.vertex;
 
@@ -26,6 +27,7 @@ namespace Headstart.Common
         public StorageAccountSettings StorageAccountSettings { get; set; } = new StorageAccountSettings();
         public UI UI { get; set; }
         public ZohoSettings ZohoSettings { get; set; } = new ZohoSettings();
+        public OrderCloudIntegrationsStripeConfig StripeSettings { get; set; } = new OrderCloudIntegrationsStripeConfig();
     }
 
     public class ApplicationInsightsSettings

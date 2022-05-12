@@ -16,16 +16,12 @@
       {{ getPaymentMethodName(method) }}
     </label>
   </div>
-  <ocm-payment-credit-card
+  <ocm-stripe-payment
     *ngIf="
       orderSummaryMeta.LineItemCount && selectedPaymentMethod === 'CreditCard'
     "
-    [cards]="cards"
-    [isAnon]="isAnon"
-    [paymentError]="paymentError"
-    (cardSelected)="onCardSelected($event.detail)"
-  >
-  </ocm-payment-credit-card>
+    (cardSelected)="onStripeCardSuccess($event)"
+  ></ocm-stripe-payment>
   <ng-container
     *ngIf="
       orderSummaryMeta.LineItemCount &&

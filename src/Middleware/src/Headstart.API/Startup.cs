@@ -46,6 +46,7 @@ using System.IO;
 using System.Linq;
 using ITaxCalculator = ordercloud.integrations.library.ITaxCalculator;
 using ITaxCodesProvider = ordercloud.integrations.library.intefaces.ITaxCodesProvider;
+using ordercloud.integrations.stripe;
 
 namespace Headstart.API
 {
@@ -207,8 +208,8 @@ namespace Headstart.API
                     }, flurlClientFactory),
                     orderCloudClient))
                 .AddSingleton<IOrderCloudIntegrationsExchangeRatesClient, OrderCloudIntegrationsExchangeRatesClient>()
-                .AddSingleton<IAssetClient>(provider => new AssetClient( new OrderCloudIntegrationsBlobService(assetConfig), _settings))
-                .AddSingleton<IExchangeRatesCommand>(provider => new ExchangeRatesCommand( new OrderCloudIntegrationsBlobService(currencyConfig), flurlClientFactory, provider.GetService<ISimpleCache>()))
+                .AddSingleton<IAssetClient>(provider => new AssetClient(new OrderCloudIntegrationsBlobService(assetConfig), _settings))
+                .AddSingleton<IExchangeRatesCommand>(provider => new ExchangeRatesCommand(new OrderCloudIntegrationsBlobService(currencyConfig), flurlClientFactory, provider.GetService<ISimpleCache>()))
                 .AddSingleton<ITaxCodesProvider>(provider =>
                 {
                     return _settings.EnvironmentSettings.TaxProvider switch
@@ -221,17 +222,18 @@ namespace Headstart.API
                 })
                 .AddSingleton<ITaxCalculator>(provider =>
                 {
-					return _settings.EnvironmentSettings.TaxProvider switch
-					{
+                    return _settings.EnvironmentSettings.TaxProvider switch
+                    {
                         TaxProvider.Avalara => avalaraCommand,
-						TaxProvider.Vertex => vertexCommand,
+                        TaxProvider.Vertex => vertexCommand,
                         TaxProvider.Taxjar => taxJarCommand,
                         _ => avalaraCommand // Avalara is default
-					};
-				})
+                    };
+                })
                 .AddSingleton<IEasyPostShippingService>(x => new EasyPostShippingService(new EasyPostConfig() { APIKey = _settings.EasyPostSettings.APIKey }))
                 .AddSingleton<ISmartyStreetsService>(x => new SmartyStreetsService(_settings.SmartyStreetSettings, smartyStreetsUsClient))
                 .AddSingleton<IOrderCloudIntegrationsCardConnectService>(x => new OrderCloudIntegrationsCardConnectService(_settings.CardConnectSettings, _settings.EnvironmentSettings.Environment.ToString(), flurlClientFactory))
+                .AddSingleton<IOrderCloudIntegrationsStripeService>(x => new OrderCloudIntegrationsStripeService(_settings.StripeSettings))
                 .AddSingleton<IOrderCloudClient>(provider => orderCloudClient)
                 .AddSwaggerGen(c =>
                 {

@@ -38,19 +38,18 @@ namespace Headstart.API.Commands
             await ValidateOrderAsync(worksheet, payment, userToken);
 
             var incrementedOrderID = await IncrementOrderAsync(worksheet);
-            // If Credit Card info is null, payment is a Purchase Order, thus skip CC validation
-            if (payment.CreditCardDetails != null || payment.CreditCardID != null)
-            {
-                payment.OrderID = incrementedOrderID;
-                await _card.AuthorizePayment(payment, userToken, GetMerchantID(payment));
-            }
             try
             {
+                // Set Stripe Credit Card Payment to Accepted
+                if (!String.IsNullOrEmpty(payment.PaymentID))
+                {
+                    await _oc.Payments.PatchAsync<HSPayment>(OrderDirection.Incoming, incrementedOrderID, payment.PaymentID, new PartialPayment { Accepted = true });
+                }
                 return await _oc.Orders.SubmitAsync<HSOrder>(direction, incrementedOrderID, userToken);
             }
             catch (Exception)
             {
-                await _card.VoidPaymentAsync(incrementedOrderID, userToken);
+                // await _card.VoidPaymentAsync(incrementedOrderID, userToken);
                 throw;
             }
         }
@@ -62,18 +61,6 @@ namespace Headstart.API.Commands
                 new ErrorCode("OrderSubmit.AlreadySubmitted", "Order has already been submitted")
             );
 
-            var shipMethodsWithoutSelections = worksheet?.ShipEstimateResponse?.ShipEstimates?.Where(estimate => estimate.SelectedShipMethodID == null);
-            Require.That(
-                worksheet?.ShipEstimateResponse != null &&
-                shipMethodsWithoutSelections.Count() == 0, 
-                new ErrorCode("OrderSubmit.MissingShippingSelections", "All shipments on an order must have a selection"), shipMethodsWithoutSelections
-                );
-
-            Require.That(
-                !worksheet.LineItems.Any() || payment != null,
-                new ErrorCode("OrderSubmit.MissingPayment", "Order contains standard line items and must include credit card payment details"),
-                worksheet.LineItems
-            );
             var lineItemsInactive = await GetInactiveLineItems(worksheet, userToken);
             Require.That(
                 !lineItemsInactive.Any(),

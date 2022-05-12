@@ -35,6 +35,7 @@ import {
 import {
   HSBuyerCreditCard,
   SelectedCreditCard,
+  StripeIntent,
 } from 'src/app/models/credit-card.types'
 import { OrderSummaryMeta } from 'src/app/models/order.types'
 import { ModalState } from 'src/app/models/shared.types'
@@ -101,7 +102,7 @@ export class OCMCheckout implements OnInit {
     private router: Router,
     private translate: TranslateService,
     private send: SitecoreSendTrackingService,
-    private cdp: SitecoreCDPTrackingService,
+    private cdp: SitecoreCDPTrackingService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -126,7 +127,8 @@ export class OCMCheckout implements OnInit {
       void this.router.navigate(['/cart'])
     } else {
       await this.reIDLineItems()
-      this.destoryLoadingIndicator(this.isAnon ? 'login' : 'shippingAddress')
+      this.doneWithShippingRates()
+      // this.destoryLoadingIndicator(this.isAnon ? 'login' : 'shippingAddress')
     }
   }
 
@@ -182,6 +184,17 @@ export class OCMCheckout implements OnInit {
     }
   }
 
+  buildCCPaymentFromNewStripeCard(card: StripeIntent): Payment {
+    return {
+      DateCreated: new Date().toDateString(),
+      Accepted: false,
+      Type: 'CreditCard',
+      xp: {
+        partialAccountNumber: card.id.substr(card.id.length - 4),
+      },
+    }
+  }
+
   buildCCPaymentFromSavedCard(card: HSBuyerCreditCard): Payment {
     return {
       DateCreated: new Date().toDateString(),
@@ -201,6 +214,22 @@ export class OCMCheckout implements OnInit {
     return {
       DateCreated: new Date().toDateString(),
       Type: 'PurchaseOrder',
+    }
+  }
+  async onStripeCardSuccess(output: StripeIntent): Promise<void> {
+    this.initLoadingIndicator('paymentLoading')
+    const payments: HSPayment[] = []
+    payments.push(this.buildCCPaymentFromNewStripeCard(output))
+    try {
+      await HeadStartSDK.Payments.SavePayments(this.order.ID, {
+        Payments: payments,
+      })
+      this.payments = await this.checkout.listPayments()
+      // Submit right away
+      this.submitOrderWithComment('')
+    } catch (exception) {
+      this.setValidation('payment', false)
+      await this.handleSubmitError(exception)
     }
   }
 
@@ -249,7 +278,7 @@ export class OCMCheckout implements OnInit {
       Payments: payments,
     })
     this.payments = await this.checkout.listPayments()
-    this.toSection('confirm')
+    this.submitOrderWithComment('')
   }
 
   async submitOrderWithComment(comment: string): Promise<void> {
@@ -271,9 +300,12 @@ export class OCMCheckout implements OnInit {
           'Outgoing',
           this.order.ID,
           payment
-        );
-        this.send.purchase(this.context.order.getLineItems().Items);
-        this.cdp.orderPlaced(this.context.order.get(), this.context.order.getLineItems().Items);
+        )
+        this.send.purchase(this.context.order.getLineItems().Items)
+        this.cdp.orderPlaced(
+          this.context.order.get(),
+          this.context.order.getLineItems().Items
+        )
         //  Do all patching of order XP values in the OrderSubmit integration event
         //  Patching order XP before order is submitted will clear out order worksheet data
         await this.checkout.patch({ Comments: comment }, order.ID)

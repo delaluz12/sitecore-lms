@@ -1,7 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 import { BuyerCreditCard, ListPage } from 'ordercloud-javascript-sdk'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
-import { CreditCardFormOutput, SelectedCreditCard } from 'src/app/models/credit-card.types'
+import {
+  CreditCardFormOutput,
+  SelectedCreditCard,
+} from 'src/app/models/credit-card.types'
 
 @Component({
   templateUrl: './payment-credit-card.component.html',
