@@ -5,3 +5,22 @@
 // to start you off. want to see the full list of bootstrap variables?
 // check out node_modules/bootstrap/variables.scss
 // --------------------------------------------------------------------------------------
+
+$gray-600: #969696;
+$gray-900: #212529;
+
+$blue:    #007bff;
+$indigo:  #333378;
+$purple:  #5548D9;
+$pink:    #AB0000;
+$red:     #EB1F1F;
+$orange:  #FFB204;
+$yellow:  #FFE007;
+$green:   #005E6E;
+$teal:    #02999A;
+$cyan:    #17a2b8;
+
+$primary:       $red;
+
+$font-family-sans-serif:      "Avenir Next LT Pro", sans-serif;
+$font-family-base:            $font-family-sans-serif;
