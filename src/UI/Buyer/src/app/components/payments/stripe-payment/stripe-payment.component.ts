@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core'
-import { HSOrder } from '@ordercloud/headstart-sdk'
+import { HeadStartSDK, HSOrder } from '@ordercloud/headstart-sdk'
 import { StripeIntent } from 'src/app/models/credit-card.types'
 import { AppConfig } from 'src/app/models/environment.types'
 import { ShopperContextService } from 'src/app/services/shopper-context/shopper-context.service'
@@ -41,12 +41,8 @@ export class StripePaymentComponent implements OnInit {
 
     const url = `${this.appConfig.middlewareUrl}/stripe/create-payment-intent`
     async function initialize(url: string, stripeBody: unknown): Promise<void> {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(stripeBody),
-      })
-      const { clientSecret } = await response.json()
+      const response = await HeadStartSDK.Stripe.CreatePaymentIntent(stripeBody)
+      const { clientSecret } = await response
 
       const appearance = {
         theme: 'stripe',

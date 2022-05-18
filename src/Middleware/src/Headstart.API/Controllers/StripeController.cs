@@ -23,7 +23,7 @@ namespace Headstart.API.Controllers
         /// <summary>
         /// POST PaymentIntentResponse
         /// </summary>
-        [HttpPost, Route("stripe/create-payment-intent")]
+        [HttpPost, Route("stripe/create-payment-intent"), OrderCloudUserAuth(ApiRole.Shopper)]
         public PaymentIntentResponse Post([FromBody] PaymentIntentRequest request)
         {
             return _stripe.CreatePaymentIntent(request);

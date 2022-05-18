@@ -32,6 +32,7 @@ import Assets from './Assets';
 import Services from './Service';
 import ApprovalRules from './ApprovalRules';
 import RmAs from './RmAs';
+import Stripe from './Stripe';
 
 export { HeadStartSDK }
 
@@ -69,7 +70,8 @@ const HeadStartSDK: HeadStartSDK = {
     Tokens: Tokens,
     Upload: new Upload(),
     Services: new Services(),
-    ApprovalRules: new ApprovalRules()
+    ApprovalRules: new ApprovalRules(),
+    Stripe: new Stripe()
 }
 
 interface HeadStartSDK {
@@ -106,5 +108,6 @@ interface HeadStartSDK {
     Tokens: typeof Tokens,
     Upload: Upload,
     Services: Services,
-    ApprovalRules: ApprovalRules
+    ApprovalRules: ApprovalRules,
+    Stripe: Stripe
 }
