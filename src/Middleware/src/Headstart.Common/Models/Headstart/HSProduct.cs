@@ -76,6 +76,7 @@ namespace Headstart.Models
         public string FreeShippingMessage { get; set; }
         public List<ImageAsset> Images { get; set; }
         public List<DocumentAsset> Documents { get; set; }
+        public string lms_course_id { get; set; }
     }
 
     public class ImageAsset

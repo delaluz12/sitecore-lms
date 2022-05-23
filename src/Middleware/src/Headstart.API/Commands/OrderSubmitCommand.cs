@@ -12,6 +12,8 @@ using Headstart.Common.Services.ShippingIntegration.Models;
 using Headstart.Models.Headstart;
 using Headstart.Common;
 using OrderCloud.Catalyst;
+using ordercloud.integrations.docebo.Models;
+using ordercloud.integrations.docebo;
 
 namespace Headstart.API.Commands
 {
@@ -24,18 +26,43 @@ namespace Headstart.API.Commands
         private readonly IOrderCloudClient _oc;
         private readonly AppSettings _settings;
         private readonly ICreditCardCommand _card;
+        private readonly IOrderCloudIntegrationsDoceboService _docebo;
 
-        public OrderSubmitCommand(IOrderCloudClient oc, AppSettings settings, ICreditCardCommand card)
+        public OrderSubmitCommand(IOrderCloudClient oc, AppSettings settings, ICreditCardCommand card, IOrderCloudIntegrationsDoceboService docebo)
         {
             _oc = oc;
             _settings = settings;
             _card = card;
+            _docebo = docebo;
         }
 
         public async Task<HSOrder> SubmitOrderAsync(string orderID, OrderDirection direction, OrderCloudIntegrationsCreditCardPayment payment, string userToken)
         {
             var worksheet = await _oc.IntegrationEvents.GetWorksheetAsync<HSOrderWorksheet>(OrderDirection.Incoming, orderID);
             await ValidateOrderAsync(worksheet, payment, userToken);
+            var paymentType = await _oc.Payments.GetAsync<Payment>(OrderDirection.All, payment.OrderID, payment.PaymentID);
+            List<DoceboItem> doceboItems = new List<DoceboItem>();
+
+            for (int i = 0; i < worksheet.LineItems.Count; i++)
+            {
+                var lineItem = new DoceboItem()
+                {
+                    course_id = Int32.Parse(worksheet.LineItems[i].Product?.xp?.lms_course_id),
+                    user_id = worksheet?.Order.FromUser?.xp?.lms_user_id,
+                    status = paymentType.Type == PaymentType.CreditCard ? "subscribed" : "waiting"
+
+                };
+                doceboItems.Add(lineItem);
+            }
+            
+            try 
+            {
+                if(doceboItems.Count > 0)
+                {
+                    await _docebo.EnrollUsers(doceboItems);
+                }
+            }
+            catch (Exception) { throw; }
 
             var incrementedOrderID = await IncrementOrderAsync(worksheet);
             try

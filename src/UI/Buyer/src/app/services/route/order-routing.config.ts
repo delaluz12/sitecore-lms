@@ -1,6 +1,5 @@
-import { OrderViewContext } from "src/app/models/order.types";
-import { RouteConfig } from "src/app/models/shared.types";
-
+import { OrderViewContext } from 'src/app/models/order.types'
+import { RouteConfig } from 'src/app/models/shared.types'
 
 export const OrderRoutes: RouteConfig[] = [
   {
@@ -9,13 +8,6 @@ export const OrderRoutes: RouteConfig[] = [
     url: '/orders',
     showInDropdown: true,
     context: OrderViewContext.MyOrders,
-  },
-  {
-    routerCall: 'toMyQuotes',
-    displayText: 'Quotes',
-    url: '/orders/quotes',
-    showInDropdown: true,
-    context: OrderViewContext.Quote,
   },
   {
     routerCall: 'toOrdersByLocation',

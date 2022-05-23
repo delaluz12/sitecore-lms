@@ -1,4 +1,5 @@
 using ordercloud.integrations.cardconnect;
+using ordercloud.integrations.docebo;
 using ordercloud.integrations.exchangerates;
 using ordercloud.integrations.library;
 using ordercloud.integrations.smartystreets;
@@ -28,6 +29,7 @@ namespace Headstart.Common
         public UI UI { get; set; }
         public ZohoSettings ZohoSettings { get; set; } = new ZohoSettings();
         public OrderCloudIntegrationsStripeConfig StripeSettings { get; set; } = new OrderCloudIntegrationsStripeConfig();
+        public OrderCloudIntegrationsDoceboConfig DoceboSettings { get; set; } = new OrderCloudIntegrationsDoceboConfig();
     }
 
     public class ApplicationInsightsSettings

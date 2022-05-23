@@ -19,4 +19,5 @@ export interface ProductXp {
     FreeShippingMessage?: string
     Images?: ImageAsset[]
     Documents?: DocumentAsset[]
+    lms_course_id?: string
 }

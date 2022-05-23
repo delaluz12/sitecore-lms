@@ -126,9 +126,16 @@ export class OCMCheckout implements OnInit {
       // Navigate to cart to review invalid items
       void this.router.navigate(['/cart'])
     } else {
-      await this.reIDLineItems()
-      this.doneWithShippingRates()
-      // this.destoryLoadingIndicator(this.isAnon ? 'login' : 'shippingAddress')
+      const clientSecret = new URLSearchParams(window.location.search).get(
+        'payment_intent_client_secret'
+      )
+
+      if (clientSecret) {
+        this.doneWithShippingRates()
+      } else {
+        await this.reIDLineItems()
+        this.destoryLoadingIndicator(this.isAnon ? 'login' : 'shippingAddress')
+      }
     }
   }
 
@@ -141,7 +148,8 @@ export class OCMCheckout implements OnInit {
     this.initLoadingIndicator()
     const orderWorksheet = await this.checkout.estimateShipping()
     this.shipEstimates = orderWorksheet.ShipEstimateResponse.ShipEstimates
-    this.destoryLoadingIndicator('shippingSelection')
+    // this.destoryLoadingIndicator('shippingSelection')
+    this.doneWithShippingRates()
   }
 
   async selectShipMethod(selection: ShipMethodSelection): Promise<void> {

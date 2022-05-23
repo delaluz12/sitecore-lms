@@ -24,7 +24,7 @@ namespace ordercloud.integrations.stripe
         public PaymentIntentResponse CreatePaymentIntent(PaymentIntentRequest request)
         {
             // This will be set based on rules
-            StripeConfiguration.ApiKey = _config.USAKey;
+            StripeConfiguration.ApiKey = (string)_config.GetType().GetProperty(request.Key).GetValue(_config, null);
 
             var paymentIntentService = new PaymentIntentService();
             var paymentIntent = paymentIntentService.Create(new PaymentIntentCreateOptions

@@ -47,6 +47,7 @@ using System.Linq;
 using ITaxCalculator = ordercloud.integrations.library.ITaxCalculator;
 using ITaxCodesProvider = ordercloud.integrations.library.intefaces.ITaxCodesProvider;
 using ordercloud.integrations.stripe;
+using ordercloud.integrations.docebo;
 
 namespace Headstart.API
 {
@@ -234,6 +235,7 @@ namespace Headstart.API
                 .AddSingleton<ISmartyStreetsService>(x => new SmartyStreetsService(_settings.SmartyStreetSettings, smartyStreetsUsClient))
                 .AddSingleton<IOrderCloudIntegrationsCardConnectService>(x => new OrderCloudIntegrationsCardConnectService(_settings.CardConnectSettings, _settings.EnvironmentSettings.Environment.ToString(), flurlClientFactory))
                 .AddSingleton<IOrderCloudIntegrationsStripeService>(x => new OrderCloudIntegrationsStripeService(_settings.StripeSettings))
+                .AddSingleton<IOrderCloudIntegrationsDoceboService>(x => new OrderCloudIntegrationsDoceboService(_settings.DoceboSettings, flurlClientFactory))
                 .AddSingleton<IOrderCloudClient>(provider => orderCloudClient)
                 .AddSwaggerGen(c =>
                 {

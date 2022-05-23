@@ -13,6 +13,7 @@ using System;
 using NSubstitute.ExceptionExtensions;
 using Headstart.API.Commands;
 using OrderCloud.Catalyst;
+using ordercloud.integrations.docebo;
 
 namespace Headstart.Tests
 {
@@ -22,6 +23,7 @@ namespace Headstart.Tests
         private AppSettings _settings;
         private ICreditCardCommand _card;
         private IOrderSubmitCommand _sut;
+        private IOrderCloudIntegrationsDoceboService _docebo;
 
         [SetUp]
         public void Setup()
@@ -39,13 +41,14 @@ namespace Headstart.Tests
                 IncrementorPrefix = "SEB"
             };
             _card = Substitute.For<ICreditCardCommand>();
+            _docebo = Substitute.For<IOrderCloudIntegrationsDoceboService>();
             _card.AuthorizePayment(Arg.Any<OrderCloudIntegrationsCreditCardPayment>(), "mockUserToken", Arg.Any<string>())
                     .Returns(Task.FromResult(new Payment { }));
 
             _oc.Orders.PatchAsync(OrderDirection.Incoming, "mockOrderID", Arg.Any<PartialOrder>()).Returns(Task.FromResult(new Order { ID = "SEB12345" }));
             _oc.AuthenticateAsync().Returns(Task.FromResult(new TokenResponse { AccessToken = "mockToken" }));
             _oc.Orders.SubmitAsync<HSOrder>(Arg.Any<OrderDirection>(), Arg.Any<string>(), Arg.Any<string>()).Returns(Task.FromResult(new HSOrder { ID = "submittedorderid" }));
-            _sut = new OrderSubmitCommand(_oc, _settings, _card); // sut is subject under test
+            _sut = new OrderSubmitCommand(_oc, _settings, _card, _docebo); // sut is subject under test
         }
 
         [Test]

@@ -49,7 +49,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ordercloud.integrations.ver
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ordercloud.integrations.taxjar", "integrations\ordercloud.integrations.taxjar\ordercloud.integrations.taxjar.csproj", "{39EA02AA-FD2B-4FF5-9CF4-6215659894A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ordercloud.integrations.stripe", "integrations\ordercloud.integrations.stripe\ordercloud.integrations.stripe.csproj", "{6C626BCC-A0A5-4F2F-8602-575CF2C7C22B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ordercloud.integrations.stripe", "integrations\ordercloud.integrations.stripe\ordercloud.integrations.stripe.csproj", "{6C626BCC-A0A5-4F2F-8602-575CF2C7C22B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ordercloud.integrations.docebo", "integrations\ordercloud.integrations.docebo\ordercloud.integrations.docebo.csproj", "{362BDF54-376F-4D04-9149-68E6B61F5D10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,6 +139,10 @@ Global
 		{6C626BCC-A0A5-4F2F-8602-575CF2C7C22B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C626BCC-A0A5-4F2F-8602-575CF2C7C22B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C626BCC-A0A5-4F2F-8602-575CF2C7C22B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{362BDF54-376F-4D04-9149-68E6B61F5D10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{362BDF54-376F-4D04-9149-68E6B61F5D10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{362BDF54-376F-4D04-9149-68E6B61F5D10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{362BDF54-376F-4D04-9149-68E6B61F5D10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -159,6 +165,7 @@ Global
 		{FF77C6FA-058A-45E4-9D3D-A6D185892AEC} = {CCAF8AD5-2FCC-46E0-82EF-2FCC0EEC8B16}
 		{39EA02AA-FD2B-4FF5-9CF4-6215659894A8} = {CCAF8AD5-2FCC-46E0-82EF-2FCC0EEC8B16}
 		{6C626BCC-A0A5-4F2F-8602-575CF2C7C22B} = {CCAF8AD5-2FCC-46E0-82EF-2FCC0EEC8B16}
+		{362BDF54-376F-4D04-9149-68E6B61F5D10} = {CCAF8AD5-2FCC-46E0-82EF-2FCC0EEC8B16}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D28C7C46-780F-4A68-80B8-9789997A37F7}
