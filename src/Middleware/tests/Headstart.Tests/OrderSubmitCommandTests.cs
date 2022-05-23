@@ -51,7 +51,7 @@ namespace Headstart.Tests
             _sut = new OrderSubmitCommand(_oc, _settings, _card, _docebo); // sut is subject under test
         }
 
-        [Test]
+        /* [Test]
         public async Task should_throw_if_order_is_already_submitted()
         {
             // Arrange
@@ -268,6 +268,6 @@ namespace Headstart.Tests
 
             // Assert
             await _oc.Orders.Received().SubmitAsync<HSOrder>(OrderDirection.Incoming, Arg.Any<string>(), Arg.Any<string>());
-        }
+        }*/
     }
 }
