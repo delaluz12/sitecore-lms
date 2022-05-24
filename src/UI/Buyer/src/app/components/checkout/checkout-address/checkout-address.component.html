@@ -39,10 +39,17 @@
             {{ promo.Code }}
           </p>
           <small>{{ promo.Description }}</small>
-          <p translate *ngIf="isShippingPromo(promo)" class="white-space-pre mt-1 mb-0 text-danger font-weight-bolder">
+          <p
+            translate
+            *ngIf="isShippingPromo(promo)"
+            class="white-space-pre mt-1 mb-0 text-danger font-weight-bolder"
+          >
             CHECKOUT.CHECKOUT_ADDRESS.SHIPPING_DISCOUNT_TEXT
           </p>
-          <p *ngIf="!isShippingPromo(promo)" class="white-space-pre mt-1 mb-0 text-danger font-weight-bolder">
+          <p
+            *ngIf="!isShippingPromo(promo)"
+            class="white-space-pre mt-1 mb-0 text-danger font-weight-bolder"
+          >
             -
             {{ getPromoDiscountTotal(promo.ID) | currency: _orderCurrency }}
           </p>
@@ -60,7 +67,7 @@
   </div>
   <hr />
 
-  <div *ngIf="!isAnon" class="form-group">
+  <!-- <div *ngIf="!isAnon" class="form-group">
     <label for="selectBuyerLocation" translate
       >CHECKOUT.CHECKOUT_ADDRESS.BUYER_LOCATION</label
     >
@@ -93,7 +100,7 @@
       </option>
     </select>
     <br />
-  </div>
+  </div> -->
   <div class="form-group" *ngIf="!isAnon && selectedBuyerLocation">
     <label for="selectAddress" translate
       >CHECKOUT.CHECKOUT_ADDRESS.SHIPPING_ADDRESS</label

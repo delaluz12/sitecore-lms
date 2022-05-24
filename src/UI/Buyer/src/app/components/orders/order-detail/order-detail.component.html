@@ -29,7 +29,7 @@
             >{{ order.xp.OrderType }}</span
           >
         </h2>
-        <ng-container *ngIf="subView === 'details'">
+        <!-- <ng-container *ngIf="subView === 'details'">
           <button
             class="btn btn-sm btn-outline-primary d-print-none"
             (click)="createAndSavePDF()"
@@ -38,10 +38,10 @@
           >
             ORDERS.DETAIL.DOWNLOAD_AS_PDF
           </button>
-        </ng-container>
+        </ng-container> -->
       </div>
       <div class="row my-3">
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <span class="text-muted small">
             <span translate> ORDERS.DETAIL.SUBMITTED</span>
             {{ order.DateSubmitted | date: 'short' }}</span
@@ -69,7 +69,7 @@
               {{ order.xp.ClaimStatus | orderStatusDisplay }}
             </li>
           </ul>
-        </div>
+        </div> -->
         <div
           class="
             col-md-8
@@ -87,7 +87,7 @@
             [orderID]="order?.ID"
           ></ocm-order-approval>
 
-          <button
+          <!-- <button
             *ngIf="!approvalVersion && !isAnon"
             class="btn btn-outline-secondary float-right d-print-none"
             (click)="toggleFavorite(order)"
@@ -99,8 +99,8 @@
               [favorite]="isFavorite(order.ID)"
             >
             </ocm-toggle-favorite>
-          </button>
-          <button
+          </button> -->
+          <!-- <button
             *ngIf="
               !approvalVersion &&
               !isQuoteOrder(order) &&
@@ -111,7 +111,7 @@
             translate
           >
             ORDERS.DETAIL.REORDER
-          </button>
+          </button> -->
           <button
             *ngIf="
               !showRequestReturn &&
@@ -280,7 +280,7 @@
           ORDERS.DETAIL.DETAILS
         </button>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <button
           type="button"
           class="btn btn-link nav-link"
@@ -297,7 +297,7 @@
           <fa-icon [icon]="faExchangeAlt"></fa-icon>
           ORDERS.DETAIL.RMAS
         </button>
-      </li>
+      </li> -->
     </ul>
     <ocm-order-historical
       class="d-block p-3"

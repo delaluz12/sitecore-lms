@@ -40,7 +40,6 @@ namespace Headstart.API.Commands
         {
             var worksheet = await _oc.IntegrationEvents.GetWorksheetAsync<HSOrderWorksheet>(OrderDirection.Incoming, orderID);
             await ValidateOrderAsync(worksheet, payment, userToken);
-            var paymentType = await _oc.Payments.GetAsync<Payment>(OrderDirection.All, payment.OrderID, payment.PaymentID);
             List<DoceboItem> doceboItems = new List<DoceboItem>();
 
             for (int i = 0; i < worksheet.LineItems.Count; i++)
@@ -49,7 +48,7 @@ namespace Headstart.API.Commands
                 {
                     course_id = Int32.Parse(worksheet.LineItems[i].Product?.xp?.lms_course_id),
                     user_id = worksheet?.Order.FromUser?.xp?.lms_user_id,
-                    status = paymentType.Type == PaymentType.CreditCard ? "subscribed" : "waiting"
+                    status = payment.OrderID != null ? "subscribed" : "waiting"
 
                 };
                 doceboItems.Add(lineItem);

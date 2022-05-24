@@ -22,7 +22,7 @@ import { RouteConfig } from 'src/app/models/shared.types'
 })
 export class OCMOrderHistory implements OnInit, AfterViewInit, OnDestroy {
   alive = true
-  columns: string[] = ['ID', 'Status', 'DateSubmitted', 'Total']
+  columns: string[] = ['ID', 'DateSubmitted', 'Total']
   @Input() orders: ListPage<HSOrder>
   viewContext: string
   showOnlyFavorites = false
