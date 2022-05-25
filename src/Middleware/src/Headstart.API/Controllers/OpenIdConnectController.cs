@@ -38,7 +38,7 @@ namespace Headstart.API.Controllers
             var jwt = new JwtSecurityToken(integrationEvent.TokenResponse.id_token);
             var user = await _oc.Users.CreateAsync(buyerID, new User
             {
-                Username = Guid.NewGuid().ToString(),
+                Username = jwt.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value,
                 Email = jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value,
                 FirstName = jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value.Split(' ')[0],
                 LastName = jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value.Split(' ')[1],

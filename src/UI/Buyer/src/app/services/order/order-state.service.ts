@@ -154,11 +154,15 @@ export class OrderStateService {
   }
 
   async resetOrder(): Promise<void> {
-    this.order = await Orders.Get('Outgoing', this.order.ID)
+    if (this?.order?.ID) {
+      this.order = await Orders.Get('Outgoing', this.order.ID)
+    }
   }
 
   async resetOrderPromos(): Promise<void> {
-    this.orderPromos = await Orders.ListPromotions('Outgoing', this.order.ID)
+    if (this?.order?.ID) {
+      this.orderPromos = await Orders.ListPromotions('Outgoing', this.order.ID)
+    }
   }
 
   async initOrder(): Promise<void> {
@@ -223,7 +227,7 @@ export class OrderStateService {
       filters: {
         DateDeclined: '!*',
         status: 'Unsubmitted',
-        'xp.QuoteStatus': '!*'
+        'xp.QuoteStatus': '!*',
       },
     })
     return orders
