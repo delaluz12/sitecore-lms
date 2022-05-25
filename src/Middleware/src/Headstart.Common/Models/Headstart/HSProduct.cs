@@ -58,7 +58,6 @@ namespace Headstart.Models
         #endregion
 
         [System.ComponentModel.DataAnnotations.Required]
-        public ObjectStatus? Status { get; set; }
         public bool HasVariants { get; set; }
         [MaxLength(500), OrchestrationIgnore]
         public string Note { get; set; }

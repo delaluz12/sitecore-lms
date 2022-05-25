@@ -29,7 +29,7 @@ namespace ordercloud.integrations.stripe
             var paymentIntentService = new PaymentIntentService();
             var paymentIntent = paymentIntentService.Create(new PaymentIntentCreateOptions
             {
-                Amount = (long?)request.Amount * 100, // Send in pennies
+                Amount = request.Amount * 100, // Send in pennies
                 Currency = request.Currency,
                 PaymentMethodTypes = new System.Collections.Generic.List<string>() { "card" },
             });

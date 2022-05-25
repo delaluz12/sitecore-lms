@@ -128,30 +128,18 @@ namespace ordercloud.integrations.avalara
 
 		private async Task<OrderTaxCalculation> CreateTransactionAsync(DocumentType docType, OrderWorksheet orderWorksheet, List<OrderPromotion> promotions)
 		{
-			var standardLineItems = orderWorksheet.LineItems.Where(li => li.Product.xp.ProductType == "Standard")?.ToList();
-            if (standardLineItems.Any())
-            {
-				try
-				{
-					if (ShouldMockAvalaraResponse()) { return CreateMockTransactionModel(); }
-					var createTransactionModel = orderWorksheet.ToAvalaraTransactionModel(_companyCode, docType, promotions);
-					var transaction = await _avaTax.CreateTransactionAsync("", createTransactionModel);
-					return transaction.ToOrderTaxCalculation();
-				}
-				catch (AvaTaxError e)
-				{
-					throw new CatalystBaseException("AvalaraTaxError", e.error.error.message, e.error.error, 400);
-				}
-			} else
-            {
-				return new OrderTaxCalculation
-				{
-					OrderID = orderWorksheet.Order.ID,
-					ExternalTransactionID = "NotTaxable",
-					TotalTax = 0
-				};
-            }
-			
+			try
+			{
+				if (ShouldMockAvalaraResponse()) { return CreateMockTransactionModel(); }
+				var createTransactionModel = orderWorksheet.ToAvalaraTransactionModel(_companyCode, docType, promotions);
+				var transaction = await _avaTax.CreateTransactionAsync("", createTransactionModel);
+				return transaction.ToOrderTaxCalculation();
+			}
+			catch (AvaTaxError e)
+			{
+				throw new CatalystBaseException("AvalaraTaxError", e.error.error.message, e.error.error, 400);
+			}
+
 		}
 	}
 }

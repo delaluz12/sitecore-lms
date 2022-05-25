@@ -13,7 +13,7 @@ namespace ordercloud.integrations.avalara
 		{
 			var buyerLocationID = order.Order.BillingAddress.ID;
 
-			var standardLineItems = order.LineItems.Where(li => li.Product.xp.ProductType == "Standard")?.ToList();
+			var standardLineItems = order.LineItems;
 
 			var standardShipEstimates = order.ShipEstimateResponse?.ShipEstimates;
 
@@ -46,7 +46,7 @@ namespace ordercloud.integrations.avalara
 			{
 				amount = lineItem.LineTotal, // Total after line-item level promotions have been applied
 				quantity = lineItem.Quantity,
-				taxCode = lineItem.Product.xp.Tax.Code,
+				taxCode = "O0000000",
 				itemCode = lineItem.ProductID,
 				discounted = true, // Assumption that all products are eligible for order-level promotions
 				customerUsageType = null,
@@ -63,12 +63,12 @@ namespace ordercloud.integrations.avalara
 
 		private static LineItemModel ToLineItemModel(this ShipEstimate shipEstimate, Address shipFrom, Address shipTo)
 		{
-			var method = shipEstimate.GetSelectedShippingMethod();
+			//var method = shipEstimate.GetSelectedShippingMethod();
 			return new LineItemModel()
 			{
-				amount = method.Cost,
+				amount = 0,
 				taxCode = "FR",
-				itemCode = method.Name,
+				itemCode = "No Shipping",
 				customerUsageType = null,
 				number = shipEstimate.ID,
 				addresses = ToAddressesModel(shipFrom, shipTo)
