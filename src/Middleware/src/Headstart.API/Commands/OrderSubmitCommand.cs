@@ -40,30 +40,56 @@ namespace Headstart.API.Commands
         {
             var worksheet = await _oc.IntegrationEvents.GetWorksheetAsync<HSOrderWorksheet>(OrderDirection.Incoming, orderID);
             await ValidateOrderAsync(worksheet, payment, userToken);
+            var incrementedOrderID = await IncrementOrderAsync(worksheet);
+
             List<DoceboItem> doceboItems = new List<DoceboItem>();
 
             for (int i = 0; i < worksheet.LineItems.Count; i++)
             {
-                var lineItem = new DoceboItem()
+                var courseID = worksheet.LineItems[i].Product?.xp?.lms_course_id;
+                var subscriptionID = worksheet.LineItems[i].Product?.xp?.lms_SubscriptionUuid;
+                if (!String.IsNullOrEmpty(courseID))
                 {
-                    course_id = Int32.Parse(worksheet.LineItems[i].Product?.xp?.lms_course_id),
-                    user_id = worksheet?.Order.FromUser?.xp?.lms_user_id,
-                    status = payment.OrderID != null ? "subscribed" : "waiting"
+                    var lineItem = new DoceboItem()
+                    {
+                        course_id = Int32.Parse(courseID),
+                        user_id = worksheet?.Order.FromUser?.xp?.lms_user_id,
+                        status = payment.OrderID != null ? "subscribed" : "waiting",
+                        field_2 = incrementedOrderID
 
-                };
-                doceboItems.Add(lineItem);
+                    };
+                    doceboItems.Add(lineItem);
+                }
+                if (!String.IsNullOrEmpty(subscriptionID))
+                {
+                    var doceboSubscription = new DoceboSubscriptionRequest()
+                    {
+                        user_ids = new List<int>()
+                        {
+                            Int32.Parse(worksheet?.Order.FromUser?.xp?.lms_user_id)
+                        },
+                        user_all = true,
+                        user_filters = new User_Filters()
+                        {
+                            search = ""
+                        }
+                    };
+                    try
+                    {
+                        await _docebo.SubscribeUsers(doceboSubscription, subscriptionID);
+                    }
+                    catch (Exception) { throw; }
+                }
             }
-            
-            try 
+
+            try
             {
-                if(doceboItems.Count > 0)
+                if (doceboItems.Count > 0)
                 {
                     await _docebo.EnrollUsers(doceboItems);
                 }
             }
             catch (Exception) { throw; }
-
-            var incrementedOrderID = await IncrementOrderAsync(worksheet);
             try
             {
                 // Set Stripe Credit Card Payment to Accepted

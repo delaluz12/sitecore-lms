@@ -1,20 +1,24 @@
 <div *ngIf="orderSummaryMeta">
-  <div
-    *ngFor="let method of _acceptedPaymentMethods; let i = index"
-    class="form-check"
-  >
-    <input
-      (change)="selectPaymentMethod($event)"
-      class="form-check-input"
-      type="radio"
+  <div class="form-group">
+    <button
+      *ngFor="let method of _acceptedPaymentMethods; let i = index"
+      class="form-check"
+      [class.active]="selectedPaymentMethod === method"
+      type="button"
+      class="btn btn-outline-primary"
+      [disabled]="method == 'PurchaseOrder' && disablePO"
+      (click)="selectPaymentMethod($event)"
       name="{{ i }}"
       id="{{ i }}"
       value="{{ method }}"
-      [checked]="selectedPaymentMethod === method"
-    />
-    <label class="form-check-label" for="{{ i }}">
+    >
       {{ getPaymentMethodName(method) }}
-    </label>
+    </button>
+  </div>
+  <div class="alert alert-warning" role="alert" *ngIf="disablePO">
+    At this time, we cannot accept purchase order payments when purchasing a
+    subscription product. Please use credit card or remove this item from your
+    cart.
   </div>
   <ocm-stripe-payment
     *ngIf="

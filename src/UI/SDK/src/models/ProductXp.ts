@@ -20,4 +20,5 @@ export interface ProductXp {
     Images?: ImageAsset[]
     Documents?: DocumentAsset[]
     lms_course_id?: string
+    lms_SubscriptionUuid?: string
 }

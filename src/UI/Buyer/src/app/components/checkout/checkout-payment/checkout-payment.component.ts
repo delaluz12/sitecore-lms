@@ -53,6 +53,7 @@ export class OCMCheckoutPayment implements OnInit {
   selectedBuyerLocation: BuyerAddress
   homeCountry: string
   readonly NEW_ADDRESS_CODE = 'new'
+  disablePO = false
 
   constructor(
     private context: ShopperContextService,
@@ -65,6 +66,12 @@ export class OCMCheckoutPayment implements OnInit {
     this.selectedPaymentMethod = this
       ._acceptedPaymentMethods?.[0] as AcceptedPaymentTypes
     this.ListAddressesForBilling()
+    const lineItems = this.context.order.getLineItems()
+    lineItems.Items.forEach((line) => {
+      if (line?.Product?.xp?.lms_SubscriptionUuid) {
+        this.disablePO = true
+      }
+    })
   }
 
   getAcceptedPaymentMethods(): string[] {

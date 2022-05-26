@@ -16,6 +16,7 @@ namespace ordercloud.integrations.docebo
     {
         Task<DoceboToken> GetToken();
         Task<DoceboEnrollmentResponse> EnrollUsers(List<DoceboItem> lineItems);
+        Task<DoceboSubscriptionResponse> SubscribeUsers(DoceboSubscriptionRequest request, string uuid);
     }
 
     public class OrderCloudIntegrationsDoceboConfig
@@ -56,6 +57,11 @@ namespace ordercloud.integrations.docebo
             DoceboToken token = await GetToken();
             DoceboEnrollmentRequest request = DoceboMapper.MapRequest(lineItems);
             return await this.Request("learn/v1/enrollment/batch", token).PostJsonAsync(request).ReceiveJson<DoceboEnrollmentResponse>();
+        }
+        public async Task<DoceboSubscriptionResponse> SubscribeUsers(DoceboSubscriptionRequest request, string uuid)
+        {
+            DoceboToken token = await GetToken();
+            return await this.Request($"audiences/v1/audience/{uuid}/assign_users", token).PutJsonAsync(request).ReceiveJson<DoceboSubscriptionResponse>();
         }
     }
 }

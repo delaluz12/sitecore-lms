@@ -27,6 +27,7 @@ namespace ordercloud.integrations.docebo.Models
         public string user_id { get; set; }
         public string level { get; set; }
         public string status { get; set; }
+        public string field_2 { get; set; } // ExternalOrderId
     }
 
 }

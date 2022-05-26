@@ -76,6 +76,7 @@ namespace Headstart.Models
         public List<ImageAsset> Images { get; set; }
         public List<DocumentAsset> Documents { get; set; }
         public string lms_course_id { get; set; }
+        public string lms_SubscriptionUuid { get; set; }
     }
 
     public class ImageAsset
