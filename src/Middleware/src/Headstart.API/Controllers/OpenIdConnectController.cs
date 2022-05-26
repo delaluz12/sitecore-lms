@@ -36,20 +36,45 @@ namespace Headstart.API.Controllers
             }
 
             var jwt = new JwtSecurityToken(integrationEvent.TokenResponse.id_token);
-            var user = await _oc.Users.CreateAsync(buyerID, new User
+            try
             {
-                Username = jwt.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value,
-                Email = jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value,
-                FirstName = jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value.Split(' ')[0],
-                LastName = jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value.Split(' ')[1],
-                Active = true
-            }, integrationEvent.OrderCloudAccessToken);
+                var user = await _oc.Users.CreateAsync(buyerID, new User
+                {
+                    Username = jwt.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value,
+                    Email = jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value,
+                    FirstName = jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value.Split(' ')[0],
+                    LastName = jwt.Claims.FirstOrDefault(c => c.Type == "name")?.Value.Split(' ')[1],
+                    Active = true
+                }, integrationEvent.OrderCloudAccessToken);
 
-            return new CreateUserIntegrationEventResponse
+                await _oc.UserGroups.SaveUserAssignmentAsync(buyerID, new UserGroupAssignment
+                {
+                    UserGroupID = "0002-0005",
+                    UserID = user.ID
+                });
+
+                return new CreateUserIntegrationEventResponse
+                {
+                    ErrorMessage = null,
+                    Username = user.Username
+                };
+            }
+            catch (Exception ex) 
             {
-                ErrorMessage = null,
-                Username = user.Username
-            };
+                if (ex.Message == "User.UsernameMustBeUnique: Username already exists in this Marketplace.")
+                {
+                    return new CreateUserIntegrationEventResponse
+                    {
+                        ErrorMessage = null,
+                        Username = jwt.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value
+                    };
+                }
+                else 
+                {
+                    throw;
+                }
+            }
+            
         }
 
         // this endpoint gets called by the OrderCloud API whenever a user needs to get a new ordercloud token via openidconnect AFTER the first attempt
