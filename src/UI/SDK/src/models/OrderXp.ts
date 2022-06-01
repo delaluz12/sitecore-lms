@@ -28,4 +28,7 @@ export interface OrderXp {
     QuoteBuyerContactEmail?: string
     QuoteSubmittedDate?: string
     QuoteSupplierID?: string
+    NetSuiteSalesOrderId?: string
+    NetSuiteOrderStatus?: string
+    StripePaymentId?: string
 }

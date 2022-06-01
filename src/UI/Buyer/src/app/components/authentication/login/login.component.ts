@@ -26,7 +26,7 @@ export class OCMLogin implements OnInit {
 
   ngOnInit(): void {
     const urlParams = this.activatedRoute.snapshot.queryParams
-    this.token = urlParams['token'] as string
+    this.token = urlParams['ssoToken'] as string
     if (this.token != undefined) {
       this.context.authentication.loginWithTokens(this.token, null, true, false)
       this.context.router.toHome()

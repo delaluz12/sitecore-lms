@@ -3,9 +3,7 @@ import { BehaviorSubject } from 'rxjs'
 import { Router, Params, ActivatedRoute } from '@angular/router'
 import { transform as _transform, pickBy as _pickBy } from 'lodash'
 import { CurrentUserService } from '../current-user/current-user.service'
-import {
-  ListPageWithFacets,
-} from 'ordercloud-javascript-sdk'
+import { ListPageWithFacets } from 'ordercloud-javascript-sdk'
 import { ProductCategoriesService } from '../product-categories/product-categories.service'
 import { TempSdk } from '../temp-sdk/temp-sdk.service'
 import { ProductFilters } from 'src/app/models/filter-config.types'
@@ -16,9 +14,8 @@ import { HSMeProduct } from '@ordercloud/headstart-sdk'
   providedIn: 'root',
 })
 export class ProductFilterService {
-  public activeFiltersSubject: BehaviorSubject<ProductFilters> = new BehaviorSubject<ProductFilters>(
-    this.getDefaultParms()
-  )
+  public activeFiltersSubject: BehaviorSubject<ProductFilters> =
+    new BehaviorSubject<ProductFilters>(this.getDefaultParms())
 
   // TODO - allow app devs to filter by custom xp that is not a facet. Create functions for this.
   private readonly nonFacetQueryParams = [

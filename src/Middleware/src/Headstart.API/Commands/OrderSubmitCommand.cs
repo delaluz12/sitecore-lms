@@ -67,11 +67,6 @@ namespace Headstart.API.Commands
                         user_ids = new List<int>()
                         {
                             Int32.Parse(worksheet?.Order.FromUser?.xp?.lms_user_id)
-                        },
-                        user_all = true,
-                        user_filters = new User_Filters()
-                        {
-                            search = ""
                         }
                     };
                     try

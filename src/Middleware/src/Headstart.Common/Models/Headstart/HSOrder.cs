@@ -45,6 +45,9 @@ namespace Headstart.Models
         public string QuoteBuyerContactEmail { get; set; }
         public DateTimeOffset? QuoteSubmittedDate { get; set; }
         public string QuoteSupplierID { get; set; }
+        public string NetSuiteSalesOrderId { get; set; }
+        public string NetSuiteOrderStatus { get; set; }
+        public string StripePaymentId { get; set; }
 
     }
 

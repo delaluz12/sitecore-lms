@@ -37,6 +37,8 @@ export class HasTokenGuard implements CanActivate, CanActivateChild {
     } else if (this.isSingleSignOn()) {
       const token = this.getQueryParamSSOToken()
       this.auth.loginWithTokens(token, null, true)
+      const queryParams = {}
+      this.router.navigate(['/products'], { queryParams })
       return true
     }
 
@@ -91,14 +93,18 @@ export class HasTokenGuard implements CanActivate, CanActivateChild {
     const decodedToken = this.tokenHelper.getDecodedOCToken()
 
     if (!decodedToken) {
-      this.appInsightsService.trackAuthErrorEvents(null, {message: 'HasTokenGuard: no token'})
+      this.appInsightsService.trackAuthErrorEvents(null, {
+        message: 'HasTokenGuard: no token',
+      })
       return false
     }
 
     const expiresIn = decodedToken.exp * 1000
     const isValid = Date.now() < expiresIn
     if (!isValid) {
-      this.appInsightsService.trackAuthErrorEvents(decodedToken, {message: 'HasTokenGuard: token expired'})
+      this.appInsightsService.trackAuthErrorEvents(decodedToken, {
+        message: 'HasTokenGuard: token expired',
+      })
     }
 
     return isValid

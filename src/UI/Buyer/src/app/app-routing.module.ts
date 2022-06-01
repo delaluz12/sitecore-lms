@@ -97,17 +97,41 @@ const HeadstartRoutes: Routes = [
       {
         path: 'orders',
         children: [
-          { path: 'approve/:orderID', component: OrderDetailWrapperComponent, canActivate: [IsProfiledUserGuard] },
-          { path: 'approve', component: OrderHistoryWrapperComponent, canActivate: [IsProfiledUserGuard] },
-          { path: 'quotes', component: OrderHistoryWrapperComponent, canActivate: [IsProfiledUserGuard] },
+          {
+            path: 'approve/:orderID',
+            component: OrderDetailWrapperComponent,
+            canActivate: [IsProfiledUserGuard],
+          },
+          {
+            path: 'approve',
+            component: OrderHistoryWrapperComponent,
+            canActivate: [IsProfiledUserGuard],
+          },
+          {
+            path: 'quotes',
+            component: OrderHistoryWrapperComponent,
+            canActivate: [IsProfiledUserGuard],
+          },
           {
             path: 'location/:locationFilter',
             component: OrderDetailWrapperComponent,
-            canActivate: [IsProfiledUserGuard]
+            canActivate: [IsProfiledUserGuard],
           },
-          { path: 'location', component: OrderHistoryWrapperComponent, canActivate: [IsProfiledUserGuard] },
-          { path: ':orderID', component: OrderDetailWrapperComponent, canActivate: [HasTokenGuard] },
-          { path: '', component: OrderHistoryWrapperComponent, canActivate: [IsProfiledUserGuard] },
+          {
+            path: 'location',
+            component: OrderHistoryWrapperComponent,
+            canActivate: [IsProfiledUserGuard],
+          },
+          {
+            path: ':orderID',
+            component: OrderDetailWrapperComponent,
+            canActivate: [HasTokenGuard],
+          },
+          {
+            path: '',
+            component: OrderHistoryWrapperComponent,
+            canActivate: [IsProfiledUserGuard],
+          },
         ],
       },
     ],
@@ -115,7 +139,9 @@ const HeadstartRoutes: Routes = [
 ]
 
 @NgModule({
-  imports: [RouterModule.forRoot(HeadstartRoutes, { relativeLinkResolution: 'legacy' })],
+  imports: [
+    RouterModule.forRoot(HeadstartRoutes, { relativeLinkResolution: 'legacy' }),
+  ],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
