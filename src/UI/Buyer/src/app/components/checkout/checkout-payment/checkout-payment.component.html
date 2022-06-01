@@ -6,7 +6,10 @@
       [class.active]="selectedPaymentMethod === method"
       type="button"
       class="btn btn-outline-primary"
-      [disabled]="method == 'PurchaseOrder' && disablePO"
+      [disabled]="
+        (method == 'PurchaseOrder' && disablePO) ||
+        (method == 'CreditCard' && disableCC)
+      "
       (click)="selectPaymentMethod($event)"
       name="{{ i }}"
       id="{{ i }}"
@@ -22,7 +25,9 @@
   </div>
   <ocm-stripe-payment
     *ngIf="
-      orderSummaryMeta.LineItemCount && selectedPaymentMethod === 'CreditCard'
+      orderSummaryMeta.LineItemCount &&
+      selectedPaymentMethod === 'CreditCard' &&
+      order.Total > 0
     "
     (cardSelected)="onStripeCardSuccess($event)"
   ></ocm-stripe-payment>

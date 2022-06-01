@@ -54,6 +54,7 @@ export class OCMCheckoutPayment implements OnInit {
   homeCountry: string
   readonly NEW_ADDRESS_CODE = 'new'
   disablePO = false
+  disableCC = false
 
   constructor(
     private context: ShopperContextService,
@@ -63,8 +64,15 @@ export class OCMCheckoutPayment implements OnInit {
   ngOnInit(): void {
     this._orderCurrency = this.context.currentUser.get().Currency
     this._acceptedPaymentMethods = this.getAcceptedPaymentMethods()
-    this.selectedPaymentMethod = this
-      ._acceptedPaymentMethods?.[0] as AcceptedPaymentTypes
+    const _order = this.context.order.get()
+    if (_order.Total > 0) {
+      this.selectedPaymentMethod = this
+        ._acceptedPaymentMethods?.[0] as AcceptedPaymentTypes
+    } else {
+      this.selectedPaymentMethod = this
+        ._acceptedPaymentMethods?.[1] as AcceptedPaymentTypes
+      this.disableCC = true
+    }
     this.ListAddressesForBilling()
     const lineItems = this.context.order.getLineItems()
     lineItems.Items.forEach((line) => {
