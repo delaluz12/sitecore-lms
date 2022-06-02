@@ -19,9 +19,12 @@
     </button>
   </div>
   <div class="alert alert-warning" role="alert" *ngIf="disablePO">
-    At this time, we cannot accept purchase order payments when purchasing a
-    subscription product. Please use credit card or remove this item from your
-    cart.
+    Unfortunately your order does not meet the requirements for payment via
+    purchase order. Please select another method of payment or
+    <a href="https://support.sitecore.com/csm" target="_blank"
+      >submit a Learning@Sitecore ticket</a
+    >
+    for further assistance.
   </div>
   <ocm-stripe-payment
     *ngIf="
@@ -37,6 +40,14 @@
       selectedPaymentMethod === 'PurchaseOrder'
     "
   >
+    <div class="alert alert-warning" role="alert">
+      For purchase order payments, please send an electronic copy of your
+      purchase order or purchase order email to
+      <a href="mailto:GlobalTraining@sitecore.com" target="_blank"
+        >GlobalTraining@sitecore.com</a
+      >
+      for processing.
+    </div>
     <small class="d-block font-italic text-muted">
       The price reflected on this order includes an estimate for sales tax and
       shipping costs. Actual final cost may vary slightly as a result. By

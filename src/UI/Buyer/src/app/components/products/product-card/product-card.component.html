@@ -7,12 +7,12 @@
       (favoriteChanged)="setIsFavorite($event.detail)"
     ></ocm-toggle-favorite>
   </div>
-  <div
+  <!-- <div
     class="ribbon ribbon-top-left bg-danger text-white"
     *ngIf="_product?.PriceSchedule?.IsOnSale"
   >
     On Sale
-  </div>
+  </div> -->
   <a
     class="clickable-card d-flex flex-fill flex-column position-relative"
     name="{{ _product.Name }}"
