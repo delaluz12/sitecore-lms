@@ -480,7 +480,8 @@ namespace Headstart.API.Commands
                 {
                     // Determine price including quantity price break discount
                     var selectedPriceBreak = product.PriceSchedule.PriceBreaks.Last(priceBreak => priceBreak.Quantity <= li.Quantity);
-                    decimal priceBasedOnQuantity = product.PriceSchedule.IsOnSale ? (decimal)selectedPriceBreak.SalePrice : selectedPriceBreak.Price;
+                    // decimal priceBasedOnQuantity = product.PriceSchedule.IsOnSale ? (decimal)selectedPriceBreak.SalePrice : selectedPriceBreak.Price;
+                    decimal priceBasedOnQuantity = selectedPriceBreak.Price;
                     // Determine markup for the 1 line item
                     lineItemTotal = priceBasedOnQuantity + GetSpecMarkup(li.Specs, product.Specs);
                 }
