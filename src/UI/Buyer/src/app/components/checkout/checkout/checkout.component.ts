@@ -199,6 +199,7 @@ export class OCMCheckout implements OnInit {
       Type: 'CreditCard',
       xp: {
         partialAccountNumber: card.id.substr(card.id.length - 4),
+        stripePaymentID: card.id,
       },
     }
   }

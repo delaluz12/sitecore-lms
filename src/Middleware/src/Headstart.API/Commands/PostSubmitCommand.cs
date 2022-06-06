@@ -214,6 +214,13 @@ namespace Headstart.API.Commands
             var orderInfos = new List<Tuple<OrderDirection, string>> { };
 
             var buyerOrder = orders.First();
+            var ocPaymentsList = (await _oc.Payments.ListAsync<HSPayment>(OrderDirection.Incoming, buyerOrder.ID, filters: "Type=CreditCard"));
+            var ocPayments = ocPaymentsList.Items;
+            var ocPayment = ocPayments.Any() ? ocPayments[0] : null;
+            if (ocPayment != null)
+            {
+                partialOrder = new PartialOrder() { xp = new { NeedsAttention = isError, StripePaymentID = ocPayment.xp.stripePaymentID} };
+            }
             orderInfos.Add(new Tuple<OrderDirection, string>(OrderDirection.Incoming, buyerOrder.ID));
             orders.RemoveAt(0);
             orderInfos.AddRange(orders.Select(o => new Tuple<OrderDirection, string>(OrderDirection.Outgoing, o.ID)));

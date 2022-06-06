@@ -23,6 +23,7 @@ namespace Headstart.Models.Headstart
     public class PaymentXP
     {
         public string partialAccountNumber { get; set; }
+        public string stripePaymentID { get; set; }
         public string cardType { get; set; }
     }
 
