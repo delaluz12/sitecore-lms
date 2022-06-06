@@ -264,7 +264,9 @@
       </h3>
       <p
         [innerHTML]="
-          _product.Description || 'This product has no description.' | safeHTML
+          _product?.xp?.description ||
+            _product.Description ||
+            'This product has no description.' | safeHTML
         "
       ></p>
       <!-- PRODUCT DOCS -->

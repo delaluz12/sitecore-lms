@@ -21,4 +21,8 @@ export interface ProductXp {
     Documents?: DocumentAsset[]
     lms_course_id?: string
     lms_SubscriptionUuid?: string
+    lms_course_code?: string
+    sku_id?: string
+    lms_uidCourse?: string
+    description?: string
 }
