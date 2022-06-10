@@ -319,6 +319,7 @@ export class OCMCheckout implements OnInit {
         //  Patching order XP before order is submitted will clear out order worksheet data
         await this.checkout.patch({ Comments: comment }, order.ID)
         await this.context.order.reset() // get new current order
+        await this.context.order.cart.reset()
         this.isLoading = false
         this.toastrService.success('Order submitted successfully', 'Success')
         this.context.router.toMyOrderDetails(order.ID)

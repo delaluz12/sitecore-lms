@@ -116,8 +116,11 @@
                   "
                 >
                   <img
+                    *ngIf="
+                      li?.Product?.xp?.Images && li.Product.xp.Images.length > 0
+                    "
                     class="img-thumbnail w-100"
-                    [src]="li.xp?.ImageUrl || getImageUrl(li.ID)"
+                    [src]="li.Product.xp.Images[0].ThumbnailUrl"
                     alt="{{ li.Product.ID }}"
                   />
                 </a>
