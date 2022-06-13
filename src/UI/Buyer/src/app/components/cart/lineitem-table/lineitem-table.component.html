@@ -120,7 +120,10 @@
                       li?.Product?.xp?.Images && li.Product.xp.Images.length > 0
                     "
                     class="img-thumbnail w-100"
-                    [src]="li.Product.xp.Images[0].ThumbnailUrl"
+                    [src]="
+                      li.Product.xp.Images[0].ThumbnailUrl ||
+                      li.Product.xp.Images[0].Url
+                    "
                     alt="{{ li.Product.ID }}"
                   />
                 </a>

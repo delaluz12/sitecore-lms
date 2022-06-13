@@ -72,7 +72,10 @@ export abstract class OCMParentTableComponent implements OnInit {
     if (!this._lineItems || !this._lineItems.length) {
       return
     }
-    this.liGroupedByShipFrom = this.groupLineItemsByShipFrom(this._lineItems)
+    const groupedItems: HSLineItem[][] = []
+    groupedItems.push(this._lineItems)
+    this.liGroupedByShipFrom = groupedItems
+    // this.liGroupedByShipFrom = this.groupLineItemsByShipFrom(this._lineItems)
   }
 
   async setSupplierData(): Promise<void> {

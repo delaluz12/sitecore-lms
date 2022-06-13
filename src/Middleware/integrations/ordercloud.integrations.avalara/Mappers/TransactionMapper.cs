@@ -46,7 +46,7 @@ namespace ordercloud.integrations.avalara
 			{
 				amount = lineItem.LineTotal, // Total after line-item level promotions have been applied
 				quantity = lineItem.Quantity,
-				taxCode = "O0000000",
+				taxCode = "SC070301",
 				itemCode = lineItem.ProductID,
 				discounted = true, // Assumption that all products are eligible for order-level promotions
 				customerUsageType = null,

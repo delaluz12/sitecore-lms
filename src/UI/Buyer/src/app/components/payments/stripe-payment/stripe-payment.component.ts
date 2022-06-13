@@ -1391,6 +1391,7 @@ export class StripePaymentComponent implements OnInit {
       (key) => key.StripeAccount == stripeAccount.StripeAccount
     )
     const stripe = Stripe(stripeInfo.PublishableKey)
+    const zipCode = this.order.xp.ShippingAddress.Zip
     let elements
     document
       .querySelector('#payment-form')
@@ -1412,7 +1413,16 @@ export class StripePaymentComponent implements OnInit {
       }
       elements = stripe.elements({ appearance, clientSecret })
 
-      const paymentElement = elements.create('payment')
+      const options = {
+        defaultValues: {
+          billingDetails: {
+            address: {
+              postal_code: zipCode,
+            },
+          },
+        },
+      }
+      const paymentElement = elements.create('payment', options)
       paymentElement.mount('#payment-element')
     }
 
