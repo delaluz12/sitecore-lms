@@ -1423,7 +1423,10 @@ export class StripePaymentComponent implements OnInit {
         },
       }
       const paymentElement = elements.create('payment', options)
-      paymentElement.mount('#payment-element')
+      const stipeElement = document.getElementById('payment-element')
+      if (stipeElement) {
+        paymentElement.mount('#payment-element')
+      }
     }
 
     // ------- UI helpers -------
