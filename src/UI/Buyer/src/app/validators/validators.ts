@@ -28,7 +28,7 @@ export const ErrorDictionary = {
 export function ValidateName(
   control: AbstractControl
 ): ValidationErrors | null {
-  const isValid = /^[a-zA-Z0-9-.'\\s]*$/.test(control.value)
+  const isValid = /^[a-zA-Z0-9-. '\\s]*$/.test(control.value)
   if (!control.value || isValid) {
     return null
   }
