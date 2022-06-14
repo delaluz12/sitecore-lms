@@ -11,8 +11,6 @@ export class OCMProductSort implements OnInit, OnDestroy {
   alive = true
   form: FormGroup
   options = [
-    { value: 'ID', label: 'ID: A to Z' },
-    { value: '!ID', label: 'ID: Z to A' },
     { value: 'Name', label: 'Name: A to Z' },
     { value: '!Name', label: 'Name: Z to A' },
   ]

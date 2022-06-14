@@ -125,9 +125,12 @@ export class CurrentUserService {
   }
 
   private getFavorites(user: MeUser, XpFieldName: string): string[] {
-    return user && user.xp && user.xp[XpFieldName] instanceof Array
+    return user &&
+      user.xp &&
+      user.xp[XpFieldName] instanceof Array &&
+      user.xp[XpFieldName].length > 0
       ? user.xp[XpFieldName]
-      : []
+      : ['nofavoritelmsproducts']
   }
 
   private async setFavoriteValue(
