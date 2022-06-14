@@ -15,6 +15,7 @@ export class PDFService {
     const printObj = document.getElementsByClassName(
       'order-detail-pdf-range'
     )[0]
+    this.removeNodesOfClass(printObj, 'img-thumbnail')
     this.generateImagePDF(printObj, orderID)
   }
 

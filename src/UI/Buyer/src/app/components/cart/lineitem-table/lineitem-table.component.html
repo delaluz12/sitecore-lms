@@ -117,7 +117,10 @@
                 >
                   <img
                     *ngIf="
-                      li?.Product?.xp?.Images && li.Product.xp.Images.length > 0
+                      li?.Product?.xp?.Images &&
+                      li.Product.xp.Images.length > 0 &&
+                      (li.Product.xp.Images[0].ThumbnailUrl ||
+                        li.Product.xp.Images[0].Url)
                     "
                     class="img-thumbnail w-100"
                     [src]="
