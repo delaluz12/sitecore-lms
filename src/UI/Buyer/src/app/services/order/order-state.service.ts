@@ -190,13 +190,15 @@ export class OrderStateService {
   }
 
   async resetShipEstimates(): Promise<void> {
-    const orderWorksheet = await IntegrationEvents.GetWorksheet(
-      'Outgoing',
-      this.order.ID
-    )
+    if (this.order?.ID) {
+      const orderWorksheet = await IntegrationEvents.GetWorksheet(
+        'Outgoing',
+        this.order.ID
+      )
 
-    if (orderWorksheet?.ShipEstimateResponse?.ShipEstimates) {
-      this.shipEstimates = orderWorksheet.ShipEstimateResponse.ShipEstimates
+      if (orderWorksheet?.ShipEstimateResponse?.ShipEstimates) {
+        this.shipEstimates = orderWorksheet.ShipEstimateResponse.ShipEstimates
+      }
     }
   }
 

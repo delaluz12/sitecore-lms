@@ -49,18 +49,17 @@ export class CurrentOrderService {
   }
 
   public async patch(order: HSOrder, orderID?: string): Promise<void> {
-    await Orders.Patch(
-      'Outgoing',
-      orderID || order.ID,
-      order
-    )
+    await Orders.Patch('Outgoing', orderID || order.ID, order)
   }
 
   public async delete(orderID: string): Promise<void> {
     await Orders.Delete('All', orderID)
   }
 
-  public async sendQuoteNotification(orderID: string, lineItemID: string): Promise<void> {
+  public async sendQuoteNotification(
+    orderID: string,
+    lineItemID: string
+  ): Promise<void> {
     await HeadStartSDK.Orders.SendQuoteRequestToSupplier(orderID, lineItemID)
   }
 
@@ -75,5 +74,4 @@ export class CurrentOrderService {
   get checkout(): CheckoutService {
     return this.checkoutService
   }
-  
 }
