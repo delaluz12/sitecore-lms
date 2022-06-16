@@ -131,12 +131,7 @@
       </div>
     </div>
     <div class="row">
-      <div
-        class="col-md-6 form-group"
-        ngbTooltip="You are only able to ship to {{
-          getCountryName(homeCountry)
-        }} addresses."
-      >
+      <div class="col-md-6 form-group">
         <label class="sr-only" for="country" translate
           >PROFILE.ADDRESS_FORM.COUNTRY</label
         >
@@ -145,11 +140,13 @@
           class="custom-select"
           id="Country"
           showErrors
-          disabled
           (change)="onCountryChange($event)"
         >
-          <option [ngValue]="homeCountry" [selected]="homeCountry" translate>
-            {{ getCountryName(homeCountry) }}
+          <option
+            *ngFor="let country of countryOptions"
+            [value]="country.abbreviation"
+          >
+            {{ country.label }}
           </option>
         </select>
       </div>

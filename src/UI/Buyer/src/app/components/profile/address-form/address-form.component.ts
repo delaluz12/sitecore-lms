@@ -64,8 +64,8 @@ export class OCMAddressForm implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.homeCountry) {
-      this.addressForm.controls.Country.setValue(this.homeCountry)
-      this.onCountryChange()
+      //this.addressForm.controls.Country.setValue(this.homeCountry)
+      //this.onCountryChange()
     }
   }
 
@@ -90,16 +90,20 @@ export class OCMAddressForm implements OnInit, OnChanges, OnDestroy {
         Validators.required
       ),
       Zip: new FormControl(this.ExistingAddress.Zip || '', [
-        Validators.pattern(getZip(this.homeCountry)),
+        Validators.pattern(getZip(this.ExistingAddress.Country)),
         Validators.required,
       ]),
       Phone: new FormControl(this.ExistingAddress.Phone || '', ValidatePhone),
-      Country: new FormControl(this.homeCountry || '', Validators.required),
+      Country: new FormControl(
+        this.ExistingAddress.Country || 'US',
+        Validators.required
+      ),
       ID: new FormControl(this.ExistingAddress.ID || ''),
     })
     this.shouldSaveAddressForm = new FormGroup({
       shouldSaveAddress: new FormControl(false),
     })
+    this.onCountryChange()
   }
 
   listenToFormChanges(): void {
@@ -115,10 +119,14 @@ export class OCMAddressForm implements OnInit, OnChanges, OnDestroy {
   }
 
   onCountryChange(event?: any): void {
-    const country = this.homeCountry
+    const country = this.addressForm.value.Country
+    debugger
     this.stateOptions = GeographyConfig.getStates(country).map(
       (s) => s.abbreviation
     )
+    this.addressForm
+      .get('Zip')
+      .setValidators([Validators.required, Validators.pattern(getZip(country))])
     if (event) {
       this.addressForm.patchValue({ State: null, Zip: '' })
     }
@@ -145,8 +153,8 @@ export class OCMAddressForm implements OnInit, OnChanges, OnDestroy {
       address: this.selectedAddress
         ? this.selectedAddress
         : this.addressForm.value,
-      shouldSaveAddress: this.shouldSaveAddressForm.controls.shouldSaveAddress
-        .value,
+      shouldSaveAddress:
+        this.shouldSaveAddressForm.controls.shouldSaveAddress.value,
     })
   }
 
