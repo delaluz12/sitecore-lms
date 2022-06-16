@@ -120,7 +120,6 @@ export class OCMAddressForm implements OnInit, OnChanges, OnDestroy {
 
   onCountryChange(event?: any): void {
     const country = this.addressForm.value.Country
-    debugger
     this.stateOptions = GeographyConfig.getStates(country).map(
       (s) => s.abbreviation
     )

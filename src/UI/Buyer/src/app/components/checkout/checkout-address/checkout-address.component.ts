@@ -80,7 +80,6 @@ export class OCMCheckoutAddress implements OnInit {
     this.spinner.hide()
     this.setOrderPromos()
     this.createPromoForm(this.promoCode)
-    this.selectedShippingAddress = this.lineItems?.Items[0].ShippingAddress
     await this.ListAddressesForShipping()
     await this.listSavedBuyerLocations()
   }
@@ -174,8 +173,7 @@ export class OCMCheckoutAddress implements OnInit {
       await this.context.addresses.listBuyerLocations(listOptions, true)
     this.homeCountry = this.existingBuyerLocations?.Items[0]?.Country || 'US'
     if (this.existingBuyerLocations?.Items?.length === 1) {
-      this.selectedBuyerLocation = this.selectedShippingAddress =
-        this.existingBuyerLocations.Items[0]
+      this.selectedBuyerLocation = this.existingBuyerLocations.Items[0]
     }
   }
 
@@ -273,6 +271,9 @@ export class OCMCheckoutAddress implements OnInit {
     ])
     this.homeCountry = buyerLocations?.Items[0]?.Country || 'US'
     this.existingShippingAddresses = existingShippingAddresses
+    if (this.order.ShippingAddressID) {
+      this.onShippingAddressChange(this.order.ShippingAddressID)
+    }
   }
 
   private async saveNewShippingAddress(

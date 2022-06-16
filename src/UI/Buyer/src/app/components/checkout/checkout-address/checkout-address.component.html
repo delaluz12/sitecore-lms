@@ -121,7 +121,8 @@
         <span class="font-weight-bold"
           >{{ address.Street1
           }}<span *ngIf="address.Street2"> {{ address.Street2 }}</span
-          >, {{ address.City }} {{ address.State }} {{ address.Zip }}
+          >, {{ address.City }}, {{ address.State }} {{ address.Zip }},
+          {{ address.Country }}
         </span>
       </option>
     </select>
