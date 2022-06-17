@@ -55,6 +55,7 @@ export class OCMCheckoutPayment implements OnInit {
   readonly NEW_ADDRESS_CODE = 'new'
   disablePO = false
   disableCC = false
+  poNumber: string
 
   constructor(
     private context: ShopperContextService,
@@ -80,6 +81,10 @@ export class OCMCheckoutPayment implements OnInit {
         this.disablePO = true
       }
     })
+    if (_order?.xp?.PONumber) {
+      debugger
+      this.poNumber = _order.xp.PONumber
+    }
   }
 
   getAcceptedPaymentMethods(): string[] {
@@ -100,7 +105,14 @@ export class OCMCheckoutPayment implements OnInit {
     return method.split(/(?=[A-Z])/).join(' ')
   }
 
-  acceptPOTerms(): void {
+  poChanged(e): void {
+    this.poNumber = e.target.value
+  }
+
+  async acceptPOTerms(): Promise<void> {
+    const currentOrder = this.context.order.get()
+    currentOrder.xp.PONumber = this.poNumber
+    await this.context.order.patch(currentOrder)
     this.POTermsAccepted = true
   }
 

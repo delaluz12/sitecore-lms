@@ -155,7 +155,6 @@
                     {{ li?.Product?.xp?.ProductType }}
                   </span>
                 </a>
-                <small class="text-muted d-block">{{ li.Product.ID }}</small>
                 <small
                   *ngIf="li.xp?.LineItemReturnInfo?.ReturnReason"
                   class="text-dark d-block"
@@ -184,13 +183,13 @@
                   <span *ngFor="let entry of li.xp.StatusByQuantity | keyvalue">
                     <span *ngIf="entry.value">
                       <ocm-order-status-icon
-                        [status]="entry.key"
+                        [status]="'Submitted'"
                       ></ocm-order-status-icon>
-                      <span>
+                      <!-- <span>
                         {{ entry.value }}
-                      </span>
+                      </span> -->
                       <span>
-                        {{ entry.key | orderStatusDisplay }}
+                        {{ 'Submitted' | orderStatusDisplay }}
                       </span>
                     </span>
                   </span>

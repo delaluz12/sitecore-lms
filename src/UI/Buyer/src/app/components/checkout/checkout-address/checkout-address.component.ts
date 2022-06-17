@@ -280,7 +280,7 @@ export class OCMCheckoutAddress implements OnInit {
     address: BuyerAddress
   ): Promise<HSAddressBuyer> {
     address.Shipping = true
-    address.Billing = false
+    address.Billing = true
     try {
       const savedAddress = await this.context.addresses.create(address)
       return savedAddress
