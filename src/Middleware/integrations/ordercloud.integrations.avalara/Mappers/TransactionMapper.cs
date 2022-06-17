@@ -42,12 +42,12 @@ namespace ordercloud.integrations.avalara
 
 		private static LineItemModel ToLineItemModel(this LineItem lineItem, Address shipFrom, Address shipTo, string exemptionNo)
 		{
-			var taxAmount = String.IsNullOrEmpty(lineItem.Product.xp.TaxCode) ? "SC070301" : lineItem.Product.xp.TaxCode;
+			//var taxAmount = String.IsNullOrEmpty(lineItem?.Product?.xp?.TaxCode) ? "SC070301" : lineItem.Product.xp.TaxCode;
 			var line = new LineItemModel()
 			{
 				amount = lineItem.LineTotal, // Total after line-item level promotions have been applied
 				quantity = lineItem.Quantity,
-				taxCode = taxAmount,
+				taxCode = "0000000",
 				itemCode = lineItem.ProductID,
 				discounted = true, // Assumption that all products are eligible for order-level promotions
 				customerUsageType = null,

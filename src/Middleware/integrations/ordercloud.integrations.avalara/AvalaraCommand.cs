@@ -60,7 +60,7 @@ namespace ordercloud.integrations.avalara
         {
 			// To give a larger "headstart" in Test and UAT, Responses can be mocked by simply
 			// not providing an Avalara License Key. (It is still needed for Production)
-			return !hasAccountCredentials && appEnvironment != AppEnvironment.Production;
+			return !hasAccountCredentials;
 		}
 
 		public async Task<OrderTaxCalculation> CalculateEstimateAsync(OrderWorksheet orderWorksheet, List<OrderPromotion> promotions)
