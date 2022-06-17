@@ -31,4 +31,5 @@ export interface OrderXp {
     NetSuiteSalesOrderId?: string
     NetSuiteOrderStatus?: string
     StripePaymentId?: string
+    PONumber?: string
 }
