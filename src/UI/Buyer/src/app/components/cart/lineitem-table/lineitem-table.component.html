@@ -180,20 +180,33 @@
 
                 <div *ngIf="!rma && readOnly && !hideStatus">
                   <span translate>ORDERS.DETAIL.STATUS</span>:
-                  <span *ngFor="let entry of li.xp.StatusByQuantity | keyvalue">
-                    <span *ngIf="entry.value">
-                      <ocm-order-status-icon
-                        [status]="'Submitted'"
-                      ></ocm-order-status-icon>
-                      <!-- <span>
-                        {{ entry.value }}
-                      </span> -->
-                      <span>
-                        {{ 'Submitted' | orderStatusDisplay }}
-                      </span>
+                  <span>
+                    <ocm-order-status-icon
+                      [status]="'Submitted'"
+                    ></ocm-order-status-icon>
+                    <span>
+                      {{ 'Submitted' | orderStatusDisplay }}
                     </span>
                   </span>
                 </div>
+
+                <!-- <div *ngIf="!rma && readOnly && !hideStatus">
+                  <span translate>ORDERS.DETAIL.STATUS</span>:
+                  <span *ngFor="let entry of li.xp.StatusByQuantity | keyvalue">
+                    <span *ngIf="entry.value">
+                      <ocm-order-status-icon
+                        [status]="entry.key"
+                      ></ocm-order-status-icon>
+                      <span>
+                        {{ entry.value }}
+                      </span>
+                      <span>
+                        {{ entry.key | orderStatusDisplay }}
+                      </span>
+                    </span>
+                  </span>
+                </div> -->
+
                 <div *ngIf="rma">
                   <span translate>ORDERS.DETAIL.REASON</span>:
                   {{ getRMALineItemReason(li) | splitByCapitalLetter }}
