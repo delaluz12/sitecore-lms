@@ -81,6 +81,7 @@ namespace Headstart.Models
         public string lms_course_code { get; set; }
         public string sku_id { get; set; }
         public string lms_uidCourse { get; set; }
+        public string TaxCode { get; set; }
     }
 
     public class ImageAsset

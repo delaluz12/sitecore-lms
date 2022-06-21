@@ -25,4 +25,5 @@ export interface ProductXp {
     sku_id?: string
     lms_uidCourse?: string
     description?: string
+    TaxCode?: string
 }
