@@ -66,7 +66,7 @@ export class OCMCheckoutPayment implements OnInit {
     this._orderCurrency = this.context.currentUser.get().Currency
     this._acceptedPaymentMethods = this.getAcceptedPaymentMethods()
     const _order = this.context.order.get()
-    if (_order.Total > 0) {
+    if (_order.Total > 0 && _order?.xp?.ShippingAddress?.Country != 'JP') {
       this.selectedPaymentMethod = this
         ._acceptedPaymentMethods?.[0] as AcceptedPaymentTypes
     } else {
@@ -82,7 +82,6 @@ export class OCMCheckoutPayment implements OnInit {
       }
     })
     if (_order?.xp?.PONumber) {
-      debugger
       this.poNumber = _order.xp.PONumber
     }
   }
