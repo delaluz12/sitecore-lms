@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { HeadStartSDK, HSOrder } from '@ordercloud/headstart-sdk'
+import { BuyerAddress } from 'ordercloud-javascript-sdk'
 import { StripeIntent } from 'src/app/models/credit-card.types'
 import { AppConfig } from 'src/app/models/environment.types'
 import { ShopperContextService } from 'src/app/services/shopper-context/shopper-context.service'
@@ -17,6 +18,7 @@ declare let Stripe: any
 export class StripePaymentComponent implements OnInit {
   order: HSOrder
   @Output() cardSelected = new EventEmitter<StripeIntent>()
+  @Input() billingAddressCountry: EventEmitter<BuyerAddress>
   stripeCountries = [
     {
       Country: 'Afghanistan',
@@ -1221,158 +1223,181 @@ export class StripePaymentComponent implements OnInit {
       StripeAccount: 'Sitecore Australia Pty Limited',
       StripeKey: 'AustraliaKey',
       Currency: 'AUD',
-      PublishableKey: 'pk_test_shDIuy6fBIMoenyiqKVi3icY00VxwwkZ1f',
+      TestPublishableKey: 'pk_test_shDIuy6fBIMoenyiqKVi3icY00VxwwkZ1f',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Bulgaria EOOD',
       StripeKey: 'BulgariaKey',
       Currency: 'BGN',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51KoCRGKzZX0R09IASXEySEC7GY3xvTaJk6K3tVlaCCoxLh8dO9ASeDVt0Dba1owd172yoOT6S9RA0UhLNyPVtOph00LMBcSSK9',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Canada, Ltd.',
       StripeKey: 'CanadaKey',
       Currency: 'CAD',
-      PublishableKey: 'pk_test_mVR95BxeOtm6N2pwSOrX7S0D00uKRQyanR',
+      TestPublishableKey: 'pk_test_mVR95BxeOtm6N2pwSOrX7S0D00uKRQyanR',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore International A/S',
       StripeKey: 'InternationalKey',
       Currency: 'DKK',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Danmark A/S',
       StripeKey: 'DanmarkKey',
       Currency: 'DKK',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51KouPuBtmjtcY965SvCDLWx4jPXkoXhVDU9lXiV1UlwRRW56CJvivgoXYOGG62j4hv2YMQLvB97lR8F1rm46Rj5u00tnIZOd4p',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Belgium NV',
       StripeKey: 'BelgiumKey',
       Currency: 'EUR',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51KnQaKCHRtvczjMiRRARLWjlFL07J0RoUiTupdMRuPDrQeOGWxcvtnXiIVsZ3mgBzEBcxuLZ5v6wKa9BLZTho8sJ002eiZ9CXX',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore France',
       StripeKey: 'FranceKey',
       Currency: 'EUR',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51KoCmlBSGyGElXTHyVcO7qAAtVW1fcdTxZy840K4UtTy9XlzHzsvP9lc5RiEVmL5WZJb3ZDMLZ3tpkuxnql2LB1Y00RFsL9zPC',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Deutschland GmbH',
       StripeKey: 'DeutschlandKey',
       Currency: 'EUR',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51Km1EPDjTpr2fhOzFuv62DM4vMzu8yEp352WjxjWEE6UKHx008mRqDCsRoOeI6XEhbwTPY4GiTnmqkNrDQknZ60q00SFoeA6J4',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Ireland Ltd.',
       StripeKey: 'IrelandKey',
       Currency: 'EUR',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51KoURkKc4w4GwnaSVMRjYVcUwNtQuq9NlTVQXwYeteoDZHpVWVtBjaXE1pFExv300fe0dpMYI4X72nBIJ4bdY0pf00eaMWgTAy',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Italia S.R.L.',
       StripeKey: 'ItaliaKey',
       Currency: 'EUR',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51KoXKTDVDE4D3onIctRYZcc9ADmaj6p6zxLDg6GBu9Vk5gcg1l4GiMjl51LovGneGRHOxQISfCOhYuUwEYRlS0mK000N20GfxS',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Nederland BV',
       StripeKey: 'NederlandKey',
       Currency: 'EUR',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51KoteyHakB2NDfUmM9NUKdzmBzVnfLvDPDNuqgNC6ATUvSAVGFMWxk2MlyPnyUUkjSqAGj8wLD0NbvUQkRDmqVc300vm0e4RJQ',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore España S.L.',
       StripeKey: 'SpainKey',
       Currency: 'EUR',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51KoBpVBvBciuK8IoSlNH7O1swGE0dA0wU07mq1a3ECKRqVgjXFRggAukju4SlXfCDLOfvCWg6LWqicunjLsivuDi005vgwW2yo',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore UK Ltd.',
       StripeKey: 'UKKey',
       Currency: 'GBP',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51KouH9JuASirL9xMbkNomC6FpbYdgrdgkp7xpq3lVpQObDquYRCQfVRxYXyn2J10zkd9nXHCqo7pUVR5TQCi4Y3D00LpVlP3LO',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Japan Co. Ltd.',
       StripeKey: 'JapanKey',
       Currency: 'JPY',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51KmPgqEOkoZ77lxQiOfkJZjfxYibJ65e5W4VVVS0U1CYqT6hjsmgzk9CaHmWXeAKBr0rL9WSCdzlyWgBR598We1l0090xlMy0z',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Sverige AB',
       StripeKey: 'SverigeKey',
       Currency: 'SEK',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51Kou9KF3la5aMXq0CDwlaNjMW01QhFA7aWGMTQ9gyTPRSwVj33oY5ztuHOrvMGFkJlCPbpkVXADMXQm09i3iSEiG00nBV4ZTtu',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Singapore Pte. Ltd.',
       StripeKey: 'SingaporeKey',
       Currency: 'SGD',
-      PublishableKey: 'pk_test_Yne3pA3wjY6GAJJvYyoKnWfY00rZjQXrqv',
+      TestPublishableKey: 'pk_test_Yne3pA3wjY6GAJJvYyoKnWfY00rZjQXrqv',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore USA, Inc.',
       StripeKey: 'USAKey',
       Currency: 'USD',
-      PublishableKey: 'pk_test_g3VSGYoz202H650TOj6HOgjZ00dWORR5Tt',
+      TestPublishableKey: 'pk_test_g3VSGYoz202H650TOj6HOgjZ00dWORR5Tt',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Software (Shanghai) Co. Ltd.',
       StripeKey: 'SoftwareKey',
       Currency: 'DKK',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Moosend PC',
       StripeKey: 'MoosendKey',
       Currency: 'DKK',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore India Private Ltd.',
       StripeKey: 'IndiaKey',
       Currency: 'DKK',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Malaysia',
       StripeKey: 'MalaysiaKey',
       Currency: 'DKK',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Ukraine',
       StripeKey: 'UkraineKey',
       Currency: 'DKK',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
+      ProductionPublishableKey: '',
     },
     {
       StripeAccount: 'Sitecore Middle East DMCC',
       StripeKey: 'MiddleEastKey',
       Currency: 'DKK',
-      PublishableKey:
+      TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
+      ProductionPublishableKey: '',
     },
   ]
 
@@ -1384,14 +1409,19 @@ export class StripePaymentComponent implements OnInit {
   ngOnInit(): void {
     this.order = this.context.order.get()
     const appURL = this.appConfig.baseUrl
+    const keyName =
+      this.appConfig.sellerName == 'Sitecore LMS TEST'
+        ? 'TestPublishableKey'
+        : 'ProductionPublishableKey'
     const stripeAccount = this.stripeCountries.find(
-      (country) => country.Code == this.order.xp.ShippingAddress.Country
+      (country) => country.Code == this.order.BillingAddress.Country
     )
     const stripeInfo = this.stripeKeyMap.find(
       (key) => key.StripeAccount == stripeAccount.StripeAccount
     )
-    const stripe = Stripe(stripeInfo.PublishableKey)
-    const zipCode = this.order.xp.ShippingAddress.Zip
+    let stripe = Stripe(stripeInfo[keyName])
+    let zipCode = this.order.BillingAddress.Zip
+    let orderCountry = this.order.BillingAddress.Country
     let elements
     document
       .querySelector('#payment-form')
@@ -1418,6 +1448,7 @@ export class StripePaymentComponent implements OnInit {
           billingDetails: {
             address: {
               postal_code: zipCode,
+              country: orderCountry,
             },
           },
         },
@@ -1485,7 +1516,40 @@ export class StripePaymentComponent implements OnInit {
       setLoading(false)
     }
 
-    initialize(url, stripeBody)
+    if (this.billingAddressCountry) {
+      this.billingAddressCountry.subscribe((data) => {
+        if (data) {
+          this.order = this.context.order.get()
+          const appURL = this.appConfig.baseUrl
+          const keyName =
+            this.appConfig.sellerName == 'Sitecore LMS TEST'
+              ? 'TestPublishableKey'
+              : 'ProductionPublishableKey'
+          const stripeAccount = this.stripeCountries.find(
+            (country) => country.Code == data.Country
+          )
+          const stripeInfo = this.stripeKeyMap.find(
+            (key) => key.StripeAccount == stripeAccount.StripeAccount
+          )
+          stripe = Stripe(stripeInfo[keyName])
+          zipCode = data.Zip
+          orderCountry = data.Country
+          let elements
+          document
+            .querySelector('#payment-form')
+            .addEventListener('submit', handleSubmit)
+
+          const stripeBody = {
+            Amount: this.order.Total,
+            Currency: this.order.Currency || 'USD',
+            Key: stripeInfo.StripeKey,
+          }
+
+          const url = `${this.appConfig.middlewareUrl}/stripe/create-payment-intent`
+          initialize(url, stripeBody)
+        }
+      })
+    }
     this.checkStatus(stripe)
   }
 

@@ -1,11 +1,11 @@
 <div class="row mb-5" *ngIf="order">
   <div class="col-6">
-    <div *ngIf="buyerLocation?.CompanyName">
+    <!-- <div *ngIf="buyerLocation?.CompanyName">
       <span class="mb-3" translate>ALIAS.BUYER_LOCATION</span>
       <p>
         <strong>{{ buyerLocation?.CompanyName }}</strong>
       </p>
-    </div>
+    </div> -->
 
     <div *ngIf="lineItems[0]?.ShippingAddress">
       <span translate>ORDERS.HISTORICAL.SHIPPING_ADDRESS</span>
@@ -18,7 +18,8 @@
           {{ lineItems[0].ShippingAddress.Street2 }}<br />
           {{ lineItems[0].ShippingAddress.City }},
           {{ lineItems[0].ShippingAddress.State }}
-          {{ lineItems[0].ShippingAddress.Zip }}
+          {{ lineItems[0].ShippingAddress.Zip }},
+          {{ lineItems[0].ShippingAddress.Country }}
           <small class="mt-1 d-block">
             <a href="tel:{{ lineItems[0].ShippingAddress.Phone }}">{{
               lineItems[0].ShippingAddress.Phone | phoneFormat

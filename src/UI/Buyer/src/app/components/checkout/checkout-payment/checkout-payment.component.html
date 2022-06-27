@@ -18,6 +18,49 @@
       {{ getPaymentMethodName(method) }}
     </button>
   </div>
+  <div class="mt-3 form-group" *ngIf="!isAnon">
+    <label for="selectAddress">Billing Address</label>
+    <select
+      [ngModel]="selectedBillingAddress?.ID"
+      (ngModelChange)="onBillingAddressChange($event)"
+      class="custom-select"
+      id="selectAddress"
+    >
+      <option [ngValue]="null" default disabled translate>
+        CHECKOUT.CHECKOUT_ADDRESS.SELECT_ADDRESS
+      </option>
+      <option
+        *ngFor="let address of existingBillingAddresses?.Items"
+        [ngValue]="address.ID"
+      >
+        <span class="font-weight-bold"
+          >{{ address.Street1
+          }}<span *ngIf="address.Street2"> {{ address.Street2 }}</span
+          >, {{ address.City }} {{ address.State }} {{ address.Zip }}
+        </span>
+      </option>
+    </select>
+    <button
+      (click)="showNewAddress()"
+      class="btn btn-outline-primary btn-sm mr-2 mt-3"
+      translate
+    >
+      Add New Address
+    </button>
+  </div>
+  <ocm-address-form
+    *ngIf="showNewAddressForm && homeCountry"
+    [existingAddress]="selectedBillingAddress"
+    [suggestedAddresses]="suggestedAddresses"
+    [showOptionToSave]="true"
+    [homeCountry]="homeCountry"
+    [btnText]="'Save and Continue'"
+    [addressError]="_addressError"
+    (formDismissed)="handleFormDismissed()"
+    (formChanged)="addressFormChanged($event.detail)"
+    (formSubmitted)="saveAddressesAndContinue($event.detail.address)"
+  >
+  </ocm-address-form>
   <div class="alert alert-warning" role="alert" *ngIf="disablePO">
     Unfortunately your order does not meet the requirements for payment via
     purchase order. Please select another method of payment or
@@ -26,14 +69,23 @@
     >
     for further assistance.
   </div>
-  <ocm-stripe-payment
-    *ngIf="
-      orderSummaryMeta.LineItemCount &&
-      selectedPaymentMethod === 'CreditCard' &&
-      order.Total > 0
-    "
-    (cardSelected)="onStripeCardSuccess($event)"
-  ></ocm-stripe-payment>
+  <div class="alert alert-warning" role="alert" *ngIf="japanOrder">
+    Credit Card purchase Functionality in Japan is current being reviewed and
+    will be released soon. We apologize for any inconvenience. Please select
+    another method of payment or contact
+    <a href="mailto:GlobalTraining@Sitecore.com" target="_blank"
+      >GlobalTraining@Sitecore.com</a
+    >
+    for further assistance.
+  </div>
+  <div
+    [hidden]="!orderSummaryMeta.LineItemCount || order.Total == 0 || japanOrder"
+  >
+    <ocm-stripe-payment
+      [billingAddressCountry]="stripeCountry"
+      (cardSelected)="onStripeCardSuccess($event)"
+    ></ocm-stripe-payment>
+  </div>
   <ng-container
     *ngIf="
       orderSummaryMeta.LineItemCount &&
@@ -85,49 +137,6 @@
         class="text-success"
       ></fa-icon>
     </div>
-    <div class="mt-3 form-group" *ngIf="!isAnon">
-      <label for="selectAddress">Billing Address</label>
-      <select
-        [ngModel]="selectedBillingAddress?.ID"
-        (ngModelChange)="onBillingAddressChange($event)"
-        class="custom-select"
-        id="selectAddress"
-      >
-        <option [ngValue]="null" default disabled translate>
-          CHECKOUT.CHECKOUT_ADDRESS.SELECT_ADDRESS
-        </option>
-        <option
-          *ngFor="let address of existingBillingAddresses?.Items"
-          [ngValue]="address.ID"
-        >
-          <span class="font-weight-bold"
-            >{{ address.Street1
-            }}<span *ngIf="address.Street2"> {{ address.Street2 }}</span
-            >, {{ address.City }} {{ address.State }} {{ address.Zip }}
-          </span>
-        </option>
-      </select>
-      <button
-        (click)="showNewAddress()"
-        class="btn btn-outline-primary btn-sm mr-2 mt-3"
-        translate
-      >
-        Add New Address
-      </button>
-    </div>
-    <ocm-address-form
-      *ngIf="showNewAddressForm && homeCountry"
-      [existingAddress]="selectedBillingAddress"
-      [suggestedAddresses]="suggestedAddresses"
-      [showOptionToSave]="true"
-      [homeCountry]="homeCountry"
-      [btnText]="'Save and Continue'"
-      [addressError]="_addressError"
-      (formDismissed)="handleFormDismissed()"
-      (formChanged)="addressFormChanged($event.detail)"
-      (formSubmitted)="saveAddressesAndContinue($event.detail.address)"
-    >
-    </ocm-address-form>
   </ng-container>
   <button
     type="submit"
