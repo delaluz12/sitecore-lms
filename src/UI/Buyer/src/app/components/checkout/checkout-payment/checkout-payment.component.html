@@ -70,16 +70,30 @@
     for further assistance.
   </div>
   <div class="alert alert-warning" role="alert" *ngIf="japanOrder">
-    Credit Card purchase Functionality in Japan is current being reviewed and
-    will be released soon. We apologize for any inconvenience. Please select
-    another method of payment or contact
-    <a href="mailto:GlobalTraining@Sitecore.com" target="_blank"
-      >GlobalTraining@Sitecore.com</a
+    <span
+      >日本にお住まいのお客様へ。クレジットカード決済の導入にあたり只今検討中でございます。ご不便をおかけし申し訳ございません。他のお支払い方法をお選びいただくか、
+      <a href="mailto:GlobalTraining@Sitecore.com" target="_blank"
+        >GlobalTraining@Sitecore.com</a
+      >
+      までお問合せください。</span
+    ><br />
+    <span
+      >Credit Card purchase Functionality in Japan is current being reviewed and
+      will be released soon. We apologize for any inconvenience. Please select
+      another method of payment or contact
+      <a href="mailto:GlobalTraining@Sitecore.com" target="_blank"
+        >GlobalTraining@Sitecore.com</a
+      >
+      for further assistance.</span
     >
-    for further assistance.
   </div>
   <div
-    [hidden]="!orderSummaryMeta.LineItemCount || order.Total == 0 || japanOrder"
+    [hidden]="
+      !orderSummaryMeta.LineItemCount ||
+      order.Total == 0 ||
+      japanOrder ||
+      showNewAddressForm
+    "
   >
     <ocm-stripe-payment
       [billingAddressCountry]="stripeCountry"

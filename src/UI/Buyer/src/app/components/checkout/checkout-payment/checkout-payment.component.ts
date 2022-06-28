@@ -123,12 +123,14 @@ export class OCMCheckoutPayment implements OnInit {
 
   showNewAddress(): void {
     this.showNewAddressForm = true
-    this.selectedBillingAddress = null
-    this.suggestedAddresses = []
   }
 
   addressFormChanged(address: BuyerAddress): void {
     this.selectedBillingAddress = address
+  }
+
+  handleFormDismissed(): void {
+    this.showNewAddressForm = false
   }
 
   onBillingAddressChange(billingAddressID: string): void {
