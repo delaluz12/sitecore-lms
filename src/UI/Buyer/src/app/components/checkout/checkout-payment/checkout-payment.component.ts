@@ -145,16 +145,23 @@ export class OCMCheckoutPayment implements OnInit {
     )
     if (billingAddress) {
       this.selectedBillingAddress = billingAddress
+      const _order = this.context.order.get()
       if (this.selectedBillingAddress.Country == 'JP') {
         this.selectedPaymentMethod = this
           ._acceptedPaymentMethods?.[1] as AcceptedPaymentTypes
         this.japanOrder = true
         this.disableCC = true
       } else {
-        this.selectedPaymentMethod = this
-          ._acceptedPaymentMethods?.[0] as AcceptedPaymentTypes
-        this.disableCC = false
-        this.stripeCountry.emit(this.selectedBillingAddress)
+        if (_order.Total > 0) {
+          this.selectedPaymentMethod = this
+            ._acceptedPaymentMethods?.[0] as AcceptedPaymentTypes
+          this.disableCC = false
+          this.stripeCountry.emit(this.selectedBillingAddress)
+        } else {
+          this.selectedPaymentMethod = this
+            ._acceptedPaymentMethods?.[1] as AcceptedPaymentTypes
+          this.disableCC = true
+        }
       }
     }
   }

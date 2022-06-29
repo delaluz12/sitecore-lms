@@ -87,15 +87,13 @@
       for further assistance.</span
     >
   </div>
-  <div
-    [hidden]="
-      !orderSummaryMeta.LineItemCount ||
-      order.Total == 0 ||
-      japanOrder ||
-      showNewAddressForm
-    "
-  >
+  <div [hidden]="japanOrder || showNewAddressForm">
     <ocm-stripe-payment
+      *ngIf="
+        orderSummaryMeta.LineItemCount &&
+        selectedPaymentMethod === 'CreditCard' &&
+        order.Total > 0
+      "
       [billingAddressCountry]="stripeCountry"
       (cardSelected)="onStripeCardSuccess($event)"
     ></ocm-stripe-payment>
