@@ -24,6 +24,7 @@ export default class Products {
         this.UpdatePricingOverride = this.UpdatePricingOverride.bind(this);
         this.DeletePricingOverride = this.DeletePricingOverride.bind(this);
         this.FilterOptionOverride = this.FilterOptionOverride.bind(this);
+        this.ListAllPriceSchedules = this.ListAllPriceSchedules.bind(this);
     }
 
    /**
@@ -137,6 +138,16 @@ export default class Products {
         const impersonating = this.impersonating;
         this.impersonating = false;
         return await httpClient.patch(`/products/filteroptionoverride/${id}`, product, { params: {  accessToken, impersonating } } );
+    }
+
+    /**
+    * @param id Id of the super hs product.
+    * @param accessToken Provide an alternative token to the one stored in the sdk instance (useful for impersonation).
+    */
+     public async ListAllPriceSchedules(id: string,  accessToken?: string ): Promise<HSPriceSchedule[]> {
+        const impersonating = this.impersonating;
+        this.impersonating = false;
+        return await httpClient.get(`/products/listallpriceschedules/${id}`, { params: {  accessToken, impersonating } } );
     }
 
     /**

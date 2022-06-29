@@ -1,5 +1,9 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
-import { PriceSchedule, OcBuyerService } from '@ordercloud/angular-sdk'
+import {
+  PriceSchedule,
+  OcBuyerService,
+  OcProductService,
+} from '@ordercloud/angular-sdk'
 import { FormControl } from '@angular/forms'
 import { BuyerTempService } from '@app-seller/shared/services/middleware-api/buyer-temp.service'
 import { CatalogsTempService } from '@app-seller/shared/services/middleware-api/catalogs-temp.service'
@@ -12,6 +16,8 @@ import {
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 import { SupportedRates } from '@app-seller/models/currency-geography.types'
 import { HSBuyerPriceMarkup } from '@app-seller/models/buyer.types'
+import { ProductVisibilityAssignments } from '@app-seller/shared/components/buyer-visibility/product-visibility-assignments/product-visibility-assignments.component'
+import { AppAuthService } from '@app-seller/auth/services/app-auth.service'
 
 @Component({
   selector: 'product-pricing-component',
@@ -57,14 +63,16 @@ export class ProductPricingComponent {
   isSavedOverride = false
   overridePriceScheduleEditable: PriceSchedule
   overridePriceScheduleStatic: PriceSchedule
+  allPriceSchedules: PriceSchedule[]
 
   constructor(
     private ocBuyerService: OcBuyerService,
     private catalogsTempService: CatalogsTempService,
-    private buyerTempService: BuyerTempService
+    private buyerTempService: BuyerTempService,
+    private appAuthService: AppAuthService
   ) {}
 
-  setData(value: SuperHSProduct): void {
+  async setData(value: SuperHSProduct): Promise<void> {
     this.superProduct = value
     if (
       value.Product?.xp?.ProductType === 'Quote' &&
@@ -80,6 +88,13 @@ export class ProductPricingComponent {
     this.overridePriceScheduleStatic = this.emptyPriceSchedule
 
     if (value) {
+      const accessToken = await this.appAuthService.fetchToken().toPromise()
+      this.allPriceSchedules =
+        await HeadStartSDK.Products.ListAllPriceSchedules(
+          value.Product.ID,
+          accessToken
+        )
+
       this.supplierPriceSchedule = JSON.parse(
         JSON.stringify(value?.PriceSchedule)
       ) as PriceSchedule

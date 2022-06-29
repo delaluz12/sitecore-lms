@@ -14,7 +14,8 @@ import { HSProduct } from '@ordercloud/headstart-sdk'
 })
 export class ProductTableComponent
   extends ResourceCrudComponent<Product>
-  implements OnInit {
+  implements OnInit
+{
   userContext: UserContext
   filterConfig: any
   constructor(
@@ -36,10 +37,10 @@ export class ProductTableComponent
     const filters = [
       {
         Display: 'ADMIN.FILTERS.STATUS',
-        Path: 'xp.Status',
+        Path: 'Active',
         Items: [
-          { Text: 'ADMIN.FILTER_OPTIONS.DRAFT', Value: 'Draft' },
-          { Text: 'ADMIN.FILTER_OPTIONS.PUBLISHED', Value: 'Published' },
+          { Text: 'Active', Value: 'true' },
+          { Text: 'Inactive', Value: 'false' },
         ],
         Type: 'Dropdown',
       },
@@ -85,10 +86,12 @@ export class ProductTableComponent
       Type: 'Dropdown',
     }
   }
-  
+
   updateResourceInList(product: Product): void {
-    const index = this.resourceList?.Items?.findIndex(item => item.ID === product.ID) 
-    if(index !== -1) {
+    const index = this.resourceList?.Items?.findIndex(
+      (item) => item.ID === product.ID
+    )
+    if (index !== -1) {
       this.resourceList.Items[index] = product
     }
   }

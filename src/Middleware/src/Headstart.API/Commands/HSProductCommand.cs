@@ -26,6 +26,7 @@ namespace Headstart.API.Commands.Crud
 		Task<HSPriceSchedule> UpdatePricingOverride(string id, string buyerID, HSPriceSchedule pricingOverride, string token);
 		Task<HSPriceSchedule> CreatePricingOverride(string id, string buyerID, HSPriceSchedule pricingOverride, string token);
 		Task<Product> FilterOptionOverride(string id, string supplierID, IDictionary<string, object> facets, DecodedToken decodedToken);
+		Task<List<HSPriceSchedule>> ListAllPriceSchedules(string id, string token);
 	}
 
 	public class DefaultOptionSpecAssignment
@@ -52,6 +53,20 @@ namespace Headstart.API.Commands.Crud
 			var priceScheduleID = $"{id}-{buyerID}";
 			var priceSchedule = await _oc.PriceSchedules.GetAsync<HSPriceSchedule>(priceScheduleID);
 			return priceSchedule;
+		}
+
+		public async Task<List<HSPriceSchedule>> ListAllPriceSchedules(string id, string token) 
+		{
+			var priceSchedules = new List<HSPriceSchedule>();
+			var assignments = await _oc.Products.ListAllAssignmentsAsync(id);
+
+			var ass = assignments.Select(async assignment => {
+				var schedule = await _oc.PriceSchedules.GetAsync<HSPriceSchedule>(assignment.PriceScheduleID);
+				priceSchedules.Add(schedule);
+			});
+
+			await Task.WhenAll(ass);
+			return priceSchedules;
 		}
 
 		public async Task DeletePricingOverride(string id, string buyerID, string token)

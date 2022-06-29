@@ -324,6 +324,115 @@
                   </div>
                 </div>
                 <!-- /Unit Of Measure -->
+                <!-- Docebo Information -->
+                <div class="card bg-white shadow-sm p-4 mt-3">
+                  <h6 class="font-weight-medium">Docebo Information</h6>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="lms_course_id"
+                        >Docebo Course ID<span class="required-field"
+                          >*</span
+                        ></label
+                      >
+                      <input
+                        [attr.disabled]="readonly ? true : null"
+                        type="text"
+                        class="form-control"
+                        id="lms_course_id"
+                        aria-describedby="Docebo Course ID"
+                        formControlName="lms_course_id"
+                        (input)="
+                          handleUpdateProduct(
+                            $event,
+                            'Product.xp.lms_course_id'
+                          )
+                        "
+                        placeholder="Docebo Course ID"
+                      />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="lms_course_code"
+                        >Docebo Course Code<span class="required-field"
+                          >*</span
+                        ></label
+                      >
+                      <input
+                        [attr.disabled]="readonly ? true : null"
+                        type="text"
+                        class="form-control"
+                        id="lms_course_code"
+                        aria-describedby="Docebo Course Code"
+                        formControlName="lms_course_code"
+                        (input)="
+                          handleUpdateProduct(
+                            $event,
+                            'Product.xp.lms_course_code'
+                          )
+                        "
+                        placeholder="Docebo Course Code"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="lms_SubscriptionUuid"
+                        >Docebo Subscription UUID</label
+                      >
+                      <input
+                        [attr.disabled]="readonly ? true : null"
+                        type="text"
+                        class="form-control"
+                        id="lms_SubscriptionUuid"
+                        aria-describedby="Docebo Subscription UUID"
+                        formControlName="lms_SubscriptionUuid"
+                        (input)="
+                          handleUpdateProduct(
+                            $event,
+                            'Product.xp.lms_SubscriptionUuid'
+                          )
+                        "
+                        placeholder="Docebo Subscription UUID"
+                      />
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="lms_uidCourse">Docebo Course UUID</label>
+                      <input
+                        [attr.disabled]="readonly ? true : null"
+                        type="text"
+                        class="form-control"
+                        id="lms_uidCourse"
+                        aria-describedby="Docebo Course UUID"
+                        formControlName="lms_uidCourse"
+                        (input)="
+                          handleUpdateProduct(
+                            $event,
+                            'Product.xp.lms_uidCourse'
+                          )
+                        "
+                        placeholder="Docebo Course UUID"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="sku_id">Docebo SKU ID</label>
+                      <input
+                        [attr.disabled]="readonly ? true : null"
+                        type="text"
+                        class="form-control"
+                        id="sku_id"
+                        aria-describedby="Docebo SKU ID"
+                        formControlName="sku_id"
+                        (input)="
+                          handleUpdateProduct($event, 'Product.xp.sku_id')
+                        "
+                        placeholder="Docebo SKU ID"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <!-- /Docebo Information -->
                 <!-- Order Limitations -->
                 <div class="card bg-white shadow-sm p-4 mt-3">
                   <h6 class="font-weight-medium" translate>
@@ -966,7 +1075,7 @@
                     [resourceInSelection]="resourceInSelection"
                     [formControlForText]="productForm?.controls?.Description"
                     resourceField="Description"
-                    pathOnResource="Description"
+                    pathOnResource="xp.description"
                     (resourceUpdated)="
                       updateResourceFromFieldValue($event.field, $event.value)
                     "

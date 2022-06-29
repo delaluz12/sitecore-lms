@@ -110,5 +110,13 @@ namespace Headstart.Common.Controllers
 			var supplierID = product.DefaultSupplierID;
 			return await _command.FilterOptionOverride(id, supplierID, facets, UserContext);
         }
+		/// <summary>
+		/// LIST All Price Schedules
+		/// </summary>
+		[HttpGet, Route("listallpriceschedules/{id}"), OrderCloudUserAuth(ApiRole.ProductAdmin, ApiRole.ProductReader)]
+		public async Task<List<HSPriceSchedule>> ListAllPriceSchedules(string id)
+		{
+			return await _command.ListAllPriceSchedules(id, UserContext.AccessToken);
+		}
 	}
 }

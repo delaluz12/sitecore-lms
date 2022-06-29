@@ -278,10 +278,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
             superHSProduct.Product.ID,
             ValidateNoSpecialCharactersAndSpaces
           ),
-          Description: new FormControl(
-            superHSProduct.Product.Description,
-            Validators.maxLength(2000)
-          ),
+          Description: new FormControl(superHSProduct.Product.xp.description),
           QuantityMultiplier: new FormControl(
             superHSProduct.Product.QuantityMultiplier
           ),
@@ -361,6 +358,21 @@ export class ProductEditComponent implements OnInit, OnDestroy {
           FreeShippingMessage: new FormControl(
             _get(superHSProduct.Product, 'xp.FreeShippingMessage') ||
               'Free Shipping'
+          ),
+          lms_course_id: new FormControl(
+            _get(superHSProduct.Product, 'xp.lms_course_id'),
+            Validators.required
+          ),
+          lms_course_code: new FormControl(
+            _get(superHSProduct.Product, 'xp.lms_course_code'),
+            Validators.required
+          ),
+          lms_SubscriptionUuid: new FormControl(
+            _get(superHSProduct.Product, 'xp.lms_SubscriptionUuid')
+          ),
+          sku_id: new FormControl(_get(superHSProduct.Product, 'xp.sku_id')),
+          lms_uidCourse: new FormControl(
+            _get(superHSProduct.Product, 'xp.lms_uidCourse')
           ),
         },
         { validators: ValidateMinMax }

@@ -19,7 +19,7 @@ export class PriceDisplayComponent {
     if (!priceBreaks) {
       return
     }
-    return priceBreaks[0].Price
+    return priceBreaks[0]?.Price || 0
   }
 
   get salePrice(): number {
