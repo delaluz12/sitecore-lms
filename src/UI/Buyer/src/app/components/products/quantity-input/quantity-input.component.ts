@@ -156,7 +156,7 @@ export class OCMQuantityInput implements OnInit, OnChanges {
     const routeUrl = this.router.routerState.snapshot.url
     const splitUrl = routeUrl.split('/')
     const endUrl = splitUrl[splitUrl.length - 1]
-    /* if (!endUrl.includes('cart')) {
+    if (!endUrl.includes('cart')) {
       const productInCart = this.context.order.cart
         .get()
         ?.Items?.filter((i) => i.ProductID === this.product?.ID)
@@ -178,7 +178,7 @@ export class OCMQuantityInput implements OnInit, OnChanges {
         }
         qty = qty + this.cumulativeQuantity
       }
-    } */
+    }
     if (isNaN(qty)) {
       this.errorMsg = 'Please Enter a Quantity'
       return false
