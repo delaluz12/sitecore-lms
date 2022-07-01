@@ -1535,9 +1535,10 @@ export class StripePaymentComponent implements OnInit {
           zipCode = data.Zip
           orderCountry = data.Country
           let elements
-          document
-            .querySelector('#payment-form')
-            .addEventListener('submit', handleSubmit)
+          const element = document.querySelector('#payment-form')
+          if (element) {
+            element.addEventListener('submit', handleSubmit)
+          }
 
           const stripeBody = {
             Amount: this.order.Total,

@@ -286,7 +286,9 @@ export class OCMCheckout implements OnInit {
     await HeadStartSDK.Payments.SavePayments(this.order.ID, {
       Payments: payments,
     })
+
     this.payments = await this.checkout.listPayments()
+    await this.checkout.calculateOrder()
     this.submitOrderWithComment('')
   }
 
