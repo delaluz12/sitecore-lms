@@ -29,6 +29,7 @@ namespace ordercloud.integrations.stripe.Models
         public string MalaysiaKey { get; set; }
         public string UkraineKey { get; set; }
         public string MiddleEastKey { get; set; }
+        public string SwitzerlandKey { get; set; }
     }
 
 }

@@ -86,8 +86,15 @@ namespace Headstart.API.Commands
             var paymentAmount = worksheet.Order.Total;
             if (existingPayment == null)
             {
-                requestedPayment.Amount = paymentAmount;
-                await _oc.Payments.CreateAsync<HSPayment>(OrderDirection.Incoming, worksheet.Order.ID, requestedPayment);
+                if(paymentAmount > 0)
+                {
+                    requestedPayment.Amount = paymentAmount;
+                }
+                try
+                {
+                    await _oc.Payments.CreateAsync<HSPayment>(OrderDirection.Incoming, worksheet.Order.ID, requestedPayment);
+                }
+                catch (Exception e) { }
             } 
             else
             {

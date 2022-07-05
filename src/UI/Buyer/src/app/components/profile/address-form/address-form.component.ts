@@ -79,6 +79,10 @@ export class OCMAddressForm implements OnInit, OnChanges, OnDestroy {
         Validators.required,
         ValidateName,
       ]),
+      CompanyName: new FormControl(
+        this.ExistingAddress.CompanyName || '',
+        Validators.required
+      ),
       Street1: new FormControl(
         this.ExistingAddress.Street1 || '',
         Validators.required

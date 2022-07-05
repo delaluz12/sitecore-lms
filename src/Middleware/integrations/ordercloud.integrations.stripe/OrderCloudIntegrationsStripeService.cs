@@ -23,13 +23,14 @@ namespace ordercloud.integrations.stripe
         // Create Payment Intent
         public PaymentIntentResponse CreatePaymentIntent(PaymentIntentRequest request)
         {
+            var cents = request.Amount * 100;
             // This will be set based on rules
             StripeConfiguration.ApiKey = (string)_config.GetType().GetProperty(request.Key).GetValue(_config, null);
 
             var paymentIntentService = new PaymentIntentService();
             var paymentIntent = paymentIntentService.Create(new PaymentIntentCreateOptions
             {
-                Amount = request.Amount * 100, // Send in pennies
+                Amount = (long)cents, // Send in pennies
                 Currency = request.Currency,
                 PaymentMethodTypes = new System.Collections.Generic.List<string>() { "card" },
             });

@@ -189,7 +189,7 @@ export class StripePaymentComponent implements OnInit {
     {
       Country: 'Bulgaria',
       Code: 'BG',
-      StripeAccount: 'Sitecore Bulgaria EOOD',
+      StripeAccount: 'Sitecore International A/S',
     },
     {
       Country: 'Burkina Faso',
@@ -1054,7 +1054,7 @@ export class StripePaymentComponent implements OnInit {
     {
       Country: 'Switzerland',
       Code: 'CH',
-      StripeAccount: 'Sitecore International A/S',
+      StripeAccount: 'Sitecore Schweiz AG',
     },
     {
       Country: 'Syrian Arab Republic (the)',
@@ -1224,7 +1224,7 @@ export class StripePaymentComponent implements OnInit {
       StripeKey: 'AustraliaKey',
       Currency: 'AUD',
       TestPublishableKey: 'pk_test_shDIuy6fBIMoenyiqKVi3icY00VxwwkZ1f',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey: 'pk_live_cupMY7SKYCL4YsZsI7VunWzV000vVlFTtb',
     },
     {
       StripeAccount: 'Sitecore Bulgaria EOOD',
@@ -1232,14 +1232,15 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'BGN',
       TestPublishableKey:
         'pk_test_51KoCRGKzZX0R09IASXEySEC7GY3xvTaJk6K3tVlaCCoxLh8dO9ASeDVt0Dba1owd172yoOT6S9RA0UhLNyPVtOph00LMBcSSK9',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51K1tzmJJK6cnWxfqswALbpBIsfLye7GnysMXDnXeoYXgiXRgFQKvSonNo0SUrcNHhBhiu5nPhO2GRDH4BP4TuC0q00qmJ65XZz',
     },
     {
       StripeAccount: 'Sitecore Canada, Ltd.',
       StripeKey: 'CanadaKey',
       Currency: 'CAD',
       TestPublishableKey: 'pk_test_mVR95BxeOtm6N2pwSOrX7S0D00uKRQyanR',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey: 'pk_live_BNFL0jtWJh04hLkumLmFlYzY00VMSVwy0L',
     },
     {
       StripeAccount: 'Sitecore International A/S',
@@ -1247,7 +1248,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'DKK',
       TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51K1tzmJJK6cnWxfqswALbpBIsfLye7GnysMXDnXeoYXgiXRgFQKvSonNo0SUrcNHhBhiu5nPhO2GRDH4BP4TuC0q00qmJ65XZz',
     },
     {
       StripeAccount: 'Sitecore Danmark A/S',
@@ -1255,7 +1257,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'DKK',
       TestPublishableKey:
         'pk_test_51KouPuBtmjtcY965SvCDLWx4jPXkoXhVDU9lXiV1UlwRRW56CJvivgoXYOGG62j4hv2YMQLvB97lR8F1rm46Rj5u00tnIZOd4p',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51KouPuBtmjtcY965mnACaEqiyNBqPUQBSzJA5h86DNhfF3T9dedxvohAiHLa8uNbO6alJWnNZFmttK6uecGzZShF00PSWp1JxJ',
     },
     {
       StripeAccount: 'Sitecore Belgium NV',
@@ -1263,7 +1266,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'EUR',
       TestPublishableKey:
         'pk_test_51KnQaKCHRtvczjMiRRARLWjlFL07J0RoUiTupdMRuPDrQeOGWxcvtnXiIVsZ3mgBzEBcxuLZ5v6wKa9BLZTho8sJ002eiZ9CXX',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51KnQaKCHRtvczjMivBMATH29fB6zE5IO0QsIOlD9FMYxHok3eUcvms4cXciJfnXq4Xr2Ytwp89IbPO6IwwUK2Bcx008Ow0Sz2D',
     },
     {
       StripeAccount: 'Sitecore France',
@@ -1271,7 +1275,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'EUR',
       TestPublishableKey:
         'pk_test_51KoCmlBSGyGElXTHyVcO7qAAtVW1fcdTxZy840K4UtTy9XlzHzsvP9lc5RiEVmL5WZJb3ZDMLZ3tpkuxnql2LB1Y00RFsL9zPC',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51KoCmlBSGyGElXTHscQ4wpbIc5G6zpZ8xXllc5b2q2bOWgyHoTpjGtaiXiCr9NtKP4z3dpNQJyJPBGICmVgLNRH100uKmtP3Ha',
     },
     {
       StripeAccount: 'Sitecore Deutschland GmbH',
@@ -1279,7 +1284,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'EUR',
       TestPublishableKey:
         'pk_test_51Km1EPDjTpr2fhOzFuv62DM4vMzu8yEp352WjxjWEE6UKHx008mRqDCsRoOeI6XEhbwTPY4GiTnmqkNrDQknZ60q00SFoeA6J4',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51Km1EPDjTpr2fhOz1WsuekugfN0iWCyW4az7wQgP7ZvSldadBbwJaILBvrC971LY5MWVBqvM5uiptyMXDfrAo2KZ00oPz0omZ2',
     },
     {
       StripeAccount: 'Sitecore Ireland Ltd.',
@@ -1287,7 +1293,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'EUR',
       TestPublishableKey:
         'pk_test_51KoURkKc4w4GwnaSVMRjYVcUwNtQuq9NlTVQXwYeteoDZHpVWVtBjaXE1pFExv300fe0dpMYI4X72nBIJ4bdY0pf00eaMWgTAy',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51KoURkKc4w4GwnaSWKQ4sKed8mIgjCDt4PEljr4V8nYfDzsQ5mpmerGloOKnlY4arxVIi8eCe2QayifUtzVKIDah00R3mRzT5J',
     },
     {
       StripeAccount: 'Sitecore Italia S.R.L.',
@@ -1295,7 +1302,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'EUR',
       TestPublishableKey:
         'pk_test_51KoXKTDVDE4D3onIctRYZcc9ADmaj6p6zxLDg6GBu9Vk5gcg1l4GiMjl51LovGneGRHOxQISfCOhYuUwEYRlS0mK000N20GfxS',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51KoXKTDVDE4D3onI86qHmKQXvDqUihb8lUrTblI8v0NdZx6i20apiO0a2sYbWw7jYoDKelkwB0KcaD9JaXXYgqlg00gFHAnJsa',
     },
     {
       StripeAccount: 'Sitecore Nederland BV',
@@ -1303,7 +1311,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'EUR',
       TestPublishableKey:
         'pk_test_51KoteyHakB2NDfUmM9NUKdzmBzVnfLvDPDNuqgNC6ATUvSAVGFMWxk2MlyPnyUUkjSqAGj8wLD0NbvUQkRDmqVc300vm0e4RJQ',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51KoteyHakB2NDfUmfvtFC5VZnG6nUqENTwwpA0pUzPgzmyqBTDYrKXBgGy596nqvSnVpFqVWNKzjJkzVMAaIFTkf00BUpnUYYX',
     },
     {
       StripeAccount: 'Sitecore España S.L.',
@@ -1311,7 +1320,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'EUR',
       TestPublishableKey:
         'pk_test_51KoBpVBvBciuK8IoSlNH7O1swGE0dA0wU07mq1a3ECKRqVgjXFRggAukju4SlXfCDLOfvCWg6LWqicunjLsivuDi005vgwW2yo',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51KoBpVBvBciuK8IoIXpWYRthhIZRfyf0uzMdYiCjr0BgCbiIB6sT7Y14tshwAs1rXmfKVsrCs6yRp1tJC9tmjbr700UcAyifyt',
     },
     {
       StripeAccount: 'Sitecore UK Ltd.',
@@ -1319,7 +1329,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'GBP',
       TestPublishableKey:
         'pk_test_51KouH9JuASirL9xMbkNomC6FpbYdgrdgkp7xpq3lVpQObDquYRCQfVRxYXyn2J10zkd9nXHCqo7pUVR5TQCi4Y3D00LpVlP3LO',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51KouH9JuASirL9xMZ2ofJ9C60RlJpY91LiGWP9ZLO1kM5d6QnbGcdefbBz5jMYGJfYYqBVV42bWfVnOFdBENyvGP00v9IOIvjE',
     },
     {
       StripeAccount: 'Sitecore Japan Co. Ltd.',
@@ -1327,7 +1338,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'JPY',
       TestPublishableKey:
         'pk_test_51KmPgqEOkoZ77lxQiOfkJZjfxYibJ65e5W4VVVS0U1CYqT6hjsmgzk9CaHmWXeAKBr0rL9WSCdzlyWgBR598We1l0090xlMy0z',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51K1tzmJJK6cnWxfqswALbpBIsfLye7GnysMXDnXeoYXgiXRgFQKvSonNo0SUrcNHhBhiu5nPhO2GRDH4BP4TuC0q00qmJ65XZz',
     },
     {
       StripeAccount: 'Sitecore Sverige AB',
@@ -1335,21 +1347,22 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'SEK',
       TestPublishableKey:
         'pk_test_51Kou9KF3la5aMXq0CDwlaNjMW01QhFA7aWGMTQ9gyTPRSwVj33oY5ztuHOrvMGFkJlCPbpkVXADMXQm09i3iSEiG00nBV4ZTtu',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51Kou9KF3la5aMXq04Fh5R2j7kaLpTr0ph5TgJFCYff2POrcbuGeWoL84apWmiu15lOc9xpkXthghimFKphAzXHHu003Wfdbis5',
     },
     {
       StripeAccount: 'Sitecore Singapore Pte. Ltd.',
       StripeKey: 'SingaporeKey',
       Currency: 'SGD',
       TestPublishableKey: 'pk_test_Yne3pA3wjY6GAJJvYyoKnWfY00rZjQXrqv',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey: 'pk_live_sCbL436E4pbky33jf1UDcXG500hbr9EckC',
     },
     {
       StripeAccount: 'Sitecore USA, Inc.',
       StripeKey: 'USAKey',
       Currency: 'USD',
       TestPublishableKey: 'pk_test_g3VSGYoz202H650TOj6HOgjZ00dWORR5Tt',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey: 'pk_live_s7vanMAyivh3sUfGiIWmi9nT00qdSMBqGm',
     },
     {
       StripeAccount: 'Sitecore Software (Shanghai) Co. Ltd.',
@@ -1357,7 +1370,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'DKK',
       TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51K1tzmJJK6cnWxfqswALbpBIsfLye7GnysMXDnXeoYXgiXRgFQKvSonNo0SUrcNHhBhiu5nPhO2GRDH4BP4TuC0q00qmJ65XZz',
     },
     {
       StripeAccount: 'Moosend PC',
@@ -1365,7 +1379,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'DKK',
       TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51K1tzmJJK6cnWxfqswALbpBIsfLye7GnysMXDnXeoYXgiXRgFQKvSonNo0SUrcNHhBhiu5nPhO2GRDH4BP4TuC0q00qmJ65XZz',
     },
     {
       StripeAccount: 'Sitecore India Private Ltd.',
@@ -1373,7 +1388,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'DKK',
       TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51K1tzmJJK6cnWxfqswALbpBIsfLye7GnysMXDnXeoYXgiXRgFQKvSonNo0SUrcNHhBhiu5nPhO2GRDH4BP4TuC0q00qmJ65XZz',
     },
     {
       StripeAccount: 'Sitecore Malaysia',
@@ -1381,7 +1397,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'DKK',
       TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51K1tzmJJK6cnWxfqswALbpBIsfLye7GnysMXDnXeoYXgiXRgFQKvSonNo0SUrcNHhBhiu5nPhO2GRDH4BP4TuC0q00qmJ65XZz',
     },
     {
       StripeAccount: 'Sitecore Ukraine',
@@ -1389,7 +1406,8 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'DKK',
       TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51K1tzmJJK6cnWxfqswALbpBIsfLye7GnysMXDnXeoYXgiXRgFQKvSonNo0SUrcNHhBhiu5nPhO2GRDH4BP4TuC0q00qmJ65XZz',
     },
     {
       StripeAccount: 'Sitecore Middle East DMCC',
@@ -1397,7 +1415,17 @@ export class StripePaymentComponent implements OnInit {
       Currency: 'DKK',
       TestPublishableKey:
         'pk_test_51K1tzmJJK6cnWxfq0fPC4hNk6OndSTBFUD4WRkCC2QcEUxFd9ZIcKB4S8L30AV7odFo9sMfI1ltNVT69nuDAO6o700BEuToehX',
-      ProductionPublishableKey: '',
+      ProductionPublishableKey:
+        'pk_live_51K1tzmJJK6cnWxfqswALbpBIsfLye7GnysMXDnXeoYXgiXRgFQKvSonNo0SUrcNHhBhiu5nPhO2GRDH4BP4TuC0q00qmJ65XZz',
+    },
+    {
+      StripeAccount: 'Sitecore Schweiz AG',
+      StripeKey: 'SwitzerlandKey',
+      Currency: 'CHF',
+      TestPublishableKey:
+        'pk_test_51KotuWCAqOLXZ48sNPvr10HM4UUEx2dxtRW69GJ1ThFUEFzYkzHyTiJh28tMZgXUksM9W6NtaiK4KuFFk8yr7jhT00cvIA7miT',
+      ProductionPublishableKey:
+        'pk_live_51KotuWCAqOLXZ48sRM0OdmHe1fmbAxJirZvfRZamwuqVkunAmMiwB4CoyXSsKSR721KOSFYD3sQg5NKJzpHSPtMp00Njr5zTDQ',
     },
   ]
 

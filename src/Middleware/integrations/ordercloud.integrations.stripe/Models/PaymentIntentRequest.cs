@@ -6,7 +6,7 @@ namespace ordercloud.integrations.stripe.Models
 {
     public class PaymentIntentRequest
     {
-        public long Amount { get; set; }
+        public double Amount { get; set; }
         public string Currency { get; set; }
         public string Key { get; set; }
     }
