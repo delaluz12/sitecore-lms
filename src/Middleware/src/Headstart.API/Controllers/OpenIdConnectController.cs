@@ -6,15 +6,18 @@ using Headstart.Common.Models;
 using System.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System;
+using Headstart.Common;
 
 namespace Headstart.API.Controllers
 {
     public class OpenIdConnectController: CatalystController
     {
         private readonly IOrderCloudClient _oc;
-        public OpenIdConnectController(IOrderCloudClient oc)
+        private readonly AppSettings _settings;
+        public OpenIdConnectController(IOrderCloudClient oc, AppSettings settings)
         {
             _oc = oc;
+            _settings = settings;
         }
 
         // this endpoint gets called by the OrderCloud API when a user first tries to login via openid connect
@@ -49,7 +52,7 @@ namespace Headstart.API.Controllers
 
                 await _oc.UserGroups.SaveUserAssignmentAsync(buyerID, new UserGroupAssignment
                 {
-                    UserGroupID = "0001-0005",
+                    UserGroupID = _settings.OrderCloudSettings.UserGroupID,
                     UserID = user.ID
                 });
 
