@@ -49,7 +49,7 @@ namespace Headstart.API.Controllers
 
                 await _oc.UserGroups.SaveUserAssignmentAsync(buyerID, new UserGroupAssignment
                 {
-                    UserGroupID = "0002-0005",
+                    UserGroupID = "0001-0005",
                     UserID = user.ID
                 });
 
