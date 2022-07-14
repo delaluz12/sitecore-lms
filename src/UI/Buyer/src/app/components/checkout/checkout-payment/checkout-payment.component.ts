@@ -101,6 +101,7 @@ export class OCMCheckoutPayment implements OnInit {
 
   selectPaymentMethod(e: any): void {
     this.selectedPaymentMethod = e.target.value
+    this.selectedBillingAddress = null
   }
 
   getPaymentMethodName(method: string): string {
@@ -109,13 +110,6 @@ export class OCMCheckoutPayment implements OnInit {
 
   poChanged(e): void {
     this.poNumber = e.target.value
-  }
-
-  async acceptPOTerms(): Promise<void> {
-    const currentOrder = this.context.order.get()
-    currentOrder.xp.PONumber = this.poNumber
-    await this.context.order.patch(currentOrder)
-    this.POTermsAccepted = true
   }
 
   onStripeCardSuccess(card: StripeIntent): void {
@@ -214,8 +208,13 @@ export class OCMCheckoutPayment implements OnInit {
   }
   // used when no selection of card is required
   // only acknowledgement of purchase order is required
-  onContinue(): void {
+  async onContinue(): Promise<void> {
     if (this.selectedBillingAddress) {
+      if (this.poNumber) {
+        const currentOrder = this.context.order.get()
+        currentOrder.xp.PONumber = this.poNumber
+        await this.context.order.patch(currentOrder)
+      }
       this.context.order.checkout.setOneTimeAddress(
         this.selectedBillingAddress as Address,
         'billing'

@@ -68,26 +68,17 @@
         >Terms</a
       >
     </small>
-    <div class="mt-3">
-      <button
-        [disabled]="POTermsAccepted"
-        type="submit"
-        (click)="acceptPOTerms()"
-        class="btn btn-info btn-block-xs mr-2"
-      >
-        Accept
-      </button>
-      <fa-icon
-        *ngIf="POTermsAccepted"
-        [icon]="faCheckCircle"
-        class="text-success"
-      ></fa-icon>
-    </div>
   </ng-container>
-  <div class="mt-3 form-group">
-    <label for="ponumber">Purchase Order Number</label>
+  <div
+    class="mt-3 form-group"
+    *ngIf="
+      orderSummaryMeta.LineItemCount &&
+      selectedPaymentMethod === 'PurchaseOrder'
+    "
+  >
+    <label for="ponumber">Purchase Order Number (Optional)</label>
     <input
-      type="text"
+      type="number"
       class="form-control"
       [ngModel]="poNumber"
       (keyup)="poChanged($event)"
@@ -155,7 +146,7 @@
     (click)="onContinue()"
     *ngIf="selectedPaymentMethod === 'PurchaseOrder'"
     class="btn btn-primary btn-block-xs mt-4 mr-2"
-    [disabled]="orderSummaryMeta.LineItemCount && !POTermsAccepted"
+    [disabled]="!selectedBillingAddress"
   >
     Submit Order
   </button>
