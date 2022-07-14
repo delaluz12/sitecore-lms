@@ -69,20 +69,8 @@
       >
     </small>
     <div class="mt-3">
-      <div class="form-group">
-        <label for="ponumber">Purchase Order Number</label>
-        <input
-          type="text"
-          class="form-control"
-          [ngModel]="poNumber"
-          (keyup)="poChanged($event)"
-          id="ponumber"
-          placeholder="Purchase Order Number"
-          autocomplete="off"
-        />
-      </div>
       <button
-        [disabled]="POTermsAccepted || !poNumber"
+        [disabled]="POTermsAccepted"
         type="submit"
         (click)="acceptPOTerms()"
         class="btn btn-info btn-block-xs mr-2"
@@ -96,6 +84,18 @@
       ></fa-icon>
     </div>
   </ng-container>
+  <div class="mt-3 form-group">
+    <label for="ponumber">Purchase Order Number</label>
+    <input
+      type="text"
+      class="form-control"
+      [ngModel]="poNumber"
+      (keyup)="poChanged($event)"
+      id="ponumber"
+      placeholder="Purchase Order Number"
+      autocomplete="off"
+    />
+  </div>
   <div class="mt-3 form-group" *ngIf="!isAnon">
     <label for="selectAddress">Billing Address</label>
     <select
