@@ -259,7 +259,7 @@ export class OCMCheckoutAddress implements OnInit {
       filters: { Editable: 'false' },
     }
     const shippingAddressesFilter = {
-      filters: { Shipping: 'true' },
+      filters: { Shipping: 'true', Editable: 'true' },
     }
     const [buyerLocations, existingShippingAddresses] = await Promise.all([
       Me.ListAddresses(buyerLocationsFilter),

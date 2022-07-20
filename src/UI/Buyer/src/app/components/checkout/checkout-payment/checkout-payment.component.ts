@@ -80,7 +80,6 @@ export class OCMCheckoutPayment implements OnInit {
     const lineItems = this.context.order.getLineItems()
     lineItems.Items.forEach((line) => {
       if (line?.Product?.xp?.lms_SubscriptionUuid && line.UnitPrice > 0) {
-        debugger
         this.disablePO = true
       }
     })
@@ -140,6 +139,10 @@ export class OCMCheckoutPayment implements OnInit {
     )
     if (billingAddress) {
       this.selectedBillingAddress = billingAddress
+      this.context.order.checkout.setOneTimeAddress(
+        this.selectedBillingAddress as Address,
+        'billing'
+      )
       const _order = this.context.order.get()
       if (this.selectedBillingAddress.Country == 'JP') {
         this.selectedPaymentMethod = this
@@ -174,7 +177,7 @@ export class OCMCheckoutPayment implements OnInit {
       filters: { Editable: 'false' },
     }
     const billingAddressesFilter = {
-      filters: { Billing: 'true' },
+      filters: { Billing: 'true', Editable: 'true' },
     }
     const [buyerLocations, existingBillingAddresses] = await Promise.all([
       Me.ListAddresses(buyerLocationsFilter),
