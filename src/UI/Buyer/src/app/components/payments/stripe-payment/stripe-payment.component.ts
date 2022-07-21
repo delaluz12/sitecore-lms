@@ -1579,7 +1579,7 @@ export class StripePaymentComponent implements OnInit {
         }
       })
     }
-    this.checkStatus(stripe)
+    this.checkStatus(stripe, this.order)
   }
 
   submitStripe(output: StripeIntent): void {
@@ -1615,7 +1615,7 @@ export class StripePaymentComponent implements OnInit {
   }
 
   // Fetches the payment intent status after payment submission
-  async checkStatus(stripe: any): Promise<void> {
+  async checkStatus(stripe: any, order: HSOrder): Promise<void> {
     const clientSecret = new URLSearchParams(window.location.search).get(
       'payment_intent_client_secret'
     )
@@ -1624,25 +1624,44 @@ export class StripePaymentComponent implements OnInit {
       return
     }
 
-    const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret)
+    try {
+      const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret)
 
-    switch (paymentIntent.status) {
-      case 'succeeded':
-        this.showMessageClass('Payment succeeded!')
-        // Submit the order
-        this.submitStripe(paymentIntent)
-        break
-      case 'processing':
-        this.showMessageClass('Your payment is processing.')
-        break
-      case 'requires_payment_method':
-        this.showMessageClass(
-          'Your payment was not successful, please try again.'
-        )
-        break
-      default:
-        this.showMessageClass('Something went wrong.')
-        break
+      switch (paymentIntent.status) {
+        case 'succeeded':
+          this.showMessageClass('Payment succeeded!')
+          // Submit the order
+          this.submitStripe(paymentIntent)
+          break
+        case 'processing':
+          this.showMessageClass('Your payment is processing.')
+          this.submitStripe(paymentIntent)
+          break
+        case 'requires_payment_method':
+          this.showMessageClass(
+            'Your payment was not successful, please try again.'
+          )
+          break
+        default:
+          this.showMessageClass('Something went wrong.')
+          break
+      }
+    } catch (ex) {
+      const errorIntent: StripeIntent = {
+        id: 'notcaptured',
+        object: '',
+        amount: order.Total,
+        capture_method: '',
+        client_secret: '',
+        confirmation_method: '',
+        created: 0,
+        currency: 'USD',
+        livemode: false,
+        payment_method: '',
+        payment_method_types: [],
+        status: 'error',
+      }
+      this.submitStripe(errorIntent)
     }
   }
 }
