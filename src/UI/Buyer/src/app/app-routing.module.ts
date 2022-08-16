@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
+import { CheckoutProcessingComponent } from './components/checkout/checkout-processing/checkout-processing.component'
 import { HasTokenGuard } from './interceptors/has-token/has-token.guard'
 import { IsProfiledUserGuard } from './interceptors/is-profiled-user/is-profiled-user.guard'
 import { BaseResolve } from './resolves/base.resolve'
@@ -48,6 +49,10 @@ const HeadstartRoutes: Routes = [
       { path: 'checkout', component: CheckoutWrapperComponent },
       { path: 'cart', component: CartWrapperComponent },
       { path: 'suppliers', component: SupplierListWrapperComponent },
+      {
+        path: 'processing/:stripekeyname/:customerid',
+        component: CheckoutProcessingComponent,
+      },
       {
         path: 'products',
         component: ProductListWrapperComponent,

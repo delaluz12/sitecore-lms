@@ -1,0 +1,19 @@
+<div class="container py-3">
+  <h1 class="mb-0">Processing Order</h1>
+  <p [hidden]="showError">Please hold while we finish processing your order.</p>
+  <ngx-spinner
+    bdColor="rgba(51,51,51,0.13)"
+    size="large"
+    color="var(--secondary)"
+    type="ball-spin-clockwise-fade"
+    [fullScreen]="true"
+  >
+    <small class="sr-only">Calculating New Total</small>
+  </ngx-spinner>
+  <div *ngIf="showError">
+    <p>{{ errorMessage }}</p>
+    <button class="btn btn-primary" type="button" (click)="backToCheckout()">
+      Back to Checkout
+    </button>
+  </div>
+</div>

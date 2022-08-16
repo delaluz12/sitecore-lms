@@ -225,22 +225,6 @@ export class OCMCheckout implements OnInit {
       Type: 'PurchaseOrder',
     }
   }
-  async onStripeCardSuccess(output: StripeIntent): Promise<void> {
-    this.initLoadingIndicator('paymentLoading')
-    const payments: HSPayment[] = []
-    payments.push(this.buildCCPaymentFromNewStripeCard(output))
-    try {
-      await HeadStartSDK.Payments.SavePayments(this.order.ID, {
-        Payments: payments,
-      })
-      this.payments = await this.checkout.listPayments()
-      // Submit right away
-      this.submitOrderWithComment('')
-    } catch (exception) {
-      this.setValidation('payment', false)
-      await this.handleSubmitError(exception)
-    }
-  }
 
   async onCardSelected(output: SelectedCreditCard): Promise<void> {
     this.initLoadingIndicator('paymentLoading')

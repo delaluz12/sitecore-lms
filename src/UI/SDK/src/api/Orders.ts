@@ -8,7 +8,7 @@ import { RequiredDeep } from '../models/RequiredDeep';
 import { ListArgs } from '../models/ListArgs'
 import httpClient from '../utils/HttpClient';
 import { Order } from 'ordercloud-javascript-sdk';
-import { CosmosListPage, RMA } from '../models';
+import { CosmosListPage, RMA, StripePaymentDetails } from '../models';
 
 export default class Orders {
     private impersonating:boolean = false;
@@ -36,13 +36,13 @@ export default class Orders {
    /**
     * @param direction Direction of the order cloud integrations credit card payment. Possible values: Incoming, Outgoing.
     * @param orderID ID of the order.
-    * @param orderCloudIntegrationsCreditCardPayment Required fields: OrderID, PaymentID, Currency, MerchantID
+    * @param stripePaymentDetails Required fields: OrderID, KeyName, CustomerID, PaymentMethodID
     * @param accessToken Provide an alternative token to the one stored in the sdk instance (useful for impersonation).
     */
-    public async Submit(direction: 'Incoming' | 'Outgoing', orderID: string, orderCloudIntegrationsCreditCardPayment: OrderCloudIntegrationsCreditCardPayment, accessToken?: string ): Promise<RequiredDeep<HSOrder>> {
+    public async Submit(direction: 'Incoming' | 'Outgoing', orderID: string, stripePaymentDetails: StripePaymentDetails, accessToken?: string ): Promise<RequiredDeep<HSOrder>> {
         const impersonating = this.impersonating;
         this.impersonating = false;
-        return await httpClient.post(`/order/${direction}/${orderID}/submit`, orderCloudIntegrationsCreditCardPayment, { params: {  accessToken, impersonating } } );
+        return await httpClient.post(`/order/${direction}/${orderID}/submit`, stripePaymentDetails, { params: {  accessToken, impersonating } } );
     }
 
    /**

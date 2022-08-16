@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using ordercloud.integrations.library;
 using Headstart.Models.Headstart;
 using Headstart.Common.Services.ShippingIntegration.Models;
-using ordercloud.integrations.cardconnect;
+using ordercloud.integrations.stripe.Models;
 using Headstart.API.Commands;
 using OrderCloud.Catalyst;
 using Headstart.Common.Models;
@@ -37,9 +37,9 @@ namespace Headstart.Common.Controllers
         /// Submit Order. Performs validation, submits credit card payment and finally submits order via OrderCloud
         /// </summary>
         [HttpPost, Route("{direction}/{orderID}/submit"), OrderCloudUserAuth(ApiRole.Shopper)]
-        public async Task<HSOrder> Submit(OrderDirection direction, string orderID, [FromBody] OrderCloudIntegrationsCreditCardPayment payment)
+        public async Task<HSOrder> Submit(OrderDirection direction, string orderID, [FromBody] StripePaymentDetails payment)
         {
-            return await _orderSubmitCommand.SubmitOrderAsync(orderID, direction, payment, UserContext.AccessToken);
+            return await _orderSubmitCommand.SubmitOrderAsync(orderID, direction, UserContext.AccessToken, payment);
         }
 
         /// <summary>

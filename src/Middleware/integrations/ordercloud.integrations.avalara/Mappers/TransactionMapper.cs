@@ -11,7 +11,7 @@ namespace ordercloud.integrations.avalara
 	{
 		public static CreateTransactionModel ToAvalaraTransactionModel(this OrderWorksheet order, string companyCode, DocumentType docType, List<OrderPromotion> promosOnOrder)
 		{
-			var buyerLocationID = order.Order.BillingAddress.ID;
+			var buyerLocationID = order.Order.ShippingAddressID;
 
 			var standardLineItems = order.LineItems;
 

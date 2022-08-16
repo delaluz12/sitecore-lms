@@ -130,7 +130,7 @@
     (formSubmitted)="saveAddressesAndContinue($event.detail.address)"
   >
   </ocm-address-form>
-  <div [hidden]="japanOrder || showNewAddressForm">
+  <div [hidden]="japanOrder || showNewAddressForm || !selectedBillingAddress">
     <ocm-stripe-payment
       *ngIf="
         orderSummaryMeta.LineItemCount &&
@@ -138,7 +138,6 @@
         order.Total > 0
       "
       [billingAddressCountry]="stripeCountry"
-      (cardSelected)="onStripeCardSuccess($event)"
     ></ocm-stripe-payment>
   </div>
   <button

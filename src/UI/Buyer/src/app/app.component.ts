@@ -9,7 +9,13 @@ import { ShopperContextService } from './services/shopper-context/shopper-contex
 export class AppComponent implements OnInit {
   showHeader = false
   // TODO: this shouln't have hard coded routes. its gross.
-  hiddenRoutes = ['/login', '/register', '/forgot-password', '/reset-password']
+  hiddenRoutes = [
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+    '/processing',
+  ]
 
   constructor(public context: ShopperContextService) {}
 

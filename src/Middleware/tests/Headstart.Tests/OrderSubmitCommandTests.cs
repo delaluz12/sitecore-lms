@@ -19,7 +19,7 @@ namespace Headstart.Tests
 {
     public class OrderSubmitCommandTests
     {
-        private IOrderCloudClient _oc;
+        /*private IOrderCloudClient _oc;
         private AppSettings _settings;
         private ICreditCardCommand _card;
         private IOrderSubmitCommand _sut;
@@ -49,7 +49,7 @@ namespace Headstart.Tests
             _oc.AuthenticateAsync().Returns(Task.FromResult(new TokenResponse { AccessToken = "mockToken" }));
             _oc.Orders.SubmitAsync<HSOrder>(Arg.Any<OrderDirection>(), Arg.Any<string>(), Arg.Any<string>()).Returns(Task.FromResult(new HSOrder { ID = "submittedorderid" }));
             _sut = new OrderSubmitCommand(_oc, _settings, _card, _docebo); // sut is subject under test
-        }
+        }*/
 
         /* [Test]
         public async Task should_throw_if_order_is_already_submitted()

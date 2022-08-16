@@ -201,7 +201,6 @@
                 [cards]="cards"
                 [orderSummaryMeta]="orderSummaryMeta"
                 [paymentError]="paymentError"
-                (cardSelected)="onStripeCardSuccess($event.detail)"
                 (continue)="onAcknowledgePurchaseOrder()"
               >
               </ocm-checkout-payment>

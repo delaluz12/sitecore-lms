@@ -124,3 +124,4 @@ export * from './AssetUpload';
 export * from './ListArgs';
 export * from './PaymentIntentRequest';
 export * from './PaymentIntentResponse';
+export * from './StripePaymentDetails'

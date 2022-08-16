@@ -17,7 +17,7 @@ namespace Headstart.Tests
 {
     class PaymentCommandTests
     {
-        private IOrderCloudClient _oc;
+        /*private IOrderCloudClient _oc;
         private ICreditCardCommand _ccCommand;
         private IPaymentCommand _sut;
         private string mockOrderID = "mockOrderID";
@@ -200,6 +200,6 @@ namespace Headstart.Tests
 
             // Assert
             await _oc.Payments.Received().PatchAsync<HSPayment>(OrderDirection.Incoming, mockOrderID, mockPoPaymentID, Arg.Is<PartialPayment>(p => p.Amount == mockedPOTotal));
-        }
+        }*/
     }
 }

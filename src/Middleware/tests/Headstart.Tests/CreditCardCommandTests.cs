@@ -1,4 +1,4 @@
-﻿using Headstart.Common;
+﻿/*using Headstart.Common;
 using Headstart.Common.Services;
 using Headstart.Common.Services.ShippingIntegration.Models;
 using Headstart.Models;
@@ -9,6 +9,7 @@ using NUnit.Framework;
 using ordercloud.integrations.cardconnect;
 using ordercloud.integrations.exchangerates;
 using ordercloud.integrations.library;
+using ordercloud.integrations.stripe.Models;
 using OrderCloud.Catalyst;
 using OrderCloud.SDK;
 using System;
@@ -39,6 +40,7 @@ namespace Headstart.Tests
 		private decimal ccTotal = 38;
 		private string paymentID = "mockPayment";
 		private string transactionID = "trans1";
+		private string keyName = "USAKey";
 
 		[SetUp]
 		public void Setup()
@@ -80,7 +82,7 @@ namespace Headstart.Tests
 			var payment = ValidIntegrationsPayment();
 
 			// Act
-			var ex = Assert.ThrowsAsync<CatalystBaseException>(async () => await _sut.AuthorizePayment(payment, userToken, merchantID));
+			var ex = Assert.ThrowsAsync<CatalystBaseException>(async () => await _sut.AuthorizePayment(payment, userToken));
 
 			// Assert
 			Assert.AreEqual("Payment.MissingCreditCardPayment", ex.Errors[0].ErrorCode);
@@ -98,7 +100,7 @@ namespace Headstart.Tests
 			var payment = ValidIntegrationsPayment();
 
 			// Act
-			await _sut.AuthorizePayment(payment, userToken, merchantID);
+			await _sut.AuthorizePayment(payment, userToken);
 
 			// Assert
 			await _cardConnect.DidNotReceive().AuthWithCapture(Arg.Any<CardConnectAuthorizationRequest>());
@@ -134,7 +136,7 @@ namespace Headstart.Tests
 			var payment = ValidIntegrationsPayment();
 
 			// Act
-			await _sut.AuthorizePayment(payment, userToken, merchantID);
+			await _sut.AuthorizePayment(payment, userToken);
 
 			// Assert
 			await _cardConnect.Received().VoidAuthorization(Arg.Is<CardConnectVoidRequest>(x => x.retref == validretref && x.merchid == merchantID && x.currency == "CAD"));
@@ -200,7 +202,7 @@ namespace Headstart.Tests
 			var payment = ValidIntegrationsPayment();
 
 			// Act
-			await _sut.AuthorizePayment(payment, userToken, merchantID);
+			await _sut.AuthorizePayment(payment, userToken);
 
 			// Assert
 			await _cardConnect.Received().VoidAuthorization(Arg.Is<CardConnectVoidRequest>(x => x.retref == "retref3" && x.merchid == merchantID && x.currency == "CAD"));
@@ -269,7 +271,7 @@ namespace Headstart.Tests
 			var payment = ValidIntegrationsPayment();
 
 			// Act
-			await _sut.AuthorizePayment(payment, userToken, merchantID);
+			await _sut.AuthorizePayment(payment, userToken);
 
 			// Assert
 			await _cardConnect.Received().VoidAuthorization(Arg.Is<CardConnectVoidRequest>(x => x.retref == "retref3" && x.merchid == merchantID && x.currency == "USD"));
@@ -314,7 +316,7 @@ namespace Headstart.Tests
 				.Do(x => throw new CreditCardAuthorizationException(new ApiError { }, new CardConnectAuthorizationResponse { }));
 
 			// Act
-			var ex = Assert.ThrowsAsync<CatalystBaseException>(async () => await _sut.AuthorizePayment(payment, userToken, merchantID));
+			var ex = Assert.ThrowsAsync<CatalystBaseException>(async () => await _sut.AuthorizePayment(payment, userToken));
 
 			// Assert
 			Assert.AreEqual("CreditCardAuth.", ex.Errors[0].ErrorCode);
@@ -359,7 +361,7 @@ namespace Headstart.Tests
 				.Do(x => throw new CreditCardVoidException(new ApiError { }, new CardConnectVoidResponse { }));
 
 			// Act
-			var ex = Assert.ThrowsAsync<CatalystBaseException>(async () => await _sut.AuthorizePayment(payment, userToken, merchantID));
+			var ex = Assert.ThrowsAsync<CatalystBaseException>(async () => await _sut.AuthorizePayment(payment, userToken));
 
 			// Assert
 			Assert.AreEqual("Payment.FailedToVoidAuthorization", ex.Errors[0].ErrorCode);
@@ -399,14 +401,16 @@ namespace Headstart.Tests
 			});
         }
 
-		private OrderCloudIntegrationsCreditCardPayment ValidIntegrationsPayment()
+		private StripePaymentDetails ValidIntegrationsPayment()
 		{
-			return new OrderCloudIntegrationsCreditCardPayment
+			return new StripePaymentDetails
 			{
-				CVV = cvv,
-				CreditCardID = creditCardID,
+				KeyName = keyName,
+                PaymentMethodID = creditCardID,
+				CustomerID = merchantID,
 				OrderID = orderID
 			};
 		}
 	}
 }
+*/

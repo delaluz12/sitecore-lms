@@ -14,12 +14,14 @@ using Headstart.Common;
 using OrderCloud.Catalyst;
 using ordercloud.integrations.docebo.Models;
 using ordercloud.integrations.docebo;
+using ordercloud.integrations.stripe.Models;
+using ordercloud.integrations.stripe;
 
 namespace Headstart.API.Commands
 {
     public interface IOrderSubmitCommand
     {
-        Task<HSOrder> SubmitOrderAsync(string orderID, OrderDirection direction, OrderCloudIntegrationsCreditCardPayment payment, string userToken);
+        Task<HSOrder> SubmitOrderAsync(string orderID, OrderDirection direction, string userToken, StripePaymentDetails payment = null);
     }
     public class OrderSubmitCommand : IOrderSubmitCommand
     {
@@ -36,11 +38,21 @@ namespace Headstart.API.Commands
             _docebo = docebo;
         }
 
-        public async Task<HSOrder> SubmitOrderAsync(string orderID, OrderDirection direction, OrderCloudIntegrationsCreditCardPayment payment, string userToken)
+        public async Task<HSOrder> SubmitOrderAsync(string orderID, OrderDirection direction, string userToken, StripePaymentDetails stripePaymentDetails = null)
         {
             var worksheet = await _oc.IntegrationEvents.GetWorksheetAsync<HSOrderWorksheet>(OrderDirection.Incoming, orderID);
-            await ValidateOrderAsync(worksheet, payment, userToken);
+            await ValidateOrderAsync(worksheet, stripePaymentDetails, userToken);
             var incrementedOrderID = await IncrementOrderAsync(worksheet);
+            string stripeTransactionID = "";
+
+            // Charge the credit card
+            if (!String.IsNullOrEmpty(stripePaymentDetails.OrderID))
+            {
+                stripePaymentDetails.OrderID = incrementedOrderID;
+                Payment authorizedPayment = await _card.AuthorizePayment(stripePaymentDetails, userToken);
+                stripeTransactionID = authorizedPayment?.xp?.stripePaymentID;
+                await _oc.IntegrationEvents.CalculateAsync(OrderDirection.Outgoing, incrementedOrderID, userToken);
+            }
 
             List<DoceboItem> doceboItems = new List<DoceboItem>();
 
@@ -54,7 +66,7 @@ namespace Headstart.API.Commands
                     {
                         course_id = Int32.Parse(courseID),
                         user_id = worksheet?.Order.FromUser?.xp?.lms_user_id,
-                        status = payment.OrderID != null ? "subscribed" : "waiting",
+                        status = stripePaymentDetails != null ? "subscribed" : "waiting",
                         field_2 = incrementedOrderID
 
                     };
@@ -73,7 +85,10 @@ namespace Headstart.API.Commands
                     {
                         await _docebo.SubscribeUsers(doceboSubscription, subscriptionID);
                     }
-                    catch (Exception) { throw; }
+                    catch (Exception) {
+                        await _card.VoidPaymentAsync(incrementedOrderID, userToken, stripePaymentDetails, stripeTransactionID); 
+                        throw; 
+                    }
                 }
             }
 
@@ -84,24 +99,23 @@ namespace Headstart.API.Commands
                     await _docebo.EnrollUsers(doceboItems);
                 }
             }
-            catch (Exception) { throw; }
+            catch (Exception) 
+            {
+                await _card.VoidPaymentAsync(incrementedOrderID, userToken, stripePaymentDetails, stripeTransactionID); 
+                throw; 
+            }
             try
             {
-                // Set Stripe Credit Card Payment to Accepted
-                if (!String.IsNullOrEmpty(payment.PaymentID))
-                {
-                    await _oc.Payments.PatchAsync<HSPayment>(OrderDirection.Incoming, incrementedOrderID, payment.PaymentID, new PartialPayment { Accepted = true });
-                }
                 return await _oc.Orders.SubmitAsync<HSOrder>(direction, incrementedOrderID, userToken);
             }
             catch (Exception)
             {
-                // await _card.VoidPaymentAsync(incrementedOrderID, userToken);
+                await _card.VoidPaymentAsync(incrementedOrderID, userToken, stripePaymentDetails, stripeTransactionID);
                 throw;
             }
         }
 
-        private async Task ValidateOrderAsync(HSOrderWorksheet worksheet, OrderCloudIntegrationsCreditCardPayment payment, string userToken)
+        private async Task ValidateOrderAsync(HSOrderWorksheet worksheet, StripePaymentDetails payment, string userToken)
         {
             Require.That(
                 !worksheet.Order.IsSubmitted, 
@@ -165,19 +179,6 @@ namespace Headstart.API.Commands
                 ID = _settings.OrderCloudSettings.IncrementorPrefix + "{orderIncrementor}"
             });
             return order.ID;
-        }
-
-        private string GetMerchantID(OrderCloudIntegrationsCreditCardPayment payment)
-        {
-            string merchantID;
-            if (payment.Currency == "USD")
-                merchantID = _settings.CardConnectSettings.UsdMerchantID;
-            else if (payment.Currency == "CAD")
-                merchantID = _settings.CardConnectSettings.CadMerchantID;
-            else
-                merchantID = _settings.CardConnectSettings.EurMerchantID;
-
-            return merchantID;
         }
     }
 }

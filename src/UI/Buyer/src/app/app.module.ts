@@ -206,7 +206,8 @@ import {
 } from '@fortawesome/free-brands-svg-icons'
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons'
 import { ProductPriceDisplayComponent } from './components/products/product-price-display/product-price-display.component'
-import { StripePaymentComponent } from './components/payments/stripe-payment/stripe-payment.component'
+import { StripePaymentComponent } from './components/payments/stripe-payment/stripe-payment.component';
+import { CheckoutProcessingComponent } from './components/checkout/checkout-processing/checkout-processing.component'
 
 export function HttpLoaderFactory(
   http: HttpClient,
@@ -342,6 +343,7 @@ const components = [
     SafeHTMLPipe,
     ...components,
     StripePaymentComponent,
+    CheckoutProcessingComponent,
   ],
   imports: [
     BrowserModule,

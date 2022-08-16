@@ -36,7 +36,6 @@ export class OCMCheckoutPayment implements OnInit {
   @Input() order: HSOrder
   @Input() paymentError: string
   @Input() orderSummaryMeta: OrderSummaryMeta
-  @Output() cardSelected = new EventEmitter<StripeIntent>()
   @Output() continue = new EventEmitter<void>()
   @Output() promosChanged = new EventEmitter<OrderPromotion[]>()
   checkout: CheckoutService = this.context.order.checkout
@@ -109,10 +108,6 @@ export class OCMCheckoutPayment implements OnInit {
 
   poChanged(e): void {
     this.poNumber = e.target.value
-  }
-
-  onStripeCardSuccess(card: StripeIntent): void {
-    this.cardSelected.emit(card)
   }
 
   showNewAddress(): void {
