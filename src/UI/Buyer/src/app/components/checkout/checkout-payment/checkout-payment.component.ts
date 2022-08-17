@@ -134,8 +134,9 @@ export class OCMCheckoutPayment implements OnInit {
     )
     if (billingAddress) {
       this.selectedBillingAddress = billingAddress
+      const billingAddressCopy = { ...this.selectedBillingAddress }
       this.context.order.checkout.setOneTimeAddress(
-        this.selectedBillingAddress as Address,
+        billingAddressCopy as Address,
         'billing'
       )
       const _order = this.context.order.get()
