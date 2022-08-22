@@ -107,15 +107,6 @@ export class OCMCheckoutPayment implements OnInit {
   }
 
   poChanged(e): void {
-    // check input using regex
-    const regex = RegExp(/[0-9]+/g)
-    const test_result = regex.test(e.target.value)
-
-    if (test_result) {
-      e.target.defaultValue = e.target.value
-    } else {
-      e.target.value = e.target.defaultValue
-    }
     this.poNumber = e.target.value
   }
 
