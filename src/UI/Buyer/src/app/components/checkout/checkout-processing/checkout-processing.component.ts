@@ -25,6 +25,8 @@ import { SitecoreSendTrackingService } from 'src/app/services/sitecore-send/site
 import { SitecoreCDPTrackingService } from 'src/app/services/sitecore-cdp/sitecore-cdp-tracking.service'
 import { ToastrService } from 'ngx-toastr'
 import { NgxSpinnerService } from 'ngx-spinner'
+import { extractMiddlewareError } from 'src/app/services/error-constants'
+import { MiddlewareError } from 'src/app/models/error.types'
 
 declare let Stripe: any
 
@@ -38,6 +40,7 @@ export class CheckoutProcessingComponent implements OnInit {
   publishablekey: string
   stripekeyname: string
   stripecustomernumber: string
+  checkoutError: MiddlewareError
   errorMessage: string
   showError = false
   stripeKeyMap = StripeConfig.getStripeKeyMap()
@@ -141,7 +144,8 @@ export class CheckoutProcessingComponent implements OnInit {
         this.toastrService.success('Order submitted successfully', 'Success')
         this.context.router.toMyOrderDetails(order.ID)
       } catch (e) {
-        this.errorMessage = 'Error Submitting Order'
+        this.checkoutError = extractMiddlewareError(e)
+        this.errorMessage = this.checkoutError.Message
         this.showError = true
         this.spinner.hide()
       }

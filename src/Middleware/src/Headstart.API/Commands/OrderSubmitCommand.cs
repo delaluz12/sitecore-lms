@@ -121,7 +121,7 @@ namespace Headstart.API.Commands
                 !worksheet.Order.IsSubmitted, 
                 new ErrorCode("OrderSubmit.AlreadySubmitted", "Order has already been submitted")
             );
-
+            Require.That(!String.IsNullOrEmpty(worksheet.Order.FromUser.xp.lms_user_id), new ErrorCode("OrderSubmit.UserDataMissing", "Please contact Learning@Sitecore Support as it appears your user setup is not complete."));
             var lineItemsInactive = await GetInactiveLineItems(worksheet, userToken);
             Require.That(
                 !lineItemsInactive.Any(),
