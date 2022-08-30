@@ -159,11 +159,11 @@ namespace ordercloud.integrations.cardconnect
 			{
 				if (payment.Accepted == true)
 				{
+					decimal transactionAmount = 0;
 					var transaction = payment.Transactions
 										.Where(x => x.Type == "CreditCard")
 										.OrderBy(x => x.DateExecuted)
 										.LastOrDefault(t => t.Succeeded);
-					var retref = transaction?.xp?.CardConnectResponse?.retref;
 					if (transaction != null && originalPayment != null)
 					{
 						var userCurrency = await _hsExchangeRates.GetCurrencyForUser(userToken);
@@ -172,9 +172,14 @@ namespace ordercloud.integrations.cardconnect
 							SecretKey = "UpdateMe",
 							KeyName = originalPayment.KeyName
 						};
+						// Get the amount from the Stripe Transaction
+						if (transactionID != null) 
+						{
+							transactionAmount = (decimal)payment.Transactions.Where(p => p?.xp?.CardConnectResponse?.TransactionID == transactionID).FirstOrDefault().Amount;
+						}
 						var response = await _stripe.RefundCaptureAsync(new FollowUpCCTransaction()
 						{
-							Amount = (decimal)payment.Amount,
+							Amount = (decimal)((transactionAmount != 0) ? transactionAmount : payment.Amount),
 							TransactionID = transactionID,
 						}, 
 						config);

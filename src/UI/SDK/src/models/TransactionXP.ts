@@ -1,5 +1,5 @@
-import { CardConnectAuthorizationResponse } from './CardConnectAuthorizationResponse';
+import { CCTransactionResult } from './CCTransactionResult';
 
 export interface TransactionXP {
-    CardConnectResponse?: CardConnectAuthorizationResponse
+    CardConnectResponse?: CCTransactionResult
 }

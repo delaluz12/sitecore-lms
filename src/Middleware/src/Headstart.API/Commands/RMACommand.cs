@@ -629,11 +629,11 @@ namespace Headstart.API.Commands
             // Refund via CardConnect
             CardConnectInquireResponse inquiry = await _cardConnect.Inquire(new CardConnectInquireRequest
             {
-                merchid = creditCardPaymentTransaction.xp.CardConnectResponse.merchid,
+                merchid = creditCardPaymentTransaction.xp.CardConnectResponse.TransactionID,
                 orderid = rma.SourceOrderID,
                 set = "1",
                 currency = worksheet.Order.xp.Currency.ToString(),
-                retref = creditCardPaymentTransaction.xp.CardConnectResponse.retref
+                retref = creditCardPaymentTransaction.xp.CardConnectResponse.TransactionID
             });
 
             decimal shippingRefund = rma.Type == RMAType.Cancellation ? GetShippingRefundIfCancellingAll(worksheet, rma, allRMAsOnThisOrder) : 0M;
@@ -733,8 +733,8 @@ namespace Headstart.API.Commands
                 CardConnectVoidResponse response = await _cardConnect.VoidAuthorization(new CardConnectVoidRequest
                 {
                     currency = worksheet.Order.xp.Currency.ToString(),
-                    merchid = creditCardPaymentTransaction.xp.CardConnectResponse.merchid,
-                    retref = creditCardPaymentTransaction.xp.CardConnectResponse.retref,
+                    merchid = creditCardPaymentTransaction.xp.CardConnectResponse.TransactionID,
+                    retref = creditCardPaymentTransaction.xp.CardConnectResponse.TransactionID,
                     amount = totalToRefund.ToString("F2"),
                 });
                 await _oc.Payments.CreateTransactionAsync(OrderDirection.Incoming, rma.SourceOrderID, creditCardPayment.ID, CardConnectMapper.Map(newCreditCardVoid, response));
@@ -757,8 +757,8 @@ namespace Headstart.API.Commands
                 CardConnectRefundRequest requestedRefund = new CardConnectRefundRequest()
                 {
                     currency = worksheet.Order.xp.Currency.ToString(),
-                    merchid = creditCardPaymentTransaction.xp.CardConnectResponse.merchid,
-                    retref = creditCardPaymentTransaction.xp.CardConnectResponse.retref,
+                    merchid = creditCardPaymentTransaction.xp.CardConnectResponse.TransactionID,
+                    retref = creditCardPaymentTransaction.xp.CardConnectResponse.TransactionID,
                     amount = totalToRefund.ToString("F2"),
                 };
                 CardConnectRefundResponse response = await _cardConnect.Refund(requestedRefund);
