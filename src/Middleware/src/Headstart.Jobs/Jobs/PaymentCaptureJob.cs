@@ -121,7 +121,7 @@ namespace Headstart.Jobs
             var authHasBeenVoided = payment.Transactions.Any(t =>
                                             t.Type == "CreditCardVoidAuthorization" &&
                                             t.Succeeded &&
-                                            t.xp?.CardConnectResponse?.retref == transaction.xp?.CardConnectResponse?.retref
+                                            t.xp?.CardConnectResponse?.TransactionID == transaction.xp?.CardConnectResponse?.TransactionID
                                          );
             if (authHasBeenVoided)
             {
@@ -135,11 +135,11 @@ namespace Headstart.Jobs
         {
             var inquire = await _cardConnect.Inquire(new CardConnectInquireRequest
             {
-                merchid = transaction.xp.CardConnectResponse.merchid,
+                merchid = transaction.xp.CardConnectResponse.TransactionID,
                 orderid = order.ID,
                 set = "1",
                 currency = order.xp.Currency.ToString(),
-                retref = transaction.xp.CardConnectResponse.retref
+                retref = transaction.xp.CardConnectResponse.TransactionID
             });
             return !string.IsNullOrEmpty(inquire.capturedate);
         }
@@ -150,8 +150,8 @@ namespace Headstart.Jobs
             {
                 var response = await _cardConnect.Capture(new CardConnectCaptureRequest
                 {
-                    merchid = transaction.xp.CardConnectResponse.merchid,
-                    retref = transaction.xp.CardConnectResponse.retref,
+                    merchid = transaction.xp.CardConnectResponse.TransactionID,
+                    retref = transaction.xp.CardConnectResponse.TransactionID,
                     currency = order.xp.Currency.ToString()
                 });
                 await _oc.Payments.CreateTransactionAsync(OrderDirection.Incoming, order.ID, payment.ID, CardConnectMapper.Map(payment, response));
