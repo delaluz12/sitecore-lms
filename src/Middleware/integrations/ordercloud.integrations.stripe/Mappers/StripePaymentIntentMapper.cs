@@ -44,7 +44,8 @@ namespace ordercloud.integrations.stripe.Mappers
                 Currency = transaction.Currency,
                 Customer = transaction.StripeCustomerID,
                 PaymentMethod = transaction.StripePaymentMethodID, // Represents PaymentMethodID
-                Metadata = MapPaymentIntentMetaData(transaction)
+                Metadata = MapPaymentIntentMetaData(transaction),
+                OffSession = true
             };
         }
 
