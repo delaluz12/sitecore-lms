@@ -40,5 +40,10 @@
         _orderSummaryMeta.OrderTotal | currency: _orderCurrency
       }}</span>
     </div>
+    <div class="text-right" *ngIf="isPartner">
+      <span class="font-italic"
+        >Your partner program pricing is reflected.</span
+      >
+    </div>
   </div>
 </div>

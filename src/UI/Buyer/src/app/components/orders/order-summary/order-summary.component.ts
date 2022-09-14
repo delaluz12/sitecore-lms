@@ -11,10 +11,20 @@ export class OCMOrderSummary implements OnInit, OnChanges {
   @Input() currentPanel: string
   _orderSummaryMeta: OrderSummaryMeta
   _orderCurrency: string
+  isPartner = false
   constructor(private context: ShopperContextService) {}
 
   ngOnInit(): void {
     this._orderCurrency = this.context.currentUser.get().Currency
+    this.context.currentUser.onChange((user) => {
+      if (
+        user.UserGroups.findIndex((group) =>
+          group.Name.toLowerCase().includes('partner')
+        ) !== -1
+      ) {
+        this.isPartner = true
+      }
+    })
   }
 
   ngOnChanges(): void {

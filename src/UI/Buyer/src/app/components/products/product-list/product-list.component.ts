@@ -26,6 +26,7 @@ export class OCMProductList implements OnInit, OnDestroy {
   numberOfItemsInPagination = 10
   searchTermForProducts = ''
   isAnon: boolean
+  isPartner = false
 
   constructor(private context: ShopperContextService) {}
 
@@ -34,6 +35,13 @@ export class OCMProductList implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.alive))
       .subscribe(this.handleFiltersChange)
     this.context.currentUser.onChange((user) => {
+      if (
+        user.UserGroups.findIndex((group) =>
+          group.Name.toLowerCase().includes('partner')
+        ) !== -1
+      ) {
+        this.isPartner = true
+      }
       this.isAnon = this.context.currentUser.isAnonymous()
       this.favoriteProducts = user.FavoriteProductIDs
     })

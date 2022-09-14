@@ -27,7 +27,12 @@
   </div>
   <div class="row">
     <div class="col-12">
-      <p>&nbsp;All prices are listed in US Dollars</p>
+      <p>
+        &nbsp;All prices are listed in US Dollars.
+        <span *ngIf="isPartner"
+          >Your partner program pricing is reflected.</span
+        >
+      </p>
     </div>
   </div>
   <!-- Mobile section for filtering on favorites -->
