@@ -57,7 +57,6 @@ export class StripePaymentComponent implements OnInit {
         // This point will only be reached if there is an immediate error when
         // confirming the payment. Show error to your customer (for example, payment
         // details incomplete)
-        debugger
         const messageContainer = document.querySelector('#error-message')
         messageContainer.classList.remove('hidden')
         messageContainer.textContent = error.message

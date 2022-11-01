@@ -60,7 +60,7 @@ export class StripeConfig {
       {
         Country: 'Argentina',
         Code: 'AR',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Armenia',
@@ -70,7 +70,7 @@ export class StripeConfig {
       {
         Country: 'Aruba',
         Code: 'AW',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Australia',
@@ -80,7 +80,7 @@ export class StripeConfig {
       {
         Country: 'Austria',
         Code: 'AT',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Deutschland GmbH',
       },
       {
         Country: 'Azerbaijan',
@@ -95,7 +95,7 @@ export class StripeConfig {
       {
         Country: 'Bahrain',
         Code: 'BH',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Middle East DMCC',
       },
       {
         Country: 'Bangladesh',
@@ -105,7 +105,7 @@ export class StripeConfig {
       {
         Country: 'Barbados',
         Code: 'BB',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Belarus',
@@ -116,7 +116,7 @@ export class StripeConfig {
       {
         Country: 'Belize',
         Code: 'BZ',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Benin',
@@ -136,7 +136,7 @@ export class StripeConfig {
       {
         Country: 'Bolivia (Plurinational State of)',
         Code: 'BO',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Bonaire, Sint Eustatius and Saba',
@@ -161,7 +161,7 @@ export class StripeConfig {
       {
         Country: 'Brazil',
         Code: 'BR',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'British Indian Ocean Territory (the)',
@@ -196,7 +196,7 @@ export class StripeConfig {
       {
         Country: 'Cambodia',
         Code: 'KH',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Singapore Pte. Ltd.',
       },
       {
         Country: 'Cameroon',
@@ -222,7 +222,7 @@ export class StripeConfig {
       {
         Country: 'Chile',
         Code: 'CL',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'China',
@@ -242,7 +242,7 @@ export class StripeConfig {
       {
         Country: 'Colombia',
         Code: 'CO',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Comoros (the)',
@@ -267,7 +267,7 @@ export class StripeConfig {
       {
         Country: 'Costa Rica',
         Code: 'CR',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: "Côte d'Ivoire",
@@ -282,7 +282,7 @@ export class StripeConfig {
       {
         Country: 'Cuba',
         Code: 'CU',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Curaçao',
@@ -313,12 +313,12 @@ export class StripeConfig {
       {
         Country: 'Dominican Republic (the)',
         Code: 'DO',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Ecuador',
         Code: 'EC',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Egypt',
@@ -373,7 +373,7 @@ export class StripeConfig {
       {
         Country: 'Finland',
         Code: 'FI',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Danmark A/S',
       },
       { Country: 'France', Code: 'FR', StripeAccount: 'Sitecore France' },
       {
@@ -419,9 +419,13 @@ export class StripeConfig {
       {
         Country: 'Gibraltar',
         Code: 'GI',
+        StripeAccount: 'Sitecore UK Ltd.',
+      },
+      {
+        Country: 'Greece',
+        Code: 'GR',
         StripeAccount: 'Sitecore International A/S',
       },
-      { Country: 'Greece', Code: 'GR', StripeAccount: 'Moosend PC' },
       {
         Country: 'Greenland',
         Code: 'GL',
@@ -490,7 +494,7 @@ export class StripeConfig {
       {
         Country: 'Hong Kong',
         Code: 'HK',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Singapore Pte. Ltd.',
       },
       {
         Country: 'Hungary',
@@ -500,7 +504,7 @@ export class StripeConfig {
       {
         Country: 'Iceland',
         Code: 'IS',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Danmark A/S',
       },
       {
         Country: 'India',
@@ -510,7 +514,7 @@ export class StripeConfig {
       {
         Country: 'Indonesia',
         Code: 'ID',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Singapore Pte. Ltd.',
       },
       {
         Country: 'Iran (Islamic Republic of)',
@@ -556,7 +560,7 @@ export class StripeConfig {
       {
         Country: 'Jordan',
         Code: 'JO',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Middle East DMCC',
       },
       {
         Country: 'Kazakhstan',
@@ -586,7 +590,7 @@ export class StripeConfig {
       {
         Country: 'Kuwait',
         Code: 'KW',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Middle East DMCC',
       },
       {
         Country: 'Kyrgyzstan',
@@ -606,7 +610,7 @@ export class StripeConfig {
       {
         Country: 'Lebanon',
         Code: 'LB',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Middle East DMCC',
       },
       {
         Country: 'Lesotho',
@@ -636,7 +640,7 @@ export class StripeConfig {
       {
         Country: 'Luxembourg',
         Code: 'LU',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Belgium NV',
       },
       {
         Country: 'Macao',
@@ -697,7 +701,7 @@ export class StripeConfig {
       {
         Country: 'Mexico',
         Code: 'MX',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Micronesia (Federated States of)',
@@ -732,7 +736,7 @@ export class StripeConfig {
       {
         Country: 'Morocco',
         Code: 'MA',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Middle East DMCC',
       },
       {
         Country: 'Mozambique',
@@ -772,7 +776,7 @@ export class StripeConfig {
       {
         Country: 'New Zealand',
         Code: 'NZ',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Australia Pty Limited',
       },
       {
         Country: 'Nicaragua',
@@ -812,12 +816,12 @@ export class StripeConfig {
       {
         Country: 'Norway',
         Code: 'NO',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Danmark A/S',
       },
       {
         Country: 'Oman',
         Code: 'OM',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Middle East DMCC',
       },
       {
         Country: 'Pakistan',
@@ -837,7 +841,7 @@ export class StripeConfig {
       {
         Country: 'Panama',
         Code: 'PA',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Papua New Guinea',
@@ -852,12 +856,12 @@ export class StripeConfig {
       {
         Country: 'Peru',
         Code: 'PE',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Philippines (the)',
         Code: 'PH',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Singapore Pte. Ltd.',
       },
       {
         Country: 'Pitcairn',
@@ -957,7 +961,7 @@ export class StripeConfig {
       {
         Country: 'Saudi Arabia',
         Code: 'SA',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Middle East DMCC',
       },
       {
         Country: 'Senegal',
@@ -1028,7 +1032,7 @@ export class StripeConfig {
       {
         Country: 'Sri Lanka',
         Code: 'LK',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Singapore Pte. Ltd.',
       },
       {
         Country: 'Sudan (the)',
@@ -1074,7 +1078,7 @@ export class StripeConfig {
       {
         Country: 'Thailand',
         Code: 'TH',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Singapore Pte. Ltd.',
       },
       {
         Country: 'Timor-Leste',
@@ -1131,11 +1135,15 @@ export class StripeConfig {
         Code: 'UG',
         StripeAccount: 'Sitecore International A/S',
       },
-      { Country: 'Ukraine', Code: 'UA', StripeAccount: 'Sitecore Ukraine' },
+      {
+        Country: 'Ukraine',
+        Code: 'UA',
+        StripeAccount: 'Sitecore International A/S',
+      },
       {
         Country: 'United Arab Emirates (the)',
         Code: 'AE',
-        StripeAccount: 'Sitecore Middle East DMCC',
+        StripeAccount: 'Sitecore International A/S',
       },
       {
         Country: 'United Kingdom of Great Britain and Northern Ireland (the)',
@@ -1155,7 +1163,7 @@ export class StripeConfig {
       {
         Country: 'Uruguay',
         Code: 'UY',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore USA, Inc.',
       },
       {
         Country: 'Uzbekistan',
@@ -1175,7 +1183,7 @@ export class StripeConfig {
       {
         Country: 'Viet Nam',
         Code: 'VN',
-        StripeAccount: 'Sitecore International A/S',
+        StripeAccount: 'Sitecore Singapore Pte. Ltd.',
       },
       {
         Country: 'Virgin Islands (British)',

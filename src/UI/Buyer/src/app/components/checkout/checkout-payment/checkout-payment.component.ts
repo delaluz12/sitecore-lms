@@ -55,6 +55,7 @@ export class OCMCheckoutPayment implements OnInit {
   disablePO = false
   disableCC = false
   japanOrder = false
+  midEastOrder = false
   poNumber: string
   stripeCountry: EventEmitter<BuyerAddress> = new EventEmitter<BuyerAddress>()
 
@@ -125,6 +126,7 @@ export class OCMCheckoutPayment implements OnInit {
   onBillingAddressChange(billingAddressID: string): void {
     this.stripeCountry.emit(null)
     this.japanOrder = false
+    this.midEastOrder = false
     this.showNewAddressForm = billingAddressID === this.NEW_ADDRESS_CODE
     this.selectedBillingAddress = this.existingBillingAddresses.Items.find(
       (address) => billingAddressID === address.ID
@@ -140,10 +142,28 @@ export class OCMCheckoutPayment implements OnInit {
         'billing'
       )
       const _order = this.context.order.get()
+      const middleEastSubsidiaryCountries = [
+        'BH',
+        'JO',
+        'KW',
+        'LB',
+        'MA',
+        'OM',
+        'SA',
+      ]
       if (this.selectedBillingAddress.Country == 'JP') {
         this.selectedPaymentMethod = this
           ._acceptedPaymentMethods?.[1] as AcceptedPaymentTypes
         this.japanOrder = true
+        this.disableCC = true
+      } else if (
+        middleEastSubsidiaryCountries.indexOf(
+          this.selectedBillingAddress.Country
+        ) !== -1
+      ) {
+        this.selectedPaymentMethod = this
+          ._acceptedPaymentMethods?.[1] as AcceptedPaymentTypes
+        this.midEastOrder = true
         this.disableCC = true
       } else {
         if (_order.Total > 0) {

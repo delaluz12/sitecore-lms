@@ -44,6 +44,17 @@
       for further assistance.</span
     >
   </div>
+  <div class="alert alert-warning" role="alert" *ngIf="midEastOrder">
+    <span
+      >Credit card purchase functionality in the selected region is currently
+      being reviewed and will be released soon. We apologize for any
+      inconvenience. Please select another method of payment or contact
+      <a href="mailto:GlobalTraining@Sitecore.com" target="_blank"
+        >GlobalTraining@Sitecore.com</a
+      >
+      for further assistance.</span
+    >
+  </div>
   <ng-container
     *ngIf="
       orderSummaryMeta.LineItemCount &&
