@@ -58,7 +58,10 @@ export class HasTokenGuard implements CanActivate, CanActivateChild {
 
     // send profiled users to login to get new token
     if (!isAccessTokenValid && !this.appConfig.anonymousShoppingEnabled) {
-      if (window.location.pathname.toLowerCase().indexOf('products') != -1) {
+      if (
+        window.location.pathname &&
+        window.location.pathname.toLowerCase().indexOf('products') != -1
+      ) {
         this.tokenHelper.setProductCookie(
           document.location.pathname.split('/')[2]
         )
