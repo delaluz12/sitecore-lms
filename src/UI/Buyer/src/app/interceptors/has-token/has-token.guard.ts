@@ -36,9 +36,15 @@ export class HasTokenGuard implements CanActivate, CanActivateChild {
       return true
     } else if (this.isSingleSignOn()) {
       const token = this.getQueryParamSSOToken()
+      const productID = this.tokenHelper.getProductCookie()
       this.auth.loginWithTokens(token, null, true)
       const queryParams = {}
-      this.router.navigate(['/products'], { queryParams })
+      if (productID !== '') {
+        this.tokenHelper.removeProductCookie()
+        this.router.navigate([`/products/${productID}`], { queryParams })
+      } else {
+        this.router.navigate(['/products'], { queryParams })
+      }
       return true
     }
 
@@ -52,7 +58,13 @@ export class HasTokenGuard implements CanActivate, CanActivateChild {
 
     // send profiled users to login to get new token
     if (!isAccessTokenValid && !this.appConfig.anonymousShoppingEnabled) {
-      this.router.navigate(['/login'])
+      if (window.location.pathname.toLowerCase().indexOf('products') != -1) {
+        this.tokenHelper.setProductCookie(
+          document.location.pathname.split('/')[2]
+        )
+      }
+      const ssoURL = this.appConfig.ssoURL
+      document.location.href = ssoURL
       return false
     }
     // get new anonymous token and then let them continue

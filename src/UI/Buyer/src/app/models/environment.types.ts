@@ -70,6 +70,7 @@ export interface EnvironmentConfig {
   sitecoreCDPWebFlowTarget: string
   sitecoreCDPPointOfSale: string
   sellerQuoteContactEmail: string
+  ssoURL: string
 }
 
 export class AppConfig {
@@ -113,6 +114,7 @@ export class AppConfig {
 
   middlewareUrl: string
   creditCardIframeUrl: string
+  ssoURL: string
 
   /**
    *  The ID of the seller organization.

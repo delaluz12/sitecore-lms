@@ -41,6 +41,19 @@ export class TokenHelperService {
     this.cookieService.putObject(this.isSSOCookieName, { isSSO })
   }
 
+  setProductCookie(id: string): void {
+    this.cookieService.put('productID', id)
+  }
+
+  getProductCookie(): string {
+    const productID = this.cookieService.get('productID')
+    return productID ? productID : ''
+  }
+
+  removeProductCookie(): void {
+    this.cookieService.remove('productID')
+  }
+
   getIsSSO(): boolean {
     const obj = this.cookieService.getObject(this.isSSOCookieName) as {
       isSSO: boolean

@@ -1,11 +1,11 @@
 {
   "hostedApp": true,
-  "appname": "SitecoreLMS",
+  "appname": "Learning@Sitecore",
   "appID": "headstartdemo-test",
   "clientID": "D7689C6F-F564-413B-9D74-6953DB6EEB17",
   "incrementorPrefix": "HS_TEST",
   "baseUrl": "http://localhost:4300/",
-  "middlewareUrl": "https://sitecore-lms-oc-middleware.azurewebsites.net",
+  "middlewareUrl": "https://sitecore-lms-oc-middleware-test.azurewebsites.net",
   "cmsUrl": "https://ordercloud-cms-test.azurewebsites.net",
   "creditCardIframeUrl": "https://fts-uat.cardconnect.com/itoke/ajax-tokenizer.html",
   "translateBlobUrl": "https://sitecorelmsoctest.blob.core.windows.net/ngx-translate/i18n/",
@@ -27,5 +27,6 @@
   },
   "instrumentationKey": null,
   "anonymousShoppingEnabled": false,
-  "acceptedPaymentMethods": ["CreditCard", "PurchaseOrder"]
+  "acceptedPaymentMethods": ["CreditCard", "PurchaseOrder"],
+  "ssoURL": "https://sandboxapi.ordercloud.io/ocrplogin?id=hIbePVxh90CdxrysqAUsQA&roles=MeAdmin+MeXpAdmin+MeAddressAdmin+MeCreditCardAdmin+ProductFacetReader+Shopper+SupplierAddressReader+SupplierReader+BuyerReader&cid=3f18555a-aeca-477e-8d7c-f42d5f8e8942"
 }

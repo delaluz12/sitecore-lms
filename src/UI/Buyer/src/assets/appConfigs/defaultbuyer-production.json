@@ -26,5 +26,6 @@
   },
   "appInsightsInstrumentationKey": null,
   "anonymousShoppingEnabled": true,
-  "acceptedPaymentMethods": ["CreditCard", "PurchaseOrder"]
+  "acceptedPaymentMethods": ["CreditCard", "PurchaseOrder"],
+  "ssoURL": "https://api.ordercloud.io/ocrplogin?id=wNYOVQtQIkiBRvFfSzJ5sw&roles=MeAdmin+MeXpAdmin+MeAddressAdmin+MeCreditCardAdmin+ProductFacetReader+Shopper+SupplierAddressReader+SupplierReader+BuyerReader&cid=c477b98d-a07d-4f54-b643-bdc7c65ceb8b"
 }
