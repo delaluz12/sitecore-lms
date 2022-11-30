@@ -78,10 +78,13 @@ export class CheckoutService {
       : await Orders.SetBillingAddress('Outgoing', this.order.ID, address)
   }
 
-  async setBuyerLocationByID(buyerLocationID: string): Promise<HSOrder> {
+  async setBuyerLocationByID(
+    buyerLocationID: string,
+    acknowlegment: boolean
+  ): Promise<HSOrder> {
     const patch = {
       BillingAddressID: buyerLocationID,
-      xp: { ApprovalNeeded: '' },
+      xp: { ApprovalNeeded: '', InstructorLeadAcknowledgment: acknowlegment },
     }
     const isApprovalNeeded = await this.isApprovalNeeded(buyerLocationID)
     if (isApprovalNeeded) patch.xp.ApprovalNeeded = buyerLocationID

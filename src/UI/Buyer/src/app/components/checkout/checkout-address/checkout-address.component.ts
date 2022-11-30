@@ -61,6 +61,7 @@ export class OCMCheckoutAddress implements OnInit {
   faCheckCircle = faCheckCircle
   checkout: CheckoutService = this.context.order.checkout
   tooltip: string
+  instructorLeadAcknowledged = false
 
   constructor(
     private context: ShopperContextService,
@@ -80,6 +81,11 @@ export class OCMCheckoutAddress implements OnInit {
     this.spinner.hide()
     this.setOrderPromos()
     this.createPromoForm(this.promoCode)
+    const currentOrder = this.context.order.get()
+    this.instructorLeadAcknowledged = currentOrder.xp
+      .InstructorLeadAcknowledgment
+      ? currentOrder.xp.InstructorLeadAcknowledgment
+      : false
     await this.ListAddressesForShipping()
     await this.listSavedBuyerLocations()
   }
@@ -226,7 +232,8 @@ export class OCMCheckoutAddress implements OnInit {
       throw new Error('Please select a location for this order')
     }
     this.order = await this.context.order.checkout.setBuyerLocationByID(
-      this.selectedBuyerLocation?.ID
+      this.selectedBuyerLocation?.ID,
+      this.instructorLeadAcknowledged
     )
     if (newShippingAddress != null) {
       this.selectedShippingAddress = await this.saveNewShippingAddress(
@@ -246,6 +253,10 @@ export class OCMCheckoutAddress implements OnInit {
 
   addressFormChanged(address: BuyerAddress): void {
     this.selectedShippingAddress = address
+  }
+
+  setInstructorCheck(event: Event): void {
+    this.instructorLeadAcknowledged = (event.target as HTMLInputElement).checked
   }
 
   showNewAddress(): void {

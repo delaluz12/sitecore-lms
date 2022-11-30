@@ -66,7 +66,35 @@
     </div>
   </div>
   <hr />
-
+  <div class="alert alert-warning" role="alert">
+    If you are purchasing Virtual Instructor-Led Training, you acknowledge that
+    all personal data collected by this platform, such as your name or e-mail
+    address, shall be shared with an authorized third-party service provider
+    solely for the purpose of providing training services and maintaining
+    accurate training records, and shall be processed only in accordance with
+    Sitecore’s
+    <a href="https://www.sitecore.com/trust/privacy-policy" target="_blank"
+      >Privacy Policy</a
+    >
+    and
+    <a href="https://www.sitecore.com/trust/terms-of-use" target="_blank"
+      >Terms of Use</a
+    >. If you have any questions on this, please contact
+    <a href="mailto:privacy@sitecore.com" target="_blank"
+      >privacy@sitecore.com</a
+    >.
+  </div>
+  <div class="form-check">
+    <input
+      type="checkbox"
+      (click)="setInstructorCheck($event)"
+      class="form-check-input"
+      id="instructorCheck"
+      [checked]="instructorLeadAcknowledged"
+    />
+    <label class="form-check-label" for="instructorCheck">I acknowledge</label>
+  </div>
+  <hr />
   <!-- <div *ngIf="!isAnon" class="form-group">
     <label for="selectBuyerLocation" translate
       >CHECKOUT.CHECKOUT_ADDRESS.BUYER_LOCATION</label
@@ -136,7 +164,7 @@
     <button
       type="submit"
       *ngIf="!showNewAddressForm"
-      [disabled]="!selectedShippingAddress"
+      [disabled]="!selectedShippingAddress || !instructorLeadAcknowledged"
       (click)="saveAddressesAndContinue()"
       class="btn btn-primary btn-sm mr-2 mt-3"
       translate

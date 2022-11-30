@@ -49,6 +49,7 @@ namespace Headstart.Models
         public string NetSuiteOrderStatus { get; set; }
         public string StripePaymentId { get; set; }
         public string PONumber { get; set; }
+        public bool? InstructorLeadAcknowledgment { get; set; }
 
     }
 
