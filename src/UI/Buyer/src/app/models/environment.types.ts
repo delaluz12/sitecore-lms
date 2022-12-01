@@ -71,6 +71,7 @@ export interface EnvironmentConfig {
   sitecoreCDPPointOfSale: string
   sellerQuoteContactEmail: string
   ssoURL: string
+  doceboURL: string
 }
 
 export class AppConfig {
@@ -115,6 +116,7 @@ export class AppConfig {
   middlewareUrl: string
   creditCardIframeUrl: string
   ssoURL: string
+  doceboURL: string
 
   /**
    *  The ID of the seller organization.

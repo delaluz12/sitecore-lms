@@ -16,6 +16,7 @@ import {
   OrderReorderResponse,
   OrderViewContext,
 } from 'src/app/models/order.types'
+import { AppConfig } from 'src/app/models/environment.types'
 
 @Component({
   templateUrl: './order-detail.component.html',
@@ -35,12 +36,16 @@ export class OCMOrderDetails implements OnInit {
   showRequestCancel = false
   isAnon: boolean
   isQuoteOrder = isQuoteOrder
+  doceboURL: string
+
   constructor(
     private context: ShopperContextService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private appConfig: AppConfig
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.doceboURL = this.appConfig.doceboURL
     this.isAnon = this.context.currentUser.isAnonymous()
     this.approvalVersion =
       this.context.orderHistory.filters.getOrderViewContext() ===

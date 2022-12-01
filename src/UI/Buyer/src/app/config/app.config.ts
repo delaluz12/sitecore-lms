@@ -31,6 +31,7 @@ export const ocAppConfig: AppConfig = {
   sitecoreCDPPointOfSale: environment.sitecoreCDPPointOfSale,
   sellerQuoteContactEmail: environment.sellerQuoteContactEmail,
   ssoURL: environment.ssoURL,
+  doceboURL: environment.doceboURL,
   scope: [
     'MeAddressAdmin',
     'AddressAdmin', // Only for location owners

@@ -30,14 +30,22 @@
           >
         </h2>
         <ng-container *ngIf="subView === 'details'">
-          <button
-            class="btn btn-sm btn-outline-primary d-print-none"
-            (click)="createAndSavePDF()"
-            type="button"
-            translate
-          >
-            ORDERS.DETAIL.DOWNLOAD_AS_PDF
-          </button>
+          <div>
+            <a
+              [href]="doceboURL"
+              class="btn btn-sm btn-outline-info"
+              role="button"
+              >Return to learning.sitecore.com
+            </a>
+            <button
+              class="btn btn-sm btn-outline-primary d-print-none"
+              (click)="createAndSavePDF()"
+              type="button"
+              translate
+            >
+              ORDERS.DETAIL.DOWNLOAD_AS_PDF
+            </button>
+          </div>
         </ng-container>
       </div>
     </div>
