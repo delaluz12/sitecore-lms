@@ -17,27 +17,43 @@ namespace ordercloud.integrations.avalara
 
 			var standardShipEstimates = order.ShipEstimateResponse?.ShipEstimates;
 
-			var shippingLines = standardShipEstimates.Select(shipment =>
-			{
-				var (shipFrom, shipTo) = shipment.GetAddresses(order.LineItems);
-				return shipment.ToLineItemModel(shipFrom, shipTo);
-			});
-
 			string exemptionNo = null; // can set to a resale cert id
 
 			var productLines = standardLineItems.Select(lineItem =>
 				 lineItem.ToLineItemModel(lineItem.ShipFromAddress, lineItem.ShippingAddress, exemptionNo));
 
-			return new CreateTransactionModel()
+			if (standardShipEstimates == null)
 			{
-				companyCode = companyCode,
-				type = docType,
-				customerCode = buyerLocationID,
-				date = DateTime.Now,
-				discount = GetOrderOnlyTotalDiscount(promosOnOrder),
-				lines = productLines.Concat(shippingLines).ToList(),
-				purchaseOrderNo = order.Order.ID
-			};
+				return new CreateTransactionModel()
+				{
+					companyCode = companyCode,
+					type = docType,
+					customerCode = buyerLocationID,
+					date = DateTime.Now,
+					discount = GetOrderOnlyTotalDiscount(promosOnOrder),
+					lines = productLines.ToList(),
+					purchaseOrderNo = order.Order.ID
+				};
+			}
+			else 
+			{
+				var shippingLines = standardShipEstimates.Select(shipment =>
+				{
+					var (shipFrom, shipTo) = shipment.GetAddresses(order.LineItems);
+					return shipment.ToLineItemModel(shipFrom, shipTo);
+				});
+
+				return new CreateTransactionModel()
+				{
+					companyCode = companyCode,
+					type = docType,
+					customerCode = buyerLocationID,
+					date = DateTime.Now,
+					discount = GetOrderOnlyTotalDiscount(promosOnOrder),
+					lines = productLines.Concat(shippingLines).ToList(),
+					purchaseOrderNo = order.Order.ID
+				};
+			}
 		}
 
 		private static LineItemModel ToLineItemModel(this LineItem lineItem, Address shipFrom, Address shipTo, string exemptionNo)
