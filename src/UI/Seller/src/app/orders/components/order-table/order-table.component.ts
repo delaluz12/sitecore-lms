@@ -46,6 +46,10 @@ export class OrderTableComponent extends ResourceCrudComponent<Order> {
     }
   }
 
+  searchResources(searchStr: string): void {
+    this.ocService.orderSearchBy(searchStr)
+  }
+
   private readFromUrlQueryParams(params: Params): void {
     const { OrderDirection } = params
     this.isQuoteOrderList = params['xp.OrderType'] === 'Quote'

@@ -353,6 +353,16 @@ export abstract class ResourceCrudService<ResourceType> {
     })
   }
 
+  orderSearchBy(searchTerm: string): void {
+    this.patchFilterState({
+      search: searchTerm || undefined,
+      searchType: searchTerm ? 'AllTermsAnyField' : undefined,
+      searchOn: [
+        'FromUser.Email,FromUser.Username,FromUser.FirstName,FromUser.LastName,ID',
+      ],
+    })
+  }
+
   addFilters(newFilters: ListArgs): void {
     const newFilterDictionary = {
       ...this.optionsSubject.value.filters,
@@ -410,8 +420,9 @@ export abstract class ResourceCrudService<ResourceType> {
 
   // Used to update the URL
   mapToUrlQueryParams(options: Options): Params {
-    const { sortBy, search, searchType, filters, OrderDirection } = options
-    return { sortBy, search, searchType, ...filters, OrderDirection }
+    const { sortBy, search, searchType, filters, OrderDirection, searchOn } =
+      options
+    return { sortBy, search, searchType, ...filters, OrderDirection, searchOn }
   }
 
   // TODO - move to some other file. Not related to resource crud

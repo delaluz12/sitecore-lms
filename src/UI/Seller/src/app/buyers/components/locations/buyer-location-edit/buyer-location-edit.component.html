@@ -28,6 +28,7 @@
                 formControlName="ID"
                 (input)="handleUpdateBuyerLocation($event, 'Address.ID')"
                 placeholder="Enter ID (optional)"
+                disabled
               />
             </div>
           </div>
@@ -59,6 +60,7 @@
               formControlName="LocationName"
               (input)="handleUpdateBuyerLocation($event, 'UserGroup.Name')"
               placeholder="Enter {{ 'ALIAS.BUYER_LOCATION' | translate }} Name"
+              disabled
             />
           </div>
           <div class="form-group col-md-6">
@@ -74,6 +76,7 @@
               formControlName="CompanyName"
               (input)="handleUpdateBuyerLocation($event, 'Address.CompanyName')"
               placeholder="Enter Company Name"
+              disabled
             />
           </div>
         </div>
@@ -113,6 +116,7 @@
             formControlName="Street1"
             (input)="handleUpdateBuyerLocation($event, 'Address.Street1')"
             placeholder="Enter Street 1"
+            disabled
           />
         </div>
         <div class="form-group">
@@ -128,6 +132,7 @@
             formControlName="Street2"
             (input)="handleUpdateBuyerLocation($event, 'Address.Street2')"
             placeholder="Enter Street 2"
+            disabled
           />
         </div>
         <div class="form-row">
@@ -144,6 +149,7 @@
               formControlName="City"
               (input)="handleUpdateBuyerLocation($event, 'Address.City')"
               placeholder="Enter City"
+              disabled
             />
           </div>
           <div class="form-group col-md-3">
@@ -159,6 +165,7 @@
               formControlName="State"
               (input)="handleUpdateBuyerLocation($event, 'Address.State')"
               placeholder="Enter State"
+              disabled
             />
           </div>
           <div class="form-group col-md-4">
@@ -174,6 +181,7 @@
               formControlName="Zip"
               (input)="handleUpdateBuyerLocation($event, 'Address.Zip')"
               placeholder="Enter Zip"
+              disabled
             />
           </div>
         </div>
@@ -189,6 +197,7 @@
               showErrors
               aria-describedby="Country"
               (change)="handleUpdateBuyerLocation($event, 'Address.Country')"
+              disabled
             >
               <option [ngValue]="''" disabled>Select a Country</option>
               <option
@@ -210,6 +219,7 @@
               formControlName="Country"
               (input)="handleUpdateBuyerLocation($event, 'Address.Country')"
               placeholder="Enter Country Code"
+              disabled
             />
           </div>
           <div class="form-group col-md-6">
@@ -223,6 +233,7 @@
               disabled
               [resourceForm]="resourceForm"
               formControlName="Currency"
+              disabled
             />
           </div>
         </div>
@@ -239,6 +250,7 @@
               formControlName="Phone"
               (input)="handleUpdateBuyerLocation($event, 'Address.Phone')"
               placeholder="Contact Phone Number"
+              disabled
             />
           </div>
           <div class="form-group col-md-6">
@@ -253,6 +265,7 @@
               formControlName="Email"
               (input)="handleUpdateBuyerLocation($event, 'Address.xp.Email')"
               placeholder="Contact Email"
+              disabled
             />
           </div>
         </div>
@@ -274,6 +287,7 @@
                 handleUpdateBuyerLocation($event, 'Address.xp.LocationID')
               "
               placeholder="Enter {{ 'ALIAS.BUYER_LOCATION' | translate }} ID"
+              disabled
             />
           </div>
           <div class="form-group col-md-6">
@@ -293,12 +307,13 @@
                 handleUpdateBuyerLocation($event, 'Address.xp.BillingNumber')
               "
               placeholder="Enter {{ 'ADMIN.BILLING_NUMBER' | translate }}"
+              disabled
             />
           </div>
         </div>
       </div>
     </div>
-    <buyer-location-approvals
+    <!-- <buyer-location-approvals
       [approvalRule]="approvalRule"
       [buyerGroup]="buyerLocationStatic"
       (approvalUpdated)="handleUpdateApproval($event)"
@@ -313,15 +328,15 @@
       [isCreatingNew]="isCreatingNew"
       (assignmentsToAdd)="addCatalogAssignments($event)"
     >
-    </app-buyer-location-catalogs>
+    </app-buyer-location-catalogs> -->
     <!-- TODO: 2/2 Abstract into component to be used anywhere using inputs and outputs -->
     <div class="d-flex justify-content-between align-items-center py-2">
-      <delete-confirm-modal-component
+      <!-- <delete-confirm-modal-component
         *ngIf="!isCreatingNew"
         buttonText="ALIAS.BUYER_LOCATION"
         (deleteConfirmed)="handleDelete($event)"
       >
-      </delete-confirm-modal-component>
+      </delete-confirm-modal-component> -->
       <div>
         <button
           *ngIf="areChanges"

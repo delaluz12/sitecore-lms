@@ -19,6 +19,7 @@
             formControlName="Name"
             (input)="updateResourceFromEvent($event, 'Buyer.Name')"
             placeholder="Enter Name"
+            disabled
           />
         </div>
         <div class="form-group">
@@ -33,6 +34,7 @@
               aria-describedby="Active"
               formControlName="Active"
               (input)="updateResourceFromEvent($event, 'Buyer.Active')"
+              disabled
             />
             <span class="slider round cursor-pointer"></span>
           </label>
@@ -50,6 +52,7 @@
             formControlName="Markup"
             (input)="updateResourceFromEvent($event, 'Markup.Percent')"
             placeholder="Enter Markup"
+            disabled
           />
         </div>
         <div class="form-group">
@@ -64,6 +67,7 @@
               aria-describedby="ImpersonatingEnabled"
               formControlName="ImpersonatingEnabled"
               (input)="updateResourceFromEvent($event, 'ImpersonatingEnabled')"
+              disabled
             />
             <span class="slider round cursor-pointer"></span>
           </label>
@@ -81,6 +85,7 @@
             formControlName="URL"
             (input)="updateResourceFromEvent($event, 'Buyer.xp.URL')"
             placeholder="Enter Url used by buyer site"
+            disabled
           />
         </div>
         <div class="form-group" *ngIf="showImpersonation">
@@ -94,8 +99,11 @@
             maxlength="100"
             [resourceForm]="resourceForm"
             formControlName="ClientID"
-            (input)="updateResourceFromEvent($event, 'ImpersonationConfig.ClientID')"
+            (input)="
+              updateResourceFromEvent($event, 'ImpersonationConfig.ClientID')
+            "
             placeholder="Enter client ID used by buyer site"
+            disabled
           />
         </div>
       </div>
@@ -103,8 +111,8 @@
   </form>
   <div *ngIf="helperMessage" class="mb-4">
     <span class="font-italic" translate>
-      {{helperMessage}}
-      <a href="{{helperLink}}" translate>{{helperAction}}</a>
+      {{ helperMessage }}
+      <a href="{{ helperLink }}" translate>{{ helperAction }}</a>
     </span>
   </div>
   <action-menu-component

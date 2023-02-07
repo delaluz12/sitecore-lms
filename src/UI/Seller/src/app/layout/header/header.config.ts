@@ -311,18 +311,10 @@ const Support = {
 
 const AllNavGroupings: HSRoute[] = [
   ProductNavGrouping,
-  SupplierOrderNavGrouping,
   SellerOrderNavGrouping,
-  RMAs,
   BuyerNavGrouping,
-  SupplierNavGrouping,
   ReportsNavGrouping,
   SellerNavGrouping,
-  StorefrontNavGrouping,
-  MySupplierProfile,
-  MySupplierLocations,
-  MySupplerUsers,
-  Support,
 ]
 
 export const getHeaderConfig = (

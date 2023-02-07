@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <user-group-assignments
+  <!-- <user-group-assignments
     *ngIf="selectedResource && !isCreatingNew"
     [isCreatingNew]="isCreatingNew"
     userGroupType="BuyerLocation"
@@ -8,7 +8,7 @@
     (hasAssignments)="userHasAssignments($event)"
     [userPermissionsService]="buyerUserService"
   >
-  </user-group-assignments>
+  </user-group-assignments> -->
   <form *ngIf="resourceForm" [formGroup]="resourceForm">
     <div class="row pt-3">
       <div class="col-md-5">
@@ -30,6 +30,7 @@
               aria-describedby="Active"
               formControlName="Active"
               (input)="toggleActive($event)"
+              disabled
             />
             <span class="slider round cursor-pointer"></span>
           </label>
@@ -47,6 +48,7 @@
               formControlName="Username"
               (input)="updateResourceFromEvent()"
               placeholder="Enter Username"
+              disabled
             />
           </div>
           <div class="form-group col-md-6">
@@ -62,9 +64,11 @@
               formControlName="Email"
               (input)="updateResourceFromEvent()"
               placeholder="Enter Email"
+              disabled
             />
-            <span *ngIf="hasValidEmailError()"
-            class="error-message">Please enter a valid email address</span>
+            <span *ngIf="hasValidEmailError()" class="error-message"
+              >Please enter a valid email address</span
+            >
           </div>
         </div>
       </div>
@@ -88,6 +92,7 @@
               formControlName="FirstName"
               (input)="updateResourceFromEvent()"
               placeholder="Enter First Name"
+              disabled
             />
           </div>
           <div class="form-group col-md-6">
@@ -102,10 +107,11 @@
               formControlName="LastName"
               (input)="updateResourceFromEvent()"
               placeholder="Enter Last Name"
+              disabled
             />
           </div>
         </div>
-        <div class="form-row">
+        <!-- <div class="form-row">
           <div class="form-group col-md-6">
             <label for="Country">Home Country</label>
             <select
@@ -117,8 +123,9 @@
               showErrors
               aria-describedby="Country"
               (change)="updateResourceFromEvent()"
+              disabled
             >
-              <option [ngValue]="''" disabled>Select a Country</option>
+              <option [ngValue]="''">Select a Country</option>
               <option
                 *ngFor="let country of countryOptions"
                 [value]="country.abbreviation"
@@ -138,6 +145,7 @@
               formControlName="Country"
               (input)="updateResourceFromEvent()"
               placeholder="Enter Country Code"
+              disabled
             />
             <p
               *ngIf="isUserAssignedToGroups"
@@ -146,7 +154,7 @@
               Unassign locations to change Home Country.
             </p>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </form>

@@ -39,6 +39,7 @@
         formControlName="{{ field.field }}"
         (input)="handleUpdateCategory($event)"
         placeholder="Enter {{ field.field }}"
+        disabled
       />
     </div>
 
@@ -56,6 +57,7 @@
         formControlName="{{ field.field }}"
         (input)="handleUpdateCategory($event)"
         placeholder="Enter {{ field.field }}"
+        disabled
       />
     </div>
 
@@ -79,6 +81,7 @@
         formControlName="{{ field.field }}"
         (input)="handleUpdateCategory($event)"
         placeholder="Enter {{ field.field }}"
+        disabled
       />
     </div>
 
@@ -91,6 +94,7 @@
           id="{{ field.field }}"
           formControlName="Active"
           (input)="handleUpdateCategory($event, 'boolean')"
+          disabled
         />
         <span class="slider round cursor-pointer"></span>
       </label>

@@ -15,9 +15,12 @@
   (resourceSelected)="selectResource($event)"
   [labelSingular]="'ADMIN.NAV.CATEGORY'"
   [labelPlural]="'ADMIN.NAV.CATEGORIES'"
+  [shouldShowCreateNew]="false"
+  [canBeDeleted]="false"
 >
   <div class="resource-edit">
-    <app-buyer-category-edit class="card bg-white shadow-sm p-4 mt-3"
+    <app-buyer-category-edit
+      class="card bg-white shadow-sm p-4 mt-3"
       (updateCategory)="updateResource($event)"
       [resource]="updatedResource"
     >

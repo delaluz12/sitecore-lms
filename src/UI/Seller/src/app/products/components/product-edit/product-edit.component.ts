@@ -265,7 +265,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
   createProductForm(superHSProduct: SuperHSProduct): void {
     if (superHSProduct.Product) {
-      this.readonly = this.isProductReadonly(superHSProduct)
+      //this.readonly = this.isProductReadonly(superHSProduct)
+      this.readonly = true
       this.sellerView = this.userContext?.UserType === 'SELLER'
       this.productForm = new FormGroup(
         {
