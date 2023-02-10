@@ -122,12 +122,7 @@ const SellerOrderNavGrouping: HSRoute = {
   title: 'ADMIN.NAV.ORDERS',
   route: '/orders',
   orderCloudUserTypesWithAccess: [SELLER],
-  subRoutes: [
-    BuyerOrders,
-    SupplierPurchaseOrders,
-    QuoteOrders,
-    RequiringAttentionOrders,
-  ],
+  subRoutes: [BuyerOrders],
 }
 
 const SupplierOrderBatchUpload: HSRoute = {

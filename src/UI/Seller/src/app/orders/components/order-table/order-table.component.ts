@@ -74,11 +74,10 @@ export class OrderTableComponent extends ResourceCrudComponent<Order> {
     Filters: [
       {
         Display: 'ADMIN.FILTERS.STATUS',
-        Path: 'xp.SubmittedOrderStatus',
+        Path: 'IsSubmitted',
         Items: [
-          { Text: 'ADMIN.FILTER_OPTIONS.OPEN', Value: 'Open' },
-          { Text: 'ADMIN.FILTER_OPTIONS.COMPLETED', Value: 'Completed' },
-          { Text: 'ADMIN.FILTER_OPTIONS.CANCELED', Value: 'Canceled' },
+          { Text: 'ADMIN.FILTER_OPTIONS.OPEN', Value: 'true' },
+          { Text: 'Unsubmitted', Value: 'false' },
         ],
         Type: 'Dropdown',
       },
