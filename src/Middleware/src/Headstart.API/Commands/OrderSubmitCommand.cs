@@ -66,7 +66,7 @@ namespace Headstart.API.Commands
                     {
                         course_id = Int32.Parse(courseID),
                         user_id = worksheet?.Order.FromUser?.xp?.lms_user_id,
-                        status = stripePaymentDetails != null ? "subscribed" : "waiting",
+                        status = !String.IsNullOrEmpty(stripePaymentDetails.OrderID) ? "subscribed" : "waiting",
                         field_2 = incrementedOrderID
 
                     };
