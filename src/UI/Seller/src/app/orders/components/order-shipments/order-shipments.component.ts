@@ -335,6 +335,7 @@ export class OrderShipmentsComponent implements OnChanges {
 
   canShipLineItems(): boolean {
     return (
+      this._order.IsSubmitted &&
       this.lineItems &&
       CanChangeLineItemsOnOrderTo(LineItemStatus.Complete, this.lineItems) &&
       (SellerOrderCanShip(
