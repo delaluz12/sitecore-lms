@@ -118,6 +118,7 @@ export const DATE_TIME = 'DATE_TIME'
 export const CURRENCY = 'CURRENCY'
 export const COPY_OBJECT = 'COPY_OBJECT'
 export const IMPERSONATE_BUTTON = 'IMPERSONATE_BUTTON'
+export const PAYMENT_TYPE = 'PAYMENT_TYPE'
 
 export const FULL_TABLE_RESOURCE_DICTIONARY: ResourceConfigurationDictionary = {
   products: {
@@ -381,6 +382,12 @@ export const FULL_TABLE_RESOURCE_DICTIONARY: ResourceConfigurationDictionary = {
         header: 'ADMIN.HEADERS.TIME_SUBMITTED',
         type: DATE_TIME,
         sortable: true,
+      },
+      {
+        path: 'xp.StripePaymentID',
+        header: 'Payment Type',
+        type: PAYMENT_TYPE,
+        sortable: false,
       },
       {
         path: 'xp.SubmittedOrderStatus',

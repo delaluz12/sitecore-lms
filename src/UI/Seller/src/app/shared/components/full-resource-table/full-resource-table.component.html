@@ -43,6 +43,10 @@
         <span *ngIf="cell.type === 'CURRENCY'">
           {{ cell.value | currency: 'USD' }}
         </span>
+        <span *ngIf="cell.type === 'PAYMENT_TYPE'">
+          <span *ngIf="cell.value">CC</span>
+          <span *ngIf="!cell.value">PO</span>
+        </span>
         <div class="d-flex" *ngIf="cell.type === 'STRING_WITH_IMAGE'">
           <img
             alt="Avatar"

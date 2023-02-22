@@ -29,7 +29,7 @@ namespace Headstart.Common.Models
                 ReportCategory = "Order",
                 AvailableToSuppliers = false,
                 Value = "SalesOrderDetail",
-                AdHocFilters = new string[] { "DateLow", "DateHigh", "TimeLow",  "TimeHigh", "SupplierID", "BrandID" }
+                AdHocFilters = new string[] { "DateLow", "DateHigh", "TimeLow",  "TimeHigh", "SupplierID", "BrandID", "xp.StripePaymentId" }
             },
             new ReportTypeResource
             {

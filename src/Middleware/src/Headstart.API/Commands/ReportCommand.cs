@@ -609,6 +609,12 @@ namespace Headstart.API.Commands
                     propertyName = $"{dataPathPrefix}{statusPath}";
                     filterExpression = $"={filterExpression}";
                 }
+                else if (propertyName == "xp.StripePaymentId")
+                {
+                    var stripeExpression = filterExpression == "PO" ? $"=null" : $"WHERE IS_DEFINED({dataPathPrefix}{propertyName})";
+                    propertyName = $"{dataPathPrefix}{propertyName}";
+                    filterExpression = stripeExpression;
+                }
                 else
                 {
                     filterExpression = $"={filterExpression}";

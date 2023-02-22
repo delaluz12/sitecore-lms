@@ -80,6 +80,22 @@
               (change)="updateReportAdHocFilters($event.target.value, filter)"
             />
           </div>
+          <div *ngIf="filter === 'xp.StripePaymentId'">
+            <label for="{{ filter }}">Payment Type</label>
+            <select
+              type="dropdown"
+              class="form-control"
+              formControlName="xp.StripePaymentId"
+              id="xp.StripePaymentId"
+              (change)="updateReportAdHocFilters($event.target.value, filter)"
+            >
+              <option [value]="null" translate>
+                ADMIN.REPORTS.INCLUDE_ALL
+              </option>
+              <option value="PO">PO</option>
+              <option value="CC">CC</option>
+            </select>
+          </div>
           <div *ngIf="filter === 'SupplierID' && suppliers?.length">
             <label for="{{ filter }}" translate
               >ADMIN.REPORTS.SUPPLIER_OPTIONAL</label

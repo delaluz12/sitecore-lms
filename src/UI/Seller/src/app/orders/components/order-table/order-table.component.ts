@@ -82,6 +82,15 @@ export class OrderTableComponent extends ResourceCrudComponent<Order> {
         Type: 'Dropdown',
       },
       {
+        Display: 'Payment Type',
+        Path: 'xp.StripePaymentID',
+        Items: [
+          { Text: 'CC', Value: '*' },
+          { Text: 'PO', Value: '!*' },
+        ],
+        Type: 'Dropdown',
+      },
+      {
         Display: 'ADMIN.FILTERS.FROM_DATE',
         Path: 'from',
         Type: 'DateFilter',

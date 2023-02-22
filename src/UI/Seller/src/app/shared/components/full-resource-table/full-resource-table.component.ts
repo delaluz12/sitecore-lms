@@ -14,7 +14,10 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { ImpersonationService } from '@app-seller/shared/services/impersonation/impersonation.service'
 import { applicationConfiguration } from '@app-seller/config/app.config'
 import { AppConfig, ResourceRow } from '@app-seller/shared'
-import { getProductSmallImageUrl, getSupplierLogoSmallUrl } from '@app-seller/shared/services/assets/asset.helper'
+import {
+  getProductSmallImageUrl,
+  getSupplierLogoSmallUrl,
+} from '@app-seller/shared/services/assets/asset.helper'
 
 @Component({
   selector: 'full-resource-table-component',
@@ -66,9 +69,9 @@ export class FullResourceTableComponent {
   }
 
   getHeaders(): object[] {
-    return FULL_TABLE_RESOURCE_DICTIONARY[
-      this.resourceType
-    ].fields.filter((r) => this.isValidForDisplay(r))
+    return FULL_TABLE_RESOURCE_DICTIONARY[this.resourceType].fields.filter(
+      (r) => this.isValidForDisplay(r)
+    )
   }
 
   isValidForDisplay(field: any): boolean {
@@ -129,9 +132,9 @@ export class FullResourceTableComponent {
   }
 
   getImage(resource: any): string {
-    if(this.resourceType === 'products') {
+    if (this.resourceType === 'products') {
       return getProductSmallImageUrl(resource)
-    } else if(this.resourceType === 'suppliers') {
+    } else if (this.resourceType === 'suppliers') {
       return getSupplierLogoSmallUrl(resource)
     } else return ''
   }
