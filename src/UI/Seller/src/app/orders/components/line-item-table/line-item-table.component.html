@@ -10,21 +10,18 @@
             >Ship From</small
           >
           <h5 class="card-title mb-0">
-            {{
-              liGroup[0]?.ShipFromAddress?.CompanyName ||
-                liGroup[0]?.Product?.xp?.Facets?.supplier[0]
-            }}
+            {{ liGroup[0]?.ShipFromAddress?.CompanyName }}
             <small
               *ngIf="liGroup[0]?.ShipFromAddress"
               class="text-muted d-block"
             >
               <span
-                >{{ liGroup[0].ShipFromAddress?.Street1
+                >{{ liGroup[0]?.ShipFromAddress?.Street1
                 }}<span *ngIf="liGroup[0].ShipFromAddress?.Street2"
-                  >, {{ liGroup[0].ShipFromAddress.Street2 }}</span
-                >, {{ liGroup[0].ShipFromAddress?.City }},
-                {{ liGroup[0].ShipFromAddress?.State }}
-                {{ liGroup[0].ShipFromAddress?.Zip }}</span
+                  >, {{ liGroup[0]?.ShipFromAddress.Street2 }}</span
+                >, {{ liGroup[0]?.ShipFromAddress?.City }},
+                {{ liGroup[0]?.ShipFromAddress?.State }}
+                {{ liGroup[0]?.ShipFromAddress?.Zip }}</span
               >
             </small>
           </h5>
@@ -55,12 +52,7 @@
         <tbody>
           <tr *ngFor="let li of liGroup; let lineItemIndex = index">
             <td
-              class="
-                align-middle
-                d-flex
-                justify-content-start
-                align-items-center
-              "
+              class="align-middle d-flex justify-content-start align-items-center"
             >
               <img
                 [id]="i"
