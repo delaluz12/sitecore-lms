@@ -38,5 +38,14 @@ namespace Headstart.API.Controllers
         {
             return await _docebo.GetToken();
         }
+
+        /// <summary>
+        /// LIST users from Docebo
+        /// </summary>
+        [HttpGet, Route("{email}"), OrderCloudUserAuth(ApiRole.Shopper)]
+        public async Task<DoceboUserSearchResponse> ListDoceboUsers(string email)
+        {
+            return await _docebo.SearchUsers(email);
+        }
     }
 }

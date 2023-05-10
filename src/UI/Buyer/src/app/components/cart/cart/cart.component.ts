@@ -9,6 +9,7 @@ import { ModalState } from 'src/app/models/shared.types'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { getPrimaryLineItemImage } from 'src/app/services/images.helpers'
 import { CurrentOrderService } from 'src/app/services/order/order.service'
+import { forEach } from 'lodash'
 
 @Component({
   templateUrl: './cart.component.html',
@@ -27,6 +28,9 @@ export class OCMCart implements OnInit, OnDestroy {
   faShoppingCart = faShoppingCart
   _isCartValid = true
   isEmptyingCart = false
+  missingDoceboUsers: string[] = []
+  showDoceboEmailError = false
+
   @Input() set invalidLineItems(value: HSLineItem[]) {
     this._invalidLineItems = value
     if (
@@ -84,16 +88,65 @@ export class OCMCart implements OnInit, OnDestroy {
   }
 
   toCheckout(): void {
-    this.context.router.toCheckout()
+    this._isCartValid = false
+    const currentUser = this.context.currentUser.get()
+    const lineItems = this.context.order.getLineItems()
+    const doceboUsers: string[] = []
+    this.missingDoceboUsers = []
+    this.showDoceboEmailError = false
+
+    lineItems.Items.forEach((li) => {
+      li.xp.OrderOnBehalfOf.forEach((email) => {
+        if (email != currentUser.Email) {
+          doceboUsers.push(email)
+        }
+      })
+    })
+
+    if (doceboUsers.length > 0) {
+      const doceboUserRequests = doceboUsers.map(async (email) => {
+        const searchResult = await this.context.order.searchDoceboUsers(email)
+        const result = {
+          learner: email,
+          found: searchResult.data.count > 0 ? true : false,
+        }
+        return result
+      })
+
+      Promise.all(doceboUserRequests)
+        .then((results) => {
+          results.forEach((result) => {
+            if (!result.found) {
+              this.missingDoceboUsers.push(result.learner)
+            }
+          })
+
+          if (this.missingDoceboUsers.length > 0) {
+            this.showDoceboEmailError = true
+            this._isCartValid = true
+          } else {
+            this.context.router.toCheckout()
+          }
+        })
+        .catch((error) => {
+          this._isCartValid = true
+          console.error(error)
+        })
+    } else {
+      this.context.router.toCheckout()
+    }
   }
 
   async submitQuote(): Promise<void> {
-    var currentOrder = this.context.order.get()
+    const currentOrder = this.context.order.get()
     currentOrder.xp.QuoteStatus = 'NeedsSellerReview'
     currentOrder.xp.QuoteSubmittedDate = new Date().toISOString()
     await this.context.order.patch(currentOrder)
-    await this.context.order.sendQuoteNotification(currentOrder.ID, this._lineItems.Items[0].ID)
-    
+    await this.context.order.sendQuoteNotification(
+      currentOrder.ID,
+      this._lineItems.Items[0].ID
+    )
+
     // The reset function does a search on xp.QuoteStatus.
     // The indexing appears to be happening in the background.
     // calling the function too soon results in the order remaining in the cart.

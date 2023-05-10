@@ -10,4 +10,6 @@ export interface LineItemXp {
     DocumentID?: string
     ShipMethod?: string
     SupplierComments?: string
+    OrderOnBehalfOf?: string[]
+    CanValidateDocebo?: boolean
 }

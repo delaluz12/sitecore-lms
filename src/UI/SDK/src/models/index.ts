@@ -126,3 +126,4 @@ export * from './PaymentIntentRequest';
 export * from './PaymentIntentResponse';
 export * from './StripePaymentDetails';
 export * from './CCTransactionResult';
+export * from './DoceboUserSearchResponse'

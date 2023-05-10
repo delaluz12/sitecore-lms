@@ -33,6 +33,7 @@ import Services from './Service';
 import ApprovalRules from './ApprovalRules';
 import RmAs from './RmAs';
 import Stripe from './Stripe';
+import DoceboUsers from './DoceboUsers';
 
 export { HeadStartSDK }
 
@@ -71,7 +72,8 @@ const HeadStartSDK: HeadStartSDK = {
     Upload: new Upload(),
     Services: new Services(),
     ApprovalRules: new ApprovalRules(),
-    Stripe: new Stripe()
+    Stripe: new Stripe(),
+    DoceboUsers: new DoceboUsers()
 }
 
 interface HeadStartSDK {
@@ -109,5 +111,6 @@ interface HeadStartSDK {
     Upload: Upload,
     Services: Services,
     ApprovalRules: ApprovalRules,
-    Stripe: Stripe
+    Stripe: Stripe,
+    DoceboUsers: DoceboUsers
 }

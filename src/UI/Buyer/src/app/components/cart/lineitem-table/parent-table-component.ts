@@ -1,5 +1,10 @@
 import { Input, OnInit, Directive } from '@angular/core'
-import { faTimes, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import {
+  faTimes,
+  faTrashAlt,
+  faAngleDown,
+  faAngleUp,
+} from '@fortawesome/free-solid-svg-icons'
 import { groupBy as _groupBy, isEqual, uniqWith } from 'lodash'
 import { HSLineItem, RMA, RMALineItem } from '@ordercloud/headstart-sdk'
 import { getPrimaryLineItemImage } from 'src/app/services/images.helpers'
@@ -28,6 +33,8 @@ export abstract class OCMParentTableComponent implements OnInit {
   @Input() invalidItem
   closeIcon = faTimes
   faTrashAlt = faTrashAlt
+  faAngleDown = faAngleDown
+  faAngleUp = faAngleUp
   _supplierArray: any[]
   suppliers: LineItemGroupSupplier[]
   selectedSupplier: LineItemGroupSupplier
@@ -39,6 +46,7 @@ export abstract class OCMParentTableComponent implements OnInit {
   _supplierData: LineItemGroupSupplier[]
   showComments: Record<string, string> = {}
   deletingLineItem = {}
+
   constructor(
     public context: ShopperContextService,
     private spinner: NgxSpinnerService,
@@ -62,10 +70,34 @@ export abstract class OCMParentTableComponent implements OnInit {
     } else if (changes?.supplierData?.currentValue) {
       this.buildSupplierArray(changes?.supplierData?.currentValue)
     }
+    const user = this.context.currentUser.get()
+    let validLineItems = true
+    this._lineItems.forEach((li) => {
+      if (li?.xp?.OrderOnBehalfOf == null) {
+        li.xp.OrderOnBehalfOf = [user.Email]
+      } else {
+        if (validLineItems) {
+          validLineItems = this.emailValidation(li.xp.OrderOnBehalfOf)
+        }
+      }
+    })
+    this.context.order.cart.setIsCartValid(validLineItems)
   }
 
   shouldDisplayAddress(shipFrom: Partial<Address>): boolean {
     return shipFrom?.Street1 && shipFrom.Street1 !== null
+  }
+
+  emailValidation(emails: string[]): boolean {
+    const user = this.context.currentUser.get()
+    const userDomain = user.Email.split('@')
+    let isSame = true
+    emails.forEach((email) => {
+      if (email.split('@')[1] != userDomain[1]) {
+        isSame = false
+      }
+    })
+    return isSame
   }
 
   initLineItems(): void {
@@ -148,7 +180,7 @@ export abstract class OCMParentTableComponent implements OnInit {
       try {
         // ACTIVATE SPINNER/DISABLE INPUT IF QTY BEING UPDATED
         this.updatingLiIDs.push(lineItemID)
-        await this.context.order.cart.setQuantity({
+        await this.context.order.cart.updateLineItem({
           ProductID,
           Specs,
           Quantity,
@@ -245,5 +277,42 @@ export abstract class OCMParentTableComponent implements OnInit {
       (liFromRMA) => liFromRMA?.ID === li?.ID
     )
     return rmaLineItem
+  }
+
+  onOrderOnBehalfOfChange(
+    lineItemID: string,
+    value: string,
+    index: number
+  ): void {
+    const li = this.getLineItem(lineItemID)
+    if (li.xp.OrderOnBehalfOf[index]) {
+      li.xp.OrderOnBehalfOf[index] = value
+    } else {
+      li.xp.OrderOnBehalfOf.push(value)
+    }
+  }
+
+  async saveEmailList(lineItemID: string): Promise<void> {
+    const li = this.getLineItem(lineItemID)
+    const { ProductID, Specs, Quantity, xp } = li
+    if (xp.OrderOnBehalfOf.length > li.Quantity) {
+      xp.OrderOnBehalfOf.splice(li.Quantity)
+    }
+    xp.CanValidateDocebo = this.emailValidation(xp.OrderOnBehalfOf)
+
+    try {
+      // ACTIVATE SPINNER/DISABLE INPUT IF QTY BEING UPDATED
+      this.updatingLiIDs.push(lineItemID)
+      await this.context.order.cart.updateLineItem({
+        ProductID,
+        Specs,
+        Quantity,
+        xp,
+      })
+    } finally {
+      // REMOVE SPINNER/ENABLE INPUT IF QTY NO LONGER BEING UPDATED
+      this.updatingLiIDs.splice(this.updatingLiIDs.indexOf(lineItemID), 1)
+      this.context.order.cart.setIsCartValid(xp.CanValidateDocebo)
+    }
   }
 }

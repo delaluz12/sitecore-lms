@@ -27,6 +27,17 @@
             LAYOUT.APP_HEADER.PRODUCTS
           </a>
         </li>
+        <li
+          class="nav-item clickable cursor-pointer"
+          [ngClass]="{ active: activePath === '/faq' }"
+        >
+          <a
+            class="nav-link"
+            (click)="isCollapsed = !isCollapsed; context.router.toRoute('faq')"
+          >
+            FAQ
+          </a>
+        </li>
         <li *ngIf="hasSuppliers" class="nav-item clickable cursor-pointer">
           <a
             class="nav-link"

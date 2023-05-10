@@ -27,6 +27,9 @@
   </div>
   <div class="row">
     <div class="col-12">
+      <p *ngIf="categoryCrumbs.length >= 1">
+        {{ categoryCrumbs[categoryCrumbs.length - 1].Description }}
+      </p>
       <p>
         &nbsp;All prices are listed in US Dollars.
         <span *ngIf="isPartner"

@@ -60,34 +60,63 @@ namespace Headstart.API.Commands
             {
                 var courseID = worksheet.LineItems[i].Product?.xp?.lms_course_id;
                 var subscriptionID = worksheet.LineItems[i].Product?.xp?.lms_SubscriptionUuid;
+                var orderOnBehalfOfEmails = worksheet.LineItems[i]?.xp?.OrderOnBehalfOf;
+                var orderOnBehalfOfIDs = new List<string>();
+
+                if (orderOnBehalfOfEmails != null)
+                {
+                    foreach (var email in orderOnBehalfOfEmails)
+                    {
+                        // build up a list of ID's
+                        if (email != worksheet?.Order.FromUser.Email)
+                        {
+                            var doceboUsers = await _docebo.SearchUsers(email);
+                            orderOnBehalfOfIDs.Add(doceboUsers.data.items[0].user_id);
+                        }
+                        else 
+                        {
+                            orderOnBehalfOfIDs.Add(worksheet?.Order.FromUser?.xp?.lms_user_id);
+                        }
+                    }
+                }
+                else
+                {
+                    orderOnBehalfOfIDs.Add(worksheet?.Order.FromUser?.xp?.lms_user_id);
+                }
+
                 if (!String.IsNullOrEmpty(courseID))
                 {
-                    var lineItem = new DoceboItem()
+                    foreach (var userID in orderOnBehalfOfIDs)
                     {
-                        course_id = Int32.Parse(courseID),
-                        user_id = worksheet?.Order.FromUser?.xp?.lms_user_id,
-                        status = !String.IsNullOrEmpty(stripePaymentDetails.OrderID) ? "subscribed" : "waiting",
-                        field_2 = incrementedOrderID
+                        var lineItem = new DoceboItem()
+                        {
+                            course_id = Int32.Parse(courseID),
+                            user_id = userID,
+                            status = !String.IsNullOrEmpty(stripePaymentDetails.OrderID) ? "subscribed" : "waiting",
+                            field_2 = incrementedOrderID
 
-                    };
-                    doceboItems.Add(lineItem);
+                        };
+                        doceboItems.Add(lineItem);
+                    }
                 }
                 if (!String.IsNullOrEmpty(subscriptionID))
                 {
                     var doceboSubscription = new DoceboSubscriptionRequest()
                     {
                         user_ids = new List<int>()
-                        {
-                            Int32.Parse(worksheet?.Order.FromUser?.xp?.lms_user_id)
-                        }
                     };
+                    foreach (var userID in orderOnBehalfOfIDs)
+                    {
+                        doceboSubscription.user_ids.Add(Int32.Parse(userID));
+                    }
                     try
                     {
                         await _docebo.SubscribeUsers(doceboSubscription, subscriptionID);
                     }
-                    catch (Exception) {
-                        await _card.VoidPaymentAsync(incrementedOrderID, userToken, stripePaymentDetails, stripeTransactionID); 
-                        throw; 
+                    catch (Exception)
+                    {
+                        await _card.VoidPaymentAsync(incrementedOrderID, userToken, stripePaymentDetails, stripeTransactionID);
+                        throw;
                     }
                 }
             }

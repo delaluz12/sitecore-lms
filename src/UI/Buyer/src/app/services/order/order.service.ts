@@ -16,6 +16,7 @@ import {
   HSLineItem,
   QuoteOrderInfo,
   HeadStartSDK,
+  DoceboUserSearchResponse,
 } from '@ordercloud/headstart-sdk'
 import { PromoService } from './promo.service'
 import { AppConfig } from 'src/app/models/environment.types'
@@ -61,6 +62,13 @@ export class CurrentOrderService {
     lineItemID: string
   ): Promise<void> {
     await HeadStartSDK.Orders.SendQuoteRequestToSupplier(orderID, lineItemID)
+  }
+
+  public async searchDoceboUsers(
+    email: string
+  ): Promise<DoceboUserSearchResponse> {
+    const userResponse = await HeadStartSDK.DoceboUsers.SearchUsers(email)
+    return userResponse
   }
 
   get cart(): CartService {

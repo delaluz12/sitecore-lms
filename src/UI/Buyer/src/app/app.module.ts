@@ -159,6 +159,7 @@ import { LocationManagementWrapperComponent } from './wrapper-components/locatio
 import { ForgotPasswordWrapperComponent } from './wrapper-components/forgot-password-wrapper.component'
 import { HomeWrapperComponent } from './wrapper-components/home-wrapper.component'
 import { LoginWrapperComponent } from './wrapper-components/login-wrapper.component'
+import { FaqWrapperComponent } from './wrapper-components/faq-wrapper.component'
 import { MeChangePasswordWrapperComponent } from './wrapper-components/me-change-password-wrapper.component'
 import { PaymentListWrapperComponent } from './wrapper-components/payment-list-wrapper.component'
 import { ProductDetailWrapperComponent } from './wrapper-components/product-detail-wrapper.component'
@@ -206,8 +207,9 @@ import {
 } from '@fortawesome/free-brands-svg-icons'
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons'
 import { ProductPriceDisplayComponent } from './components/products/product-price-display/product-price-display.component'
-import { StripePaymentComponent } from './components/payments/stripe-payment/stripe-payment.component';
+import { StripePaymentComponent } from './components/payments/stripe-payment/stripe-payment.component'
 import { CheckoutProcessingComponent } from './components/checkout/checkout-processing/checkout-processing.component'
+import { FaqComponent } from './components/faq/faq.component'
 
 export function HttpLoaderFactory(
   http: HttpClient,
@@ -226,6 +228,7 @@ const components = [
   ForgotPasswordWrapperComponent,
   HomeWrapperComponent,
   LoginWrapperComponent,
+  FaqWrapperComponent,
   MeChangePasswordWrapperComponent,
   PaymentListWrapperComponent,
   ProductDetailWrapperComponent,
@@ -344,6 +347,7 @@ const components = [
     ...components,
     StripePaymentComponent,
     CheckoutProcessingComponent,
+    FaqComponent,
   ],
   imports: [
     BrowserModule,

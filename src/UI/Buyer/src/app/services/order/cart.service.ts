@@ -35,7 +35,7 @@ export class CartService {
     private checkout: CheckoutService,
     private userService: CurrentUserService,
     private send: SitecoreSendTrackingService,
-    private cdp: SitecoreCDPTrackingService,
+    private cdp: SitecoreCDPTrackingService
   ) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.onChange = this.state.onLineItemsChange.bind(this.state)
@@ -103,10 +103,10 @@ export class CartService {
       await this.initializeOrder()
     }
 
-    var createdLi = await this.upsertLineItem(lineItem)
-    this.send.addToCart(createdLi);
-    this.cdp.addToCart(createdLi);
-    return createdLi;
+    const createdLi = await this.upsertLineItem(lineItem)
+    this.send.addToCart(createdLi)
+    this.cdp.addToCart(createdLi)
+    return createdLi
   }
 
   async initializeOrder(): Promise<void> {
@@ -139,7 +139,7 @@ export class CartService {
     return Promise.all(req)
   }
 
-  async setQuantity(lineItem: HSLineItem): Promise<HSLineItem> {
+  async updateLineItem(lineItem: HSLineItem): Promise<HSLineItem> {
     try {
       return await this.upsertLineItem(lineItem)
     } finally {
@@ -234,7 +234,7 @@ export class CartService {
       const requests = this.lineItems.Items.map((li) =>
         LineItems.Delete('Outgoing', this.order.ID, li.ID)
       )
-      this.cdp.clearCart();
+      this.cdp.clearCart()
       await Promise.all(requests)
     } finally {
       await this.state.reset()

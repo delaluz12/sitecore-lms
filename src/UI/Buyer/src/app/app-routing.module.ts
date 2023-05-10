@@ -17,6 +17,7 @@ import { HomeWrapperComponent } from './wrapper-components/home-wrapper.componen
 import { LocationListWrapperComponent } from './wrapper-components/location-list-wrapper.component'
 import { LocationManagementWrapperComponent } from './wrapper-components/location-management-wrapper.component'
 import { LoginWrapperComponent } from './wrapper-components/login-wrapper.component'
+import { FaqWrapperComponent } from './wrapper-components/faq-wrapper.component'
 import { MeChangePasswordWrapperComponent } from './wrapper-components/me-change-password-wrapper.component'
 import { OrderDetailWrapperComponent } from './wrapper-components/order-detail-wrapper.component'
 import { OrderHistoryWrapperComponent } from './wrapper-components/order-history-wrapper-component'
@@ -49,6 +50,7 @@ const HeadstartRoutes: Routes = [
       { path: 'checkout', component: CheckoutWrapperComponent },
       { path: 'cart', component: CartWrapperComponent },
       { path: 'suppliers', component: SupplierListWrapperComponent },
+      { path: 'faq', component: FaqWrapperComponent },
       {
         path: 'processing/:stripekeyname/:customerid',
         component: CheckoutProcessingComponent,
