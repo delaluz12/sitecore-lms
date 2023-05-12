@@ -80,8 +80,12 @@ export abstract class OCMParentTableComponent implements OnInit {
           validLineItems = this.emailValidation(li.xp.OrderOnBehalfOf)
         }
       }
+      if (li.Quantity != li.xp.OrderOnBehalfOf.length) {
+        validLineItems = false
+      }
     })
     this.context.order.cart.setIsCartValid(validLineItems)
+    this.context.order.cart.setCanValidateDocebo(validLineItems)
   }
 
   shouldDisplayAddress(shipFrom: Partial<Address>): boolean {
@@ -285,7 +289,7 @@ export abstract class OCMParentTableComponent implements OnInit {
     index: number
   ): void {
     const li = this.getLineItem(lineItemID)
-    if (li.xp.OrderOnBehalfOf[index]) {
+    if (li.xp.OrderOnBehalfOf[index] || li.xp.OrderOnBehalfOf[index] == '') {
       li.xp.OrderOnBehalfOf[index] = value
     } else {
       li.xp.OrderOnBehalfOf.push(value)
@@ -299,6 +303,9 @@ export abstract class OCMParentTableComponent implements OnInit {
       xp.OrderOnBehalfOf.splice(li.Quantity)
     }
     xp.CanValidateDocebo = this.emailValidation(xp.OrderOnBehalfOf)
+    if (li.Quantity != li.xp.OrderOnBehalfOf.length) {
+      xp.CanValidateDocebo = false
+    }
 
     try {
       // ACTIVATE SPINNER/DISABLE INPUT IF QTY BEING UPDATED
@@ -313,6 +320,7 @@ export abstract class OCMParentTableComponent implements OnInit {
       // REMOVE SPINNER/ENABLE INPUT IF QTY NO LONGER BEING UPDATED
       this.updatingLiIDs.splice(this.updatingLiIDs.indexOf(lineItemID), 1)
       this.context.order.cart.setIsCartValid(xp.CanValidateDocebo)
+      this.context.order.cart.setCanValidateDocebo(xp.CanValidateDocebo)
     }
   }
 }

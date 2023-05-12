@@ -30,6 +30,7 @@ export class OCMCart implements OnInit, OnDestroy {
   isEmptyingCart = false
   missingDoceboUsers: string[] = []
   showDoceboEmailError = false
+  showDoceboValidationError = false
 
   @Input() set invalidLineItems(value: HSLineItem[]) {
     this._invalidLineItems = value
@@ -70,6 +71,11 @@ export class OCMCart implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentOrder.cart.isCartValidSubject.subscribe((valid) => {
       this._isCartValid = valid
+    })
+
+    this.currentOrder.cart.canValidateDoceboSubject.subscribe((canValidate) => {
+      this.showDoceboValidationError = !canValidate
+      this._isCartValid = canValidate
     })
   }
 

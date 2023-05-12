@@ -29,6 +29,7 @@ export class CartService {
   public onChange: (callback: (lineItems: ListPage<HSLineItem>) => void) => void
   private initializingOrder = false
   public isCartValidSubject = new Subject<boolean>()
+  public canValidateDoceboSubject = new Subject<boolean>()
 
   constructor(
     private state: OrderStateService,
@@ -47,6 +48,10 @@ export class CartService {
 
   setIsCartValid(isCartValid: boolean): void {
     this.isCartValidSubject.next(isCartValid)
+  }
+
+  setCanValidateDocebo(canValidateDocebo: boolean): void {
+    this.canValidateDoceboSubject.next(canValidateDocebo)
   }
 
   async reset(): Promise<void> {
