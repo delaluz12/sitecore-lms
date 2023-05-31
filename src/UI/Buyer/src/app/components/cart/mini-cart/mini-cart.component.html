@@ -7,9 +7,17 @@
       class="list-group-item"
       *ngFor="let li of lineItems | slice: 0:maxLines"
     >
-      <a href="javascript:;" (click)="toProductDetails(li.Product.ID, li.xp.ConfigurationID, li.xp.DocumentID)">{{
-        li | productNameWithSpecs
-      }}</a>
+      <a
+        href="javascript:;"
+        (click)="
+          toProductDetails(
+            li.Product.ID,
+            li.xp.ConfigurationID,
+            li.xp.DocumentID
+          )
+        "
+        >{{ li | productNameWithSpecs }}</a
+      >
       <div class="d-flex justify-content-between">
         <small
           ><span class="text-muted" translate>CART.MINI_CART.QTY</span>:
@@ -36,13 +44,13 @@
   </div>
   <div
     *ngIf="lineItems.length > 0"
-    class="d-flex justify-content-between card-footer bg-white"
+    class="d-flex justify-content-end card-footer bg-white"
   >
-    <button class="btn btn-sm btn-link" (click)="toFullCart()" translate>
+    <button class="btn btn-sm btn-primary" (click)="toFullCart()" translate>
       CART.MINI_CART.EDIT_CART
     </button>
-    <button class="btn btn-sm btn-primary" (click)="toCheckout()" *ngIf="!isQuoteOrder()" translate>
+    <!-- <button class="btn btn-sm btn-primary" (click)="toCheckout()" *ngIf="!isQuoteOrder()" translate>
       CART.MINI_CART.CHECKOUT
-    </button>
+    </button> -->
   </div>
 </div>
