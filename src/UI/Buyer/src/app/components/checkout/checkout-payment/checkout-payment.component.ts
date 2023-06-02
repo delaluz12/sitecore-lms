@@ -25,6 +25,7 @@ import { OrderSummaryMeta } from 'src/app/models/order.types'
 import { AppConfig } from 'src/app/models/environment.types'
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 import { getSuggestedAddresses } from 'src/app/services/address-suggestion.helper'
+import { StripeConfig } from 'src/app/config/stripe.class'
 
 @Component({
   templateUrl: './checkout-payment.component.html',
@@ -55,9 +56,11 @@ export class OCMCheckoutPayment implements OnInit {
   disablePO = false
   disableCC = false
   japanOrder = false
-  midEastOrder = false
+  poOnlyOrder = false
   poNumber: string
   stripeCountry: EventEmitter<BuyerAddress> = new EventEmitter<BuyerAddress>()
+  stripeCountries = StripeConfig.getStripeCountries()
+  stripeKeyMap = StripeConfig.getStripeKeyMap()
 
   constructor(
     private context: ShopperContextService,
@@ -68,6 +71,7 @@ export class OCMCheckoutPayment implements OnInit {
     this._orderCurrency = this.context.currentUser.get().Currency
     this._acceptedPaymentMethods = this.getAcceptedPaymentMethods()
     const _order = this.context.order.get()
+
     if (_order.Total > 0 && _order?.xp?.ShippingAddress?.Country != 'JP') {
       this.selectedPaymentMethod = this
         ._acceptedPaymentMethods?.[0] as AcceptedPaymentTypes
@@ -126,7 +130,7 @@ export class OCMCheckoutPayment implements OnInit {
   onBillingAddressChange(billingAddressID: string): void {
     this.stripeCountry.emit(null)
     this.japanOrder = false
-    this.midEastOrder = false
+    this.poOnlyOrder = false
     this.showNewAddressForm = billingAddressID === this.NEW_ADDRESS_CODE
     this.selectedBillingAddress = this.existingBillingAddresses.Items.find(
       (address) => billingAddressID === address.ID
@@ -142,28 +146,28 @@ export class OCMCheckoutPayment implements OnInit {
         'billing'
       )
       const _order = this.context.order.get()
-      const middleEastSubsidiaryCountries = [
-        'BH',
-        'JO',
-        'KW',
-        'LB',
-        'MA',
-        'OM',
-        'SA',
-      ]
+      const keyName =
+        this.appConfig.sellerName == 'Sitecore LMS TEST'
+          ? 'TestPublishableKey'
+          : 'ProductionPublishableKey'
+
+      const stripeAccount = this.stripeCountries.find(
+        (country) => country.Code == this.selectedBillingAddress.Country
+      )
+      const stripeInfo = this.stripeKeyMap.find(
+        (key) => key.StripeAccount == stripeAccount.StripeAccount
+      )
+      const stripeKey = stripeInfo[keyName]
+
       if (this.selectedBillingAddress.Country == 'JP') {
         this.selectedPaymentMethod = this
           ._acceptedPaymentMethods?.[1] as AcceptedPaymentTypes
         this.japanOrder = true
         this.disableCC = true
-      } else if (
-        middleEastSubsidiaryCountries.indexOf(
-          this.selectedBillingAddress.Country
-        ) !== -1
-      ) {
+      } else if (stripeKey == 'PO_ONLY') {
         this.selectedPaymentMethod = this
           ._acceptedPaymentMethods?.[1] as AcceptedPaymentTypes
-        this.midEastOrder = true
+        this.poOnlyOrder = true
         this.disableCC = true
       } else {
         if (_order.Total > 0) {
