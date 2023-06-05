@@ -296,6 +296,7 @@ export class OCMCheckoutAddress implements OnInit {
       const savedAddress = await this.context.addresses.create(address)
       return savedAddress
     } catch (ex) {
+      this.spinner.hide()
       return this.handleAddressError(ex)
     }
   }
