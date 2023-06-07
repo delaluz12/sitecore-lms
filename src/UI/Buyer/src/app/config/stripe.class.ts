@@ -457,8 +457,10 @@ export class StripeConfig {
         StripeAccount: 'Sitecore Middle East FZ-LLC',
         StripeKey: 'MiddleEastKey',
         Currency: 'DKK',
-        TestPublishableKey: 'PO_ONLY',
-        ProductionPublishableKey: 'PO_ONLY',
+        TestPublishableKey:
+          'pk_test_51L5WmNEfaBdmzCzjfgumFnbpA2n2sOEzL9hTJJk3ozShW3QuzUJ6cXbWBMMgnkTYZ6HybAoD4OH8iHXL1JBFVuHN00NFuE0YFq',
+        ProductionPublishableKey:
+          'pk_live_51L5WmNEfaBdmzCzj1ylFk2o1s9yhGEfZMfsBD2IVfzMP2gRHji4Xfhj3W1XpgYptl6hwwzytsnwP95iiBDR7LR4J00O1MuP6AE',
       },
       {
         StripeAccount: 'PO_ONLY',
