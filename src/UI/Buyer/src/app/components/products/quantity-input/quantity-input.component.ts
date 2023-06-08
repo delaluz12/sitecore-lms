@@ -130,6 +130,12 @@ export class OCMQuantityInput implements OnInit, OnChanges {
     }
   }
 
+  checkKey(event: Event): void {
+    if (event['key'] === 'Enter') {
+      this.emit(this.form.value.quantity)
+    }
+  }
+
   quantityChangeListener(): void {
     this.form.valueChanges.subscribe(() => {
       this.emit(this.form.value.quantity)

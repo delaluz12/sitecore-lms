@@ -15,6 +15,7 @@
       [attr.disabled]="disabled ? '' : null"
       aria-label="Quantity Input Selector"
       aria-describedby="quantity"
+      (keyup)="checkKey($event)"
     />
     <select
       *ngIf="isQtyRestricted"
