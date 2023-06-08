@@ -82,7 +82,7 @@ export class OCMAppHeader implements OnInit {
   faTimes = faTimes
   faBoxOpen = faBoxOpen
   flagIcon: string
-  hasSuppliers = false;
+  hasSuppliers = false
   currentSupplierList: ListPage<Supplier>
 
   constructor(
@@ -124,10 +124,11 @@ export class OCMAppHeader implements OnInit {
   }
 
   async getCurrentSupplierList() {
-    this.setBuyerFilterIfNeeded();
-    const supplierList: ListPage<Supplier> = await this.context.supplierFilters.listSuppliers()
+    this.setBuyerFilterIfNeeded()
+    const supplierList: ListPage<Supplier> =
+      await this.context.supplierFilters.listSuppliers()
 
-    return supplierList;
+    return supplierList
   }
 
   private setBuyerFilterIfNeeded(): void {
@@ -163,9 +164,7 @@ export class OCMAppHeader implements OnInit {
       .subscribe((lis: HSLineItem[]) => {
         clearTimeout(closePopoverTimeout)
         if (lis.length) {
-          let totalQuantity = lis
-            .map((li) => li.Quantity)
-            .reduce((accum, currentVal) => accum + currentVal, 0)
+          let totalQuantity = lis[0].xp.QuantityAdded
           this.addToCartPopover.ngbPopover = `Added ${totalQuantity} items to Cart`
           setTimeout(() => {
             if (!this.addToCartPopover.isOpen()) {
@@ -219,7 +218,7 @@ export class OCMAppHeader implements OnInit {
   }
   searchProducts(searchStr: string): void {
     this.searchTermForProducts = searchStr
-    this.cdp.productSearched(searchStr); 
+    this.cdp.productSearched(searchStr)
     this.context.router.toProductList({ search: searchStr })
   }
 

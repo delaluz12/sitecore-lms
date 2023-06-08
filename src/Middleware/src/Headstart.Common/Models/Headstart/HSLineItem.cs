@@ -32,6 +32,7 @@ namespace Headstart.Models.Headstart
         public string SupplierComments { get; set; } // xp.Comments is already being used as ship comments for SEB
         public List<string> OrderOnBehalfOf { get; set; }
         public bool? CanValidateDocebo { get; set; }
+        public int? QuantityAdded { get; set; }
     }
 
     

@@ -91,6 +91,7 @@ export class CartService {
     // order is well defined, line item can be added
     this.onAdd.next(lineItem)
     if (!_isUndefined(this.order.DateCreated)) {
+      lineItem.xp.QuantityAdded = lineItem.Quantity
       const isPrintProduct = lineItem.xp.PrintArtworkURL
       // Handle quantity changes for non-print products
       if (!isPrintProduct) {

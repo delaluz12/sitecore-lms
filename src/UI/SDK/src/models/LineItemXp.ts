@@ -12,4 +12,5 @@ export interface LineItemXp {
     SupplierComments?: string
     OrderOnBehalfOf?: string[]
     CanValidateDocebo?: boolean
+    QuantityAdded?: number
 }
