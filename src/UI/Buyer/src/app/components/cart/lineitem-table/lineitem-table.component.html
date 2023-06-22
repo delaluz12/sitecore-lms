@@ -347,7 +347,7 @@
             ></textarea>
           </div> -->
         </div>
-        <div>
+        <div *ngIf="showOrderOnBehalfOf(li)">
           <ngb-accordion #acc="ngbAccordion" class="d-block rounded">
             <ngb-panel [id]="'test' + li.Product.ID">
               <ng-template ngbPanelHeader let-opened="opened">
@@ -363,7 +363,8 @@
                 <ul class="oc-list-items">
                   <p class="danger">
                     Please include each of the learner's email address used to
-                    access the Sitecore Learning platform.
+                    access the Sitecore Learning platform. The email address
+                    must already exist on Sitecore Learning.
                   </p>
                   <li
                     style="margin-bottom: 1rem"
@@ -376,6 +377,7 @@
                       >Learner Email {{ c + 1 }}</label
                     >
                     <input
+                      [attr.readonly]="!readOnly"
                       type="email"
                       placeholder="name@example.com"
                       [id]="'input' + li.Product.ID + c"
@@ -387,6 +389,7 @@
                     />
                   </li>
                   <button
+                    *ngIf="!readOnly"
                     class="btn btn-success btn-block"
                     (click)="saveEmailList(li.ID)"
                   >

@@ -283,6 +283,16 @@ export abstract class OCMParentTableComponent implements OnInit {
     return rmaLineItem
   }
 
+  showOrderOnBehalfOf(li: HSLineItem): boolean {
+    let shouldShow = true
+    if (li?.xp?.OrderOnBehalfOf && this.readOnly) {
+      const user = this.context.currentUser.get()
+      if (li.Quantity === 1 && li.xp.OrderOnBehalfOf[0] === user.Email) {
+        shouldShow = false
+      }
+    }
+    return shouldShow
+  }
   onOrderOnBehalfOfChange(
     lineItemID: string,
     value: string,
