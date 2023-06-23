@@ -377,12 +377,13 @@
                       >Learner Email {{ c + 1 }}</label
                     >
                     <input
-                      [attr.readonly]="!readOnly"
+                      [readonly]="readOnly"
                       type="email"
                       placeholder="name@example.com"
                       [id]="'input' + li.Product.ID + c"
                       class="form-control input-width"
                       [ngModel]="li.xp.OrderOnBehalfOf[c]"
+                      [required]="showOrderOnBehalfOf(li)"
                       (ngModelChange)="
                         onOrderOnBehalfOfChange(li.ID, $event, c)
                       "

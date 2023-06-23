@@ -1,3 +1,9 @@
 .relative {
     position: relative;
 }
+input.ng-invalid {
+    color: #495057;
+    background-color: #fff;
+    border-color: #f59494;
+    outline: 0;
+}
