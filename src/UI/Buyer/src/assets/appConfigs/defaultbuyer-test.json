@@ -28,6 +28,6 @@
   "instrumentationKey": null,
   "anonymousShoppingEnabled": false,
   "acceptedPaymentMethods": ["CreditCard", "PurchaseOrder"],
-  "ssoURL": "https://sandboxapi.ordercloud.io/ocrplogin?id=hIbePVxh90CdxrysqAUsQA&roles=MeAdmin+MeXpAdmin+MeAddressAdmin+MeCreditCardAdmin+ProductFacetReader+Shopper+SupplierAddressReader+SupplierReader+BuyerReader&cid=3f18555a-aeca-477e-8d7c-f42d5f8e8942",
+  "ssoURL": "https://sandboxapi.ordercloud.io/ocrplogin?id=YdZhuilV-EanXMMMyitvOg&roles=MeAdmin+MeXpAdmin+MeAddressAdmin+MeCreditCardAdmin+ProductFacetReader+Shopper+SupplierAddressReader+SupplierReader+BuyerReader&cid=3f18555a-aeca-477e-8d7c-f42d5f8e8942",
   "doceboURL": "https://learning.sitecore.com/"
 }
