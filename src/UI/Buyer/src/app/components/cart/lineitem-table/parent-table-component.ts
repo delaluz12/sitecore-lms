@@ -306,6 +306,30 @@ export abstract class OCMParentTableComponent implements OnInit {
     }
   }
 
+  async removeLearner(lineItemID: string, index: number): Promise<void> {
+    // ACTIVATE SPINNER/DISABLE INPUT IF QTY BEING UPDATED
+    this.updatingLiIDs.push(lineItemID)
+    const li = this.getLineItem(lineItemID)
+    // remove the lerner
+    li.xp.OrderOnBehalfOf.splice(index, 1)
+    // reduce the quantity on the line item
+    li.Quantity--
+
+    const { ProductID, Specs, Quantity, xp } = li
+
+    try {
+      await this.context.order.cart.updateLineItem({
+        ProductID,
+        Specs,
+        Quantity,
+        xp,
+      })
+    } finally {
+      // REMOVE SPINNER/ENABLE INPUT IF QTY NO LONGER BEING UPDATED
+      this.updatingLiIDs.splice(this.updatingLiIDs.indexOf(lineItemID), 1)
+    }
+  }
+
   async saveEmailList(lineItemID: string): Promise<void> {
     const li = this.getLineItem(lineItemID)
     const { ProductID, Specs, Quantity, xp } = li
