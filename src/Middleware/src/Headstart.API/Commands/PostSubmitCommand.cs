@@ -355,7 +355,8 @@ namespace Headstart.API.Commands
             var updatedSupplierOrders = new List<HSOrder>();
             var supplierIDs = new List<string>();
             var lineItems = await _oc.LineItems.ListAllAsync(OrderDirection.Incoming, buyerOrder.Order.ID);
-            var shipFromAddressIDs = lineItems.DistinctBy(li => li.ShipFromAddressID).Select(li => li.ShipFromAddressID).ToList();
+            var shipFromAddressIDs = EnumerableExtensions.DistinctBy(lineItems, li => li.ShipFromAddressID).Select(li => li.ShipFromAddressID).ToList();
+            //var shipFromAddressIDs = lineItems.DistinctBy(li => li.ShipFromAddressID).Select(li => li.ShipFromAddressID).ToList();
 
             foreach (var supplierOrder in supplierOrders)
             {
