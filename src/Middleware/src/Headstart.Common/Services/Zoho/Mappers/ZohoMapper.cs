@@ -122,7 +122,7 @@ namespace Headstart.Common.Services.Zoho.Mappers
                 }
             }
 
-            return EnumerableExtensions.DistinctBy(list, u => u.email).ToList();
+            return list.DistinctBy(u => u.email).ToList();
         }
     }
 
@@ -303,7 +303,7 @@ namespace Headstart.Common.Services.Zoho.Mappers
             zOrder.currency_code = contact.currency_code;
             zOrder.currency_symbol = contact.currency_symbol;
             zOrder.notes = promotions.Any()
-                ? $"Promotions applied: {EnumerableExtensions.DistinctBy(promotions, p => p.Code).Select(p => p.Code).JoinString(" - ", p => p)}"
+                ? $"Promotions applied: {promotions.DistinctBy(p => p.Code).Select(p => p.Code).JoinString(" - ", p => p)}"
                 : null;
             // adding shipping as a line item
             foreach (var shipment in worksheet.ShipEstimateResponse.ShipEstimates)
@@ -346,7 +346,7 @@ namespace Headstart.Common.Services.Zoho.Mappers
                 currency_code = contact.currency_code,
                 currency_symbol = contact.currency_symbol,
                 notes = promotions.Any()
-                    ? $"Promotions applied: {EnumerableExtensions.DistinctBy(promotions, p => p.Code).Select(p => p.Code).JoinString(" - ", p => p)}"
+                    ? $"Promotions applied: {promotions.DistinctBy(p => p.Code).Select(p => p.Code).JoinString(" - ", p => p)}"
                     : null
                 //shipping_charge = decimal.ToDouble(order.ShippingCost), //TODO: Please mention any Shipping/miscellaneous charges as additional line items.
             };

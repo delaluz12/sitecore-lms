@@ -36,7 +36,8 @@ namespace Headstart.API.Commands
             // ordercloud does not re-evaluate promotions when line items change
             // we must remove all promos and re-apply them to ensure promotion discounts are accurate
             var promos = await _oc.Orders.ListPromotionsAsync(OrderDirection.Incoming, orderID, pageSize: 100);
-            var requests = EnumerableExtensions.DistinctBy(promos.Items, p => p.ID) // the same promo may be applied to multiple line items on one order
+            var requests = promos.Items
+                            .DistinctBy(p => p.ID) // the same promo may be applied to multiple line items on one order
                             .Select(p => RemovePromoAsync(orderID, p));
             var allTasks = Task.WhenAll(requests);
 

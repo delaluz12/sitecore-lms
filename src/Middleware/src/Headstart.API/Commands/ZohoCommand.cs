@@ -179,7 +179,7 @@ namespace Headstart.API.Commands.Zoho
             // Overview: variants will be saved in Zoho as the Item. If the variant is null save the Product as the Item
 
             // gather IDs either at the product or variant level to search Zoho for existing Items 
-            var uniqueLineItems = EnumerableExtensions.DistinctBy(lineitems, item => item.SKU()).ToList();
+            var uniqueLineItems = lineitems.DistinctBy(item => item.SKU()).ToList();
 
             var zItems = await Throttler.RunAsync(uniqueLineItems, delay, concurrent, id => _zoho.Items.ListAsync(new ZohoFilter()
             {
