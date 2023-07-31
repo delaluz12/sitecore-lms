@@ -103,6 +103,22 @@ export class CheckoutService {
     }
   }
 
+  async setOrderOnBehalfOfOrderFlag(flag: boolean): Promise<void> {
+    const patch = { xp: { OrderedOnBehalfOfOthers: flag } }
+    try {
+      this.order = await this.patch(patch as HSOrder)
+    } catch (ex) {
+      if (ex.errors.Errors[0].ErrorCode === 'NotFound') {
+        if (ex?.errors?.Errors?.[0]?.Data.ObjectType === 'Order') {
+          throw Error('You no longer have access to this order')
+        }
+        throw Error(
+          'You no longer have access to this buyer location. Please enter or select a different one.'
+        )
+      }
+    }
+  }
+
   async isApprovalNeeded(locationID: string): Promise<boolean> {
     const userGroups = await Me.ListUserGroups({
       searchOn: ['ID'],

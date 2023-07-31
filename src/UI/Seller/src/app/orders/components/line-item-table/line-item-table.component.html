@@ -82,6 +82,16 @@
                   >
                     {{ spec?.Name }}: {{ spec.Value }}
                   </p>
+                  <div *ngIf="li?.xp?.OrderOnBehalfOf?.length > 0">
+                    <hr />
+                    <span><b>Learners:</b></span>
+                    <p
+                      class="mb-0 mt-2"
+                      *ngFor="let learner of li.xp.OrderOnBehalfOf"
+                    >
+                      {{ learner }}
+                    </p>
+                  </div>
                 </h6>
               </div>
             </td>

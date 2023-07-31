@@ -33,4 +33,5 @@ export interface OrderXp {
     StripePaymentId?: string
     PONumber?: string
     InstructorLeadAcknowledgment?: boolean
+    OrderedOnBehalfOfOthers?: boolean
 }

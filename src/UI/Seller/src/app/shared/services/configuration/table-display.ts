@@ -390,9 +390,9 @@ export const FULL_TABLE_RESOURCE_DICTIONARY: ResourceConfigurationDictionary = {
         sortable: false,
       },
       {
-        path: 'xp.SubmittedOrderStatus',
-        header: 'ADMIN.HEADERS.STATUS',
-        type: BASIC_STRING,
+        path: 'xp.OrderedOnBehalfOfOthers',
+        header: 'Behalf of Others',
+        type: BOOLEAN,
         sortable: false,
       },
     ],

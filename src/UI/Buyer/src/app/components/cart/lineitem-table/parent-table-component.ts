@@ -331,6 +331,7 @@ export abstract class OCMParentTableComponent implements OnInit {
   }
 
   async saveEmailList(lineItemID: string): Promise<void> {
+    const currentOrder = this.context.order.get()
     const li = this.getLineItem(lineItemID)
     const { ProductID, Specs, Quantity, xp } = li
     if (xp.OrderOnBehalfOf.length > li.Quantity) {
@@ -351,6 +352,9 @@ export abstract class OCMParentTableComponent implements OnInit {
         xp,
       })
     } finally {
+      if (!currentOrder.xp.OrderedOnBehalfOfOthers) {
+        await this.context.order.checkout.setOrderOnBehalfOfOrderFlag(true)
+      }
       // REMOVE SPINNER/ENABLE INPUT IF QTY NO LONGER BEING UPDATED
       this.updatingLiIDs.splice(this.updatingLiIDs.indexOf(lineItemID), 1)
       this.context.order.cart.setIsCartValid(xp.CanValidateDocebo)
