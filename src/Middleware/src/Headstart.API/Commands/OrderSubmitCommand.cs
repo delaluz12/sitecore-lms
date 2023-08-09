@@ -111,7 +111,11 @@ namespace Headstart.API.Commands
                     }
                     try
                     {
-                        await _docebo.SubscribeUsers(doceboSubscription, subscriptionID);
+                        var subscriptions = subscriptionID.Split("|");
+                        foreach (var subscription in subscriptions)
+                        {
+                            await _docebo.SubscribeUsers(doceboSubscription, subscription);
+                        }
                     }
                     catch (Exception)
                     {
