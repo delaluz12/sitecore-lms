@@ -22,7 +22,7 @@
   <div
     class="custom-control custom-checkbox"
     *ngFor="
-      let checkbox of checkboxArray | slice: 0:visibleFacetLength;
+      let checkbox of checkboxArray | slice : 0 : visibleFacetLength;
       let i = index
     "
   >
@@ -36,8 +36,8 @@
     />
     <label
       for="{{ _facet.Name }}facetCheckbox{{ i }}"
-      class="custom-control-label text-capitalize"
-      >{{ checkbox.facet.Value
+      class="custom-control-label"
+      >{{ sitecoreCaps(checkbox.facet.Value)
       }}<small
         class="text-secondary font-weight-bold ml-2 badge badge-pill badge-light"
         >({{ checkbox.facet.Count }})</small

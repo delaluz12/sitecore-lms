@@ -148,7 +148,7 @@ export class ProductFilterService {
     // default params are grabbed through a function that returns an anonymous object to avoid pass by reference bugs
     return {
       page: undefined,
-      sortBy: undefined,
+      sortBy: ['Name'],
       search: undefined,
       categoryID: undefined,
       showOnlyFavorites: false,
@@ -158,7 +158,8 @@ export class ProductFilterService {
 
   // Handle URL updates
   private readFromUrlQueryParams(params: Params): void {
-    const { page, sortBy, search, categoryID } = params
+    const { page, search, categoryID } = params
+    const sortBy = params['sortBy'] ? params['sortBy'] : ['Name']
     this.categories.setActiveCategoryID(categoryID)
     const showOnlyFavorites = !!params.favorites
     const activeFacets = _pickBy(

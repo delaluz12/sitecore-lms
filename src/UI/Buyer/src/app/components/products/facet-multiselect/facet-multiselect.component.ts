@@ -75,4 +75,29 @@ export class OCMFacetMultiSelect implements OnDestroy {
     const values = activeFacetValues.join('|')
     this.context.productFilters.filterByFacet(this.facetID, values)
   }
+
+  sitecoreCaps(label: string): string {
+    switch (label) {
+      case 'xm/xp':
+        return 'XM/XP'
+        break
+      case 'ordercloud':
+        return 'OrderCloud'
+        break
+      case 'cdp':
+        return 'CDP'
+        break
+      case 'content hub':
+        return 'Content Hub'
+        break
+      case 'personalize':
+        return 'Personalize'
+        break
+      case 'xm cloud':
+        return 'XM Cloud'
+        break
+      default:
+        return label
+    }
+  }
 }
