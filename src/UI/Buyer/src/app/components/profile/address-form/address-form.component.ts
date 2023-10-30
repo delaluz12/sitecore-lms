@@ -127,6 +127,15 @@ export class OCMAddressForm implements OnInit, OnChanges, OnDestroy {
     this.stateOptions = GeographyConfig.getStates(country).map(
       (s) => s.abbreviation
     )
+    if (this.stateOptions.length === 0) {
+      this.addressForm.patchValue({ State: 'N/A' })
+    } else {
+      const stateVal = this.addressForm.get('State').value
+      if (stateVal == 'N/A') {
+        this.addressForm.patchValue({ State: '' })
+      }
+    }
+    this.addressForm.get('State').updateValueAndValidity()
     this.addressForm
       .get('Zip')
       .setValidators([Validators.required, Validators.pattern(getZip(country))])
