@@ -412,8 +412,9 @@ namespace Headstart.API.Commands
                     SubmittedOrderStatus = SubmittedOrderStatus.Open,
                     HasSellerProducts = buyerOrder.LineItems.Any(li => li.SupplierID == null),
                     PaymentMethod = payment.Type == PaymentType.CreditCard ? "Credit Card" : "Purchase Order",
+                    OrderedOnBehalfOfOthers = buyerOrder.Order.xp.OrderedOnBehalfOfOthers ?? false,
                     //  If we have seller ship estimates for a seller owned product save selected method on buyer order.
-                    SelectedShipMethodsSupplierView = sellerShipEstimates != null ? MapSelectedShipMethod(sellerShipEstimates) : null,
+                    //SelectedShipMethodsSupplierView = sellerShipEstimates != null ? MapSelectedShipMethod(sellerShipEstimates) : null,
                 }
             };
 
