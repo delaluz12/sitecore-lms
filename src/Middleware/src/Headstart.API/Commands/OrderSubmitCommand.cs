@@ -43,6 +43,7 @@ namespace Headstart.API.Commands
             var worksheet = await _oc.IntegrationEvents.GetWorksheetAsync<HSOrderWorksheet>(OrderDirection.Incoming, orderID);
             await ValidateOrderAsync(worksheet, stripePaymentDetails, userToken);
             var incrementedOrderID = await IncrementOrderAsync(worksheet);
+            var internalUser = worksheet.Order.FromUser.Email.Contains("@sitecore.com") && String.IsNullOrEmpty(stripePaymentDetails.OrderID);
             string stripeTransactionID = "";
 
             // Charge the credit card
@@ -92,14 +93,14 @@ namespace Headstart.API.Commands
                         {
                             course_id = Int32.Parse(courseID),
                             user_id = userID,
-                            status = !String.IsNullOrEmpty(stripePaymentDetails.OrderID) ? "subscribed" : "waiting",
+                            status = !String.IsNullOrEmpty(stripePaymentDetails.OrderID) ? "subscribed" : internalUser ? "subscribed" : "waiting",
                             field_2 = incrementedOrderID
 
                         };
                         doceboItems.Add(lineItem);
                     }
                 }
-                if (!String.IsNullOrEmpty(subscriptionID))
+                if (!String.IsNullOrEmpty(subscriptionID) )
                 {
                     var doceboSubscription = new DoceboSubscriptionRequest()
                     {
@@ -129,7 +130,7 @@ namespace Headstart.API.Commands
             {
                 if (doceboItems.Count > 0)
                 {
-                    await _docebo.EnrollUsers(doceboItems);
+                    await _docebo.EnrollUsers(doceboItems, internalUser);
                 }
             }
             catch (Exception) 

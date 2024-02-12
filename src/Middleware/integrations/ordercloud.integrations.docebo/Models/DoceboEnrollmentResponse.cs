@@ -20,6 +20,7 @@ namespace ordercloud.integrations.docebo.Models
         public int course_id { get; set; }
         public int user_id { get; set; }
         public object session_id { get; set; }
+        public int deleted_enrollment { get; set; }
     }
 
 }
