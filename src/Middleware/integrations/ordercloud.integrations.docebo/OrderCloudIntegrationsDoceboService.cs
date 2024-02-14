@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -18,6 +18,7 @@ namespace ordercloud.integrations.docebo
         Task<DoceboEnrollmentResponse> EnrollUsers(List<DoceboItem> lineItems, bool isInternal);
         Task<DoceboSubscriptionResponse> SubscribeUsers(DoceboSubscriptionRequest request, string uuid);
         Task<DoceboUserSearchResponse> SearchUsers(string email);
+        Task<DoceboEnrollmentResponse> UnEnrollUsers(List<DoceboItem> lineItems);
     }
 
     public class OrderCloudIntegrationsDoceboConfig
@@ -69,5 +70,13 @@ namespace ordercloud.integrations.docebo
             DoceboToken token = await GetToken();
             return await this.Request($"manage/v1/user", token).SetQueryParam("search_text", email).GetJsonAsync<DoceboUserSearchResponse>();
         }
+
+        public async Task<DoceboEnrollmentResponse> UnEnrollUsers(List<DoceboItem> lineItems  )
+        {
+            DoceboToken token = await GetToken();
+            DoceboEnrollmentRequest unenrollRequest = DoceboMapper.MapRequest(lineItems, false);
+            return await this.Request("learn/v1/enrollment/batch", token).SendJsonAsync(System.Net.Http.HttpMethod.Delete, unenrollRequest).ReceiveJson<DoceboEnrollmentResponse>();
+        }
+
     }
 }
