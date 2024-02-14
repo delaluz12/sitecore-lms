@@ -356,7 +356,7 @@ namespace Headstart.API.Commands
             var supplierIDs = new List<string>();
             var lineItems = await _oc.LineItems.ListAllAsync(OrderDirection.Incoming, buyerOrder.Order.ID);
             var shipFromAddressIDs = lineItems.DistinctBy(li => li.ShipFromAddressID).Select(li => li.ShipFromAddressID).ToList();
-
+            var region = FindRegion(buyerOrder.Order.BillingAddress.Country);
             foreach (var supplierOrder in supplierOrders)
             {
                 supplierIDs.Add(supplierOrder.ToCompanyID);
@@ -412,7 +412,8 @@ namespace Headstart.API.Commands
                     SubmittedOrderStatus = SubmittedOrderStatus.Open,
                     HasSellerProducts = buyerOrder.LineItems.Any(li => li.SupplierID == null),
                     PaymentMethod = payment.Type == PaymentType.CreditCard ? "Credit Card" : "Purchase Order",
-                    OrderedOnBehalfOfOthers = buyerOrder.Order.xp.OrderedOnBehalfOfOthers ?? false,
+                    OrderOnBehalfOf = buyerOrder.Order.xp.OrderOnBehalfOf ?? false,
+                    Region = region,
                     //  If we have seller ship estimates for a seller owned product save selected method on buyer order.
                     //SelectedShipMethodsSupplierView = sellerShipEstimates != null ? MapSelectedShipMethod(sellerShipEstimates) : null,
                 }
@@ -435,6 +436,41 @@ namespace Headstart.API.Commands
                 };
             }).ToList();
             return selectedShipMethods;
+        }
+
+        private string FindRegion(string countryCode)
+        {
+            List<string> AMS = new List<string>(){"ag", "ai", "aw", "bb", "bm", "bo", "br", "bs", "bz",
+                "ca", "cl", "co", "cr", "cu", "dm", "do", "ec", "gd", "gf",
+                "gp", "gt", "gy", "hn", "ht", "jm", "kn", "ky", "lc", "mf",
+                "mq", "ms", "mx", "ni", "pa", "pe", "pr", "py", "sv", "tc",
+                "tt", "us", "uy", "vc", "ve", "vg", "vi"};
+            
+            List<string> APJ = new List<string>(){"as", "bn", "fj", "fm", "gu", "hm", "id", "io", "jp",
+                "ki", "la", "mh", "mm", "mn", "mo", "mp", "my", "nc", "nf",
+                "nr", "nu", "nz", "pg", "ph", "pk", "pn", "pw", "sb", "sg",
+                "sh", "tk", "tl", "to", "tv", "tw", "um", "vn", "vu", "wf", "ws"};
+            
+            List<string> EMEA = new List<string>(){"ad", "ae", "af", "al", "am", "ao", "aq", "ar", "at",
+                "ax", "az", "ba", "be", "bf", "bg", "bh", "bi", "bj", "bl",
+                "bv", "bw", "by", "cd", "cf", "cg", "ch", "ci", "ck", "cv",
+                "cx", "cy", "cz", "de", "dj", "dk", "dz", "eh", "er", "es",
+                "et", "fi", "fk", "fo", "fr", "ga", "gb", "ge", "gg", "gh",
+                "gi", "gl", "gm", "gn", "gp", "gq", "gr", "gs", "gw", "hm",
+                "hr", "hu", "ie", "il", "im", "iq", "ir", "is", "it", "je",
+                "jo", "ke", "kg", "km", "kw", "lb", "li", "lr", "ls", "lt",
+                "lu", "lv", "ly", "ma", "mc", "md", "me", "mg", "mk", "ml",
+                "mr", "mt", "mu", "mv", "mw", "na", "ne", "ng", "nl", "no",
+                "np", "om", "pl", "pm", "ps", "pt", "qa", "re", "ro", "rs",
+                "ru", "rw", "sa", "sc", "sd", "se", "sh", "si", "sk", "sl",
+                "sm", "sn", "so", "ss", "st", "sx", "sy", "sz", "td", "tf",
+                "tg", "tn", "tz", "ua", "ug", "va", "ye", "yt", "za", "zm", "zw"};
+
+            if (AMS.Contains(countryCode)) return "AMS";
+            if (APJ.Contains(countryCode)) return "APJ";
+            if (EMEA.Contains(countryCode)) return "EMEA";
+            else { return "N/A"; }
+
         }
 
         private async Task HandleTaxTransactionCreationAsync(OrderWorksheet orderWorksheet)

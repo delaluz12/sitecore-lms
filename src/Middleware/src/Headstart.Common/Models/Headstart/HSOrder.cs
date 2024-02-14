@@ -50,7 +50,7 @@ namespace Headstart.Models
         public string StripePaymentId { get; set; }
         public string PONumber { get; set; }
         public bool? InstructorLeadAcknowledgment { get; set; }
-        public bool? OrderedOnBehalfOfOthers { get; set; }
+        public bool? OrderOnBehalfOf { get; set; }
 
     }
 
