@@ -466,9 +466,9 @@ namespace Headstart.API.Commands
                 "sm", "sn", "so", "ss", "st", "sx", "sy", "sz", "td", "tf",
                 "tg", "tn", "tz", "ua", "ug", "va", "ye", "yt", "za", "zm", "zw"};
 
-            if (AMS.Contains(countryCode)) return "AMS";
-            if (APJ.Contains(countryCode)) return "APJ";
-            if (EMEA.Contains(countryCode)) return "EMEA";
+            if (AMS.Contains(countryCode.ToLower())) return "AMS";
+            if (APJ.Contains(countryCode.ToLower())) return "APJ";
+            if (EMEA.Contains(countryCode.ToLower())) return "EMEA";
             else { return "N/A"; }
 
         }
