@@ -124,6 +124,12 @@ namespace Headstart.API
                 Container = "assets", 
                 AccessType = BlobContainerPublicAccessType.Container 
             };
+            var uploadConfig = new BlobServiceConfig()
+            {
+                ConnectionString = _settings.StorageAccountSettings.ConnectionString,
+                Container = "po-uploads",
+                AccessType = BlobContainerPublicAccessType.Container
+            };
 
             var flurlClientFactory = new PerBaseUrlFlurlClientFactory();
             var smartyStreetsUsClient = new ClientBuilder(_settings.SmartyStreetSettings.AuthID, _settings.SmartyStreetSettings.AuthToken).BuildUsStreetApiClient();
@@ -210,6 +216,7 @@ namespace Headstart.API
                     orderCloudClient))
                 .AddSingleton<IOrderCloudIntegrationsExchangeRatesClient, OrderCloudIntegrationsExchangeRatesClient>()
                 .AddSingleton<IAssetClient>(provider => new AssetClient(new OrderCloudIntegrationsBlobService(assetConfig), _settings))
+                .AddSingleton<IAssetClient>(provider => new AssetClient(new OrderCloudIntegrationsBlobService(uploadConfig), _settings))
                 .AddSingleton<IExchangeRatesCommand>(provider => new ExchangeRatesCommand(new OrderCloudIntegrationsBlobService(currencyConfig), flurlClientFactory, provider.GetService<ISimpleCache>()))
                 .AddSingleton<ITaxCodesProvider>(provider =>
                 {

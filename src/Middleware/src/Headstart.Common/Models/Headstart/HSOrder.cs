@@ -51,6 +51,7 @@ namespace Headstart.Models
         public string PONumber { get; set; }
         public bool? InstructorLeadAcknowledgment { get; set; }
         public bool? OrderedOnBehalfOfOthers { get; set; }
+        public string POFileID { get; set; }
 
     }
 

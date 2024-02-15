@@ -101,6 +101,44 @@
       >Please enter numbers only.</small
     >
   </div>
+  <div
+    class="mt-3 form-group"
+    *ngIf="
+      orderSummaryMeta.LineItemCount &&
+      selectedPaymentMethod === 'PurchaseOrder' &&
+      !isSitecorian
+    "
+  >
+    <label for="ponumber">Purchase Order Upload (PDF)</label>
+    <div class="input-group">
+      <div class="custom-file">
+        <input
+          type="file"
+          class="custom-file-input"
+          id="po-upload-input"
+          aria-describedby="po-upload-btn"
+          (change)="onFileSelected($event)"
+          accept=".pdf"
+        />
+        <label class="custom-file-label" for="po-upload-input">{{
+          poUploadLabelText
+        }}</label>
+      </div>
+      <div class="input-group-append">
+        <button
+          class="btn btn-outline-secondary"
+          type="button"
+          id="po-upload-btn"
+          (click)="uploadPdf(uploadFile)"
+        >
+          Upload PDF
+        </button>
+      </div>
+    </div>
+    <small id="ponumberhelp" class="form-text text-muted"
+      >Please upload PDFs only.</small
+    >
+  </div>
   <div class="mt-3 form-group" *ngIf="!isAnon">
     <label for="selectAddress">Billing Address</label>
     <select
@@ -159,7 +197,9 @@
     (click)="onContinue()"
     *ngIf="selectedPaymentMethod === 'PurchaseOrder'"
     class="btn btn-primary btn-block-xs mt-4 mr-2"
-    [disabled]="!selectedBillingAddress"
+    [disabled]="
+      !selectedBillingAddress || (poUploadSuccess === false && !isSitecorian)
+    "
   >
     Submit Order
   </button>

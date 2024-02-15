@@ -11,6 +11,7 @@ import {
   HeadStartSDK,
   HSAddressBuyer,
   HSOrder,
+  AssetUpload,
 } from '@ordercloud/headstart-sdk'
 import { groupBy as _groupBy } from 'lodash'
 import { uniqBy as _uniqBy } from 'lodash'
@@ -58,6 +59,11 @@ export class OCMCheckoutPayment implements OnInit {
   japanOrder = false
   poOnlyOrder = false
   poNumber: string
+  poOrderUpload: AssetUpload
+  poUploadLabelText = 'Choose file'
+  selectedFileName: string | null = null
+  poUploadSuccess = false
+  isSitecorian: boolean
   stripeCountry: EventEmitter<BuyerAddress> = new EventEmitter<BuyerAddress>()
   stripeCountries = StripeConfig.getStripeCountries()
   stripeKeyMap = StripeConfig.getStripeKeyMap()
@@ -70,6 +76,7 @@ export class OCMCheckoutPayment implements OnInit {
   ngOnInit(): void {
     this._orderCurrency = this.context.currentUser.get().Currency
     this._acceptedPaymentMethods = this.getAcceptedPaymentMethods()
+    this.isSitecorian = this.isSitecoreEmail()
     const _order = this.context.order.get()
 
     if (_order.Total > 0 && _order?.xp?.ShippingAddress?.Country != 'JP') {
@@ -182,6 +189,14 @@ export class OCMCheckoutPayment implements OnInit {
     }
   }
 
+  isSitecoreEmail(): any {
+    const user = this.context.currentUser.get()
+    if (user.Email) {
+      const domain = user.Email.split('@')[1]
+      return domain === 'sitecore.com' || domain === 'sitecore.net'
+    }
+    return
+  }
   async saveAddressesAndContinue(address: BuyerAddress): Promise<void> {
     await this.context.order.checkout.setOneTimeAddress(
       address as Address,
@@ -244,5 +259,64 @@ export class OCMCheckoutPayment implements OnInit {
       )
       this.continue.emit()
     }
+  }
+
+  //PDF upload enhancement
+  onFileSelected(event: any): void {
+    let asset: AssetUpload = {}
+    if (
+      event.target.files[0] !== null &&
+      event.target.files[0] !== undefined &&
+      !Array.isArray(event) &&
+      event.target.files[0].type === 'application/pdf'
+    ) {
+      asset = {
+        Active: true,
+        Title: 'document',
+        File: event.target.files[0],
+        FileName: event.target.files[0].name,
+      } as AssetUpload
+      this.poOrderUpload = asset
+      this.selectedFileName = asset.FileName
+      this.poUploadLabelText = this.selectedFileName
+        ? this.selectedFileName
+        : 'Choose file'
+    } else {
+      alert('must upload .pdf')
+    }
+  }
+
+  async uploadPdf(): Promise<void> {
+    if (this.poOrderUpload) {
+      // const formData = new FormData()
+      // for (const prop in this.poOrderUpload) {
+      //   if (this.poOrderUpload.hasOwnProperty(prop)) {
+      //     formData.append(prop, this.poOrderUpload[prop])
+      //   }
+      // }
+      try {
+        const results = await HeadStartSDK.Assets.CreateDocument({
+          File: this.poOrderUpload.File,
+          Filename: this.poOrderUpload.FileName,
+        })
+        if (results && results.Url && results.FileName) {
+          this.poUploadSuccess = true
+          //set the fileName on order to pull file on orderSumbit for email sending
+          const currentOrder = this.context.order.get()
+          currentOrder.xp.POFileID = this.GetAssetIDFromUr(results.Url)
+          await this.context.order.patch(currentOrder)
+        }
+      } catch (error) {
+        console.error('error:', error)
+      }
+    } else {
+      alert('No file selected')
+    }
+  }
+
+  //HELPER
+  GetAssetIDFromUr(url: string): string {
+    const parts = url.split('/')
+    return parts[parts.length - 1]
   }
 }
