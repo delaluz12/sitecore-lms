@@ -100,6 +100,8 @@ namespace Headstart.Common
     {
         public string ApiKey { get; set; }
         public string FromEmail { get; set; }
+        public string POUploadEmail { get; set; }
+        public string CertOrderEmail { get; set; }
         public string CriticalSupportEmails { get; set; } // (Optional) Comma delimited list of emails that should be contacted when criticial failures occur that require manual intervention
         public string SupportCaseEmail { get; set; } // (Optional) Email to send support cases to
         public string BillingEmail { get; set; } // (Optional) Email to send for payment, billing, or refund queries

@@ -72,20 +72,31 @@ export abstract class OCMParentTableComponent implements OnInit {
     }
     const user = this.context.currentUser.get()
     let validLineItems = true
+    let certificationCount = 0
     this._lineItems.forEach((li) => {
+      const isCertificate = li?.xp?.IsCertification === true
       if (li?.xp?.OrderOnBehalfOf == null) {
         li.xp.OrderOnBehalfOf = [user.Email]
       } else {
         if (validLineItems) {
-          validLineItems = this.emailValidation(li.xp.OrderOnBehalfOf)
+          validLineItems = this.emailValidation(li.xp.OrderOnBehalfOf)2
         }
       }
-      if (li.Quantity != li.xp.OrderOnBehalfOf.length) {
+      if (li.Quantity != li.xp.OrderOnBehalfOf.length && !isCertificate) {
         validLineItems = false
       }
+      // Additional check for xp.Certificate
+      if (isCertificate) {
+        certificationCount++
+      }
     })
-    this.context.order.cart.setIsCartValid(validLineItems)
-    this.context.order.cart.setCanValidateDocebo(validLineItems)
+
+    const isCartValid =
+      (certificationCount === 1 && validLineItems) ||
+      (certificationCount > 1 && validLineItems) ||
+      (certificationCount === 0 && validLineItems)
+    this.context.order.cart.setIsCartValid(isCartValid)
+    this.context.order.cart.setCanValidateDocebo(isCartValid)
   }
 
   shouldDisplayAddress(shipFrom: Partial<Address>): boolean {
@@ -290,6 +301,9 @@ export abstract class OCMParentTableComponent implements OnInit {
       if (li.Quantity === 1 && li.xp.OrderOnBehalfOf[0] === user.Email) {
         shouldShow = false
       }
+    }
+    if (li?.xp?.IsCertification) {
+      shouldShow = false
     }
     return shouldShow
   }

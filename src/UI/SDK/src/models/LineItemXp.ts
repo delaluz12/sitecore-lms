@@ -1,16 +1,25 @@
-import { LineItemClaim } from './LineItemClaim';
+import { LineItemClaim } from './LineItemClaim'
 
 export interface LineItemXp {
-    StatusByQuantity?: 'Complete' | 'Submitted' | 'Open' | 'Backordered' | 'Canceled' | 'CancelRequested' | 'Returned' | 'ReturnRequested'
-    Returns?: LineItemClaim[]
-    Cancelations?: LineItemClaim[]
-    ImageUrl?: string
-    PrintArtworkURL?: string
-    ConfigurationID?: string
-    DocumentID?: string
-    ShipMethod?: string
-    SupplierComments?: string
-    OrderOnBehalfOf?: string[]
-    CanValidateDocebo?: boolean
-    QuantityAdded?: number
+  StatusByQuantity?:
+    | 'Complete'
+    | 'Submitted'
+    | 'Open'
+    | 'Backordered'
+    | 'Canceled'
+    | 'CancelRequested'
+    | 'Returned'
+    | 'ReturnRequested'
+  Returns?: LineItemClaim[]
+  Cancelations?: LineItemClaim[]
+  ImageUrl?: string
+  PrintArtworkURL?: string
+  ConfigurationID?: string
+  DocumentID?: string
+  ShipMethod?: string
+  SupplierComments?: string
+  OrderOnBehalfOf?: string[]
+  CanValidateDocebo?: boolean
+  QuantityAdded?: number
+  IsCertification?: boolean
 }

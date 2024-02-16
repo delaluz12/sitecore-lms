@@ -47,6 +47,7 @@ namespace Headstart.Common.Models
             public int? QuantityChanged { get; set; }
             public string SpecCombo { get; set; }
             public string MessageToBuyer { get; set; }
+            public bool? IsCertification { get; set; }
         }
 
         public class NewUserData
@@ -83,7 +84,23 @@ namespace Headstart.Common.Models
             public string DynamicPropertyName4 { get; set; }
             public string DynamicPropertyValue4 { get; set; }
         }
+        public class PoOrderUploadTemplateData
+        {
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string OrderID { get; set; }
+            public IEnumerable<LineItemProductData> Products { get; set; }
+            public bool IncludesCerts { get; set; }
 
+        }
+
+        public class CertOrderTemplateData
+        {
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string OrderID { get; set; }
+            public IEnumerable<LineItemProductData> Products { get; set; }
+        }
 
         public class OrderTemplateData
         {

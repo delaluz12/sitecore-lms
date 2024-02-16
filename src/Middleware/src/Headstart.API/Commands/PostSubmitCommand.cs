@@ -105,67 +105,122 @@ namespace Headstart.API.Commands
         {
             var results = new List<ProcessResult>();
 
-            // STEP 1
-            var (supplierOrders, buyerOrder, activities) = await HandlingForwarding(orderWorksheet);
-            results.Add(new ProcessResult()
-            {
-                Type = ProcessType.Forwarding,
-                Activity = activities
-            });
-            // step 1 failed. we don't want to attempt the integrations. return error for further action
-            if (activities.Any(a => !a.Success))
-                return await CreateOrderSubmitResponse(results, new List<HSOrder> { orderWorksheet.Order });
-            
+            //STEP 1
+            //var (supplierOrders, buyerOrder, activities) = await HandlingForwarding(orderWorksheet);
+            //results.Add(new ProcessResult()
+            //{
+            //    Type = ProcessType.Forwarding,
+            //    Activity = activities
+            //});
+            ////step 1 failed.we don't want to attempt the integrations. return error for further action
+
+            //if (activities.Any(a => !a.Success))
+            //    return await CreateOrderSubmitResponse(results, new List<HSOrder> { orderWorksheet.Order });
+
             // STEP 2 (integrations)
-            var integrations = await HandleIntegrations(supplierOrders, buyerOrder);
+            var integrations = await HandleIntegrations(orderWorksheet);
             results.AddRange(integrations);
 
             // STEP 3: return OrderSubmitResponse
             return await CreateOrderSubmitResponse(results, new List<HSOrder> { orderWorksheet.Order });
         }
 
-        private async Task<List<ProcessResult>> HandleIntegrations(List<HSOrder> supplierOrders, HSOrderWorksheet orderWorksheet)
+        private async Task<List<ProcessResult>> HandleIntegrations(HSOrderWorksheet orderWorksheet)
         {
-            // STEP 1: SendGrid notifications
+            
             var results = new List<ProcessResult>();
 
-            var notifications = await ProcessActivityCall(
-                ProcessType.Notification,
-                "Sending Order Submit Emails",
-                _sendgridService.SendOrderSubmitEmail(orderWorksheet));
-            results.Add(new ProcessResult()
-            {
-                Type = ProcessType.Notification,
-                Activity = new List<ProcessResultAction>() { notifications }
-            });
+            //internal (sitecore.com/net) or external
+            var externalBuyer = IsExternalBuyer(orderWorksheet.Order.FromUser.Email);
 
-            if (!orderWorksheet.IsStandardOrder())
-                return results;
-
-            // STEP 2: Tax transaction
-            var tax = await ProcessActivityCall(
-                ProcessType.Tax,
-                "Creating Tax Transaction",
-                HandleTaxTransactionCreationAsync(orderWorksheet.Reserialize<OrderWorksheet>()));
-            results.Add(new ProcessResult()
+            // external notifications
+            if (externalBuyer)
             {
-                Type = ProcessType.Tax,
-                Activity = new List<ProcessResultAction>() { tax }
-            });
+                var isCCPayment = orderWorksheet?.Order?.xp?.StripePaymentId != null;
+                var includesCert = ContainsCertProducts(orderWorksheet);
+
+
+                if (isCCPayment && includesCert)
+                {
+                    
+                    var notifications = await ProcessActivityCall(
+                    ProcessType.Notification,
+                    "Sending Order Submit Emails",
+                    _sendgridService.SendCertOrderEmail(orderWorksheet));
+                    results.Add(new ProcessResult()
+                    {
+                        Type = ProcessType.Notification,
+                        Activity = new List<ProcessResultAction>() { notifications }
+                    });
+
+                } else if(!isCCPayment && includesCert)
+                {
+                    //send template/data for PO + certs
+                    var notifications = await ProcessActivityCall(
+                    ProcessType.Notification,
+                    "Sending Order Submit Emails",
+                    _sendgridService.SendPurchaseOrderUpload(orderWorksheet, orderWorksheet.Order.xp?.POFileID, true));
+                    results.Add(new ProcessResult()
+                    {
+                        Type = ProcessType.Notification,
+                        Activity = new List<ProcessResultAction>() { notifications }
+                    });
+
+                } else if (!isCCPayment && !includesCert)
+                {
+                    // send data for PO only
+                    var notifications = await ProcessActivityCall(
+                    ProcessType.Notification,
+                    "Sending Order Submit Emails",
+                    _sendgridService.SendPurchaseOrderUpload(orderWorksheet, orderWorksheet.Order.xp?.POFileID, false));
+                    results.Add(new ProcessResult()
+                    {
+                        Type = ProcessType.Notification,
+                        Activity = new List<ProcessResultAction>() { notifications }
+                    });
+                }
+                else return results;
+            }
+
+           
+
+            // SendGrid notifications
+            //var notifications = await ProcessActivityCall(
+            //    ProcessType.Notification,
+            //    "Sending Order Submit Emails",
+            //    _sendgridService.SendPurchaseOrderUpload(orderWorksheet, orderWorksheet.Order.xp?.POFileID));
+            //results.Add(new ProcessResult()
+            //{
+            //    Type = ProcessType.Notification,
+            //    Activity = new List<ProcessResultAction>() { notifications }
+            //});
+
+            
+
+            //// STEP 2: Tax transaction
+            //var tax = await ProcessActivityCall(
+            //    ProcessType.Tax,
+            //    "Creating Tax Transaction",
+            //    HandleTaxTransactionCreationAsync(orderWorksheet.Reserialize<OrderWorksheet>()));
+            //results.Add(new ProcessResult()
+            //{
+            //    Type = ProcessType.Tax,
+            //    Activity = new List<ProcessResultAction>() { tax }
+            //});
 
             // STEP 3: Zoho orders
-            if(_settings.ZohoSettings.PerformOrderSubmitTasks) { results.Add(await this.PerformZohoTasks(orderWorksheet, supplierOrders)); }
+            //if(_settings.ZohoSettings.PerformOrderSubmitTasks) { results.Add(await this.PerformZohoTasks(orderWorksheet, supplierOrders)); }
 
             // STEP 4: Validate shipping
-            var shipping = await ProcessActivityCall(
-                ProcessType.Shipping,
-                "Validate Shipping",
-                ValidateShipping(orderWorksheet));
-            results.Add(new ProcessResult()
-            {
-                Type = ProcessType.Shipping,
-                Activity = new List<ProcessResultAction>() { shipping }
-            });
+            //var shipping = await ProcessActivityCall(
+            //    ProcessType.Shipping,
+            //    "Validate Shipping",
+            //    ValidateShipping(orderWorksheet));
+            //results.Add(new ProcessResult()
+            //{
+            //    Type = ProcessType.Shipping,
+            //    Activity = new List<ProcessResultAction>() { shipping }
+            //});
 
             return results;
         }
@@ -487,6 +542,22 @@ namespace Headstart.API.Commands
                     await _oc.LineItems.PatchAsync(OrderDirection.Outgoing, supplierOrderID, lineItem.ID, patch);
                 }
             }
+        }
+        private static Boolean IsExternalBuyer(string email)
+        {
+            var domain = email.Split("@")[1];
+            if (domain == "sitecore.com" || domain == "sitecore.net")
+            {
+                return false;
+            }
+            return true;
+            
+
+
+        }
+        private static Boolean ContainsCertProducts(HSOrderWorksheet orderWorksheet)
+        {
+            return orderWorksheet.LineItems.Any(li => li.xp.IsCertification == true);
         }
     };
 }
