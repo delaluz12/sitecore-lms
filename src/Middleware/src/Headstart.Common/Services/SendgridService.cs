@@ -25,43 +25,66 @@ using ordercloud.integrations.library;
 using Headstart.Models.Headstart;
 using OrderCloud.Catalyst;
 using System.Net;
+using Headstart.Common.Services.CMS;
 
 namespace Headstart.Common.Services
 {
     public interface ISendgridService
     {
         Task SendSingleTemplateEmail(string from, string to, string templateID, object templateData);
+
         Task SendSingleTemplateEmailMultipleRcpts(string from, List<EmailAddress> tos, string templateID, object templateData);
+
         Task SendSingleTemplateEmailMultipleRcptsAttachment(string from, List<EmailAddress> tos, string templateID, object templateData, CloudAppendBlob fileReference, string fileName);
+
         Task SendSingleTemplateEmailSingleRcptAttachment(string from, string to, string templateID, object templateData, IFormFile fileReference);
+
         Task SendOrderSubmitEmail(HSOrderWorksheet orderData);
+
         Task SendNewUserEmail(MessageNotification<PasswordResetEventBody> payload);
+
+        Task SendPurchaseOrderUpload(HSOrderWorksheet worksheet, string fileName, bool includesCerts);
+
+        Task SendCertOrderEmail(HSOrderWorksheet worksheet);
+
         Task SendPasswordResetEmail(MessageNotification<PasswordResetEventBody> messageNotification);
+
         Task SendOrderRequiresApprovalEmail(MessageNotification<OrderSubmitEventBody> messageNotification);
+
         Task SendOrderSubmittedForApprovalEmail(MessageNotification<OrderSubmitEventBody> messageNotification);
+
         Task SendOrderApprovedEmail(MessageNotification<OrderSubmitEventBody> messageNotification);
+
         Task SendOrderDeclinedEmail(MessageNotification<OrderSubmitEventBody> messageNotification);
+
         Task SendLineItemStatusChangeEmail(HSOrder order, LineItemStatusChanges lineItemStatusChanges, List<HSLineItem> lineItems, string firstName, string lastName, string email, EmailDisplayText lineItemEmailDisplayText);
+
         Task SendLineItemStatusChangeEmailMultipleRcpts(HSOrder order, LineItemStatusChanges lineItemStatusChanges, List<HSLineItem> lineItems, List<EmailAddress> tos, EmailDisplayText lineItemEmailDisplayText);
+
         Task SendContactSupplierAboutProductEmail(ContactSupplierBody template);
+
         Task EmailVoidAuthorizationFailedAsync(HSPayment payment, string transactionID, HSOrder order, CreditCardVoidException ex);
+
         Task EmailGeneralSupportQueue(SupportCase supportCase);
+
         Task SendQuotePriceConfirmationEmail(HSOrder order, HSLineItem LineItem, string buyerEmail);
+
         Task SendQuoteRequestConfirmationEmail(HSOrder order, HSLineItem lineItem, string buyerEmail);
     }
 
-
     public class SendgridService : ISendgridService
     {
-        private readonly AppSettings _settings; 
+        private readonly AppSettings _settings;
         private readonly IOrderCloudClient _oc;
         private readonly ISendGridClient _client;
+        private readonly IAssetClient _assetClient;
 
-        public SendgridService(AppSettings settings, IOrderCloudClient ocClient, ISendGridClient client)
+        public SendgridService(AppSettings settings, IOrderCloudClient ocClient, ISendGridClient client, IAssetClient assetClient)
         {
             _oc = ocClient;
             _client = client;
             _settings = settings;
+            _assetClient = assetClient;
         }
 
         public async Task SendQuoteRequestConfirmationEmail(HSOrder order, HSLineItem lineItem, string buyerEmail)
@@ -92,7 +115,7 @@ namespace Headstart.Common.Services
                 var toEmail = new EmailAddress(to);
                 var msg = MailHelper.CreateSingleTemplateEmail(fromEmail, toEmail, templateID, templateData);
                 var response = await _client.SendEmailAsync(msg);
-                if(!response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
                     throw new Exception("Error sending sendgrid email");
                 }
@@ -150,6 +173,47 @@ namespace Headstart.Common.Services
                 {
                     throw new Exception("Error sending sendgrid email");
                 }
+            }
+        }
+
+        public async Task SendPurchaseOrderUpload(HSOrderWorksheet worksheet, string fileName, bool includesCerts)
+        {
+            var fromEmail = new EmailAddress("no-reply@po-orders.com");
+            var toEmail = new EmailAddress("globaltraining@sitecore.com");
+            var certAndPoOrderData = SendgridMappers.GetCertAndPoOrderData(worksheet.Order, worksheet.LineItems, includesCerts);
+            var templateData = new EmailTemplate<PoOrderUploadTemplateData>()
+            {
+                Data = certAndPoOrderData
+            };
+            var msg = MailHelper.CreateSingleTemplateEmail(fromEmail, toEmail, _settings?.SendgridSettings?.POUploadEmail, templateData);
+            if (fileName != null)
+            {
+                var asset = await _assetClient.GetAssetByName(fileName);
+                
+                 msg.AddAttachment(asset);
+            }
+            var response = await _client.SendEmailAsync(msg);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error sending sendgrid email");
+            }
+        }
+
+        public async Task SendCertOrderEmail(HSOrderWorksheet worksheet)
+        {
+            var fromEmail = new EmailAddress("no-reply@certification-exam-orders.com");
+            var toEmail = new EmailAddress("globaltraining@sitecore.com");
+            var certOrderData = SendgridMappers.GetCertOrderTemplateData(worksheet.Order, worksheet.LineItems);
+            var certTemplateData = new EmailTemplate<CertOrderTemplateData>()
+            {
+                Data = certOrderData
+            };
+            var msg = MailHelper.CreateSingleTemplateEmail(fromEmail, toEmail, _settings?.SendgridSettings?.CertOrderEmail, certTemplateData);
+            
+            var response = await _client.SendEmailAsync(msg);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error sending sendgrid email");
             }
         }
 
@@ -319,7 +383,7 @@ namespace Headstart.Common.Services
                 var sellerEmailList = await GetSellerEmails();
 
                 //  send emails
-                
+
                 await SendSingleTemplateEmailMultipleRcpts(_settings?.SendgridSettings?.FromEmail, sellerEmailList, _settings?.SendgridSettings?.OrderSubmitTemplateID, sellerTemplateData);
                 await SendSingleTemplateEmail(_settings?.SendgridSettings?.FromEmail, orderWorksheet.Order.FromUser.Email, _settings?.SendgridSettings?.OrderSubmitTemplateID, buyerTemplateData);
                 await SendSupplierOrderSubmitEmails(orderWorksheet);
@@ -353,9 +417,9 @@ namespace Headstart.Common.Services
                 var filterString = String.Join("|", orderWorksheet.Order.xp.SupplierIDs);
                 suppliers = await _oc.Suppliers.ListAsync<HSSupplier>(filters: $"ID={filterString}");
             }
-            foreach(var supplier in suppliers.Items)
+            foreach (var supplier in suppliers.Items)
             {
-                if(supplier?.xp?.NotificationRcpts?.Count() >0)
+                if (supplier?.xp?.NotificationRcpts?.Count() > 0)
                 {
                     // get orderworksheet for supplier order and fill in some information from buyer order worksheet
                     var supplierOrderWorksheet = await BuildSupplierOrderWorksheet(orderWorksheet, supplier.ID);
@@ -387,7 +451,7 @@ namespace Headstart.Common.Services
                         supplierTos.Add(new EmailAddress(rcpt));
                     };
                     await SendSingleTemplateEmailMultipleRcpts(_settings?.SendgridSettings?.FromEmail, supplierTos, _settings?.SendgridSettings?.OrderSubmitTemplateID, supplierTemplateData);
-                }   
+                }
             }
         }
 

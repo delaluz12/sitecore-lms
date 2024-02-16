@@ -17,6 +17,7 @@ namespace ordercloud.integrations.library
         CloudBlobContainer Container { get; }
         Task<T> Get<T>(string id);
         Task<string> Get(string id);
+        Task<CloudBlob> GetBlobReference(string fileName);
         Task Save(string reference, string blob, string fileType = null);
         Task Save(string reference, JObject blob, string fileType = null);
         Task Save(string reference, IFormFile blob, string fileType = null);

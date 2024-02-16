@@ -33,6 +33,7 @@ namespace Headstart.Models.Headstart
         public List<string> OrderOnBehalfOf { get; set; }
         public bool? CanValidateDocebo { get; set; }
         public int? QuantityAdded { get; set; }
+        public bool? IsCertification { get; set; }
     }
 
     

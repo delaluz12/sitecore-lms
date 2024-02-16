@@ -261,6 +261,7 @@ export class OCMProductDetails implements OnInit {
             this._superProduct.Specs,
             this.specForm
           ),
+          IsCertification: this._superProduct.Product.xp?.IsCertification,
         },
       })
     } catch (err) {
