@@ -79,7 +79,7 @@ export abstract class OCMParentTableComponent implements OnInit {
         li.xp.OrderOnBehalfOf = [user.Email]
       } else {
         if (validLineItems) {
-          validLineItems = this.emailValidation(li.xp.OrderOnBehalfOf)2
+          validLineItems = this.emailValidation(li.xp.OrderOnBehalfOf)
         }
       }
       if (li.Quantity != li.xp.OrderOnBehalfOf.length && !isCertificate) {
