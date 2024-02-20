@@ -106,16 +106,16 @@ namespace Headstart.API.Commands
             var results = new List<ProcessResult>();
 
             //STEP 1
-            //var (supplierOrders, buyerOrder, activities) = await HandlingForwarding(orderWorksheet);
-            //results.Add(new ProcessResult()
-            //{
-            //    Type = ProcessType.Forwarding,
-            //    Activity = activities
-            //});
-            ////step 1 failed.we don't want to attempt the integrations. return error for further action
+            var (supplierOrders, buyerOrder, activities) = await HandlingForwarding(orderWorksheet);
+            results.Add(new ProcessResult()
+            {
+                Type = ProcessType.Forwarding,
+                Activity = activities
+            });
+            //step 1 failed.we don't want to attempt the integrations. return error for further action
 
-            //if (activities.Any(a => !a.Success))
-            //    return await CreateOrderSubmitResponse(results, new List<HSOrder> { orderWorksheet.Order });
+            if (activities.Any(a => !a.Success))
+                return await CreateOrderSubmitResponse(results, new List<HSOrder> { orderWorksheet.Order });
 
             // STEP 2 (integrations)
             var integrations = await HandleIntegrations(orderWorksheet);
@@ -182,45 +182,27 @@ namespace Headstart.API.Commands
                 else return results;
             }
 
-           
-
-            // SendGrid notifications
-            //var notifications = await ProcessActivityCall(
-            //    ProcessType.Notification,
-            //    "Sending Order Submit Emails",
-            //    _sendgridService.SendPurchaseOrderUpload(orderWorksheet, orderWorksheet.Order.xp?.POFileID));
-            //results.Add(new ProcessResult()
-            //{
-            //    Type = ProcessType.Notification,
-            //    Activity = new List<ProcessResultAction>() { notifications }
-            //});
-
-            
-
             //// STEP 2: Tax transaction
-            //var tax = await ProcessActivityCall(
-            //    ProcessType.Tax,
-            //    "Creating Tax Transaction",
-            //    HandleTaxTransactionCreationAsync(orderWorksheet.Reserialize<OrderWorksheet>()));
-            //results.Add(new ProcessResult()
-            //{
-            //    Type = ProcessType.Tax,
-            //    Activity = new List<ProcessResultAction>() { tax }
-            //});
+            var tax = await ProcessActivityCall(
+                ProcessType.Tax,
+                "Creating Tax Transaction",
+                HandleTaxTransactionCreationAsync(orderWorksheet.Reserialize<OrderWorksheet>()));
+            results.Add(new ProcessResult()
+            {
+                Type = ProcessType.Tax,
+                Activity = new List<ProcessResultAction>() { tax }
+            });
 
-            // STEP 3: Zoho orders
-            //if(_settings.ZohoSettings.PerformOrderSubmitTasks) { results.Add(await this.PerformZohoTasks(orderWorksheet, supplierOrders)); }
-
-            // STEP 4: Validate shipping
-            //var shipping = await ProcessActivityCall(
-            //    ProcessType.Shipping,
-            //    "Validate Shipping",
-            //    ValidateShipping(orderWorksheet));
-            //results.Add(new ProcessResult()
-            //{
-            //    Type = ProcessType.Shipping,
-            //    Activity = new List<ProcessResultAction>() { shipping }
-            //});
+            // STEP 3: Validate shipping
+            var shipping = await ProcessActivityCall(
+                ProcessType.Shipping,
+                "Validate Shipping",
+                ValidateShipping(orderWorksheet));
+            results.Add(new ProcessResult()
+            {
+                Type = ProcessType.Shipping,
+                Activity = new List<ProcessResultAction>() { shipping }
+            });
 
             return results;
         }
@@ -469,8 +451,6 @@ namespace Headstart.API.Commands
                     PaymentMethod = payment.Type == PaymentType.CreditCard ? "Credit Card" : "Purchase Order",
                     OrderOnBehalfOf = buyerOrder.Order.xp.OrderOnBehalfOf ?? false,
                     Region = region,
-                    //  If we have seller ship estimates for a seller owned product save selected method on buyer order.
-                    //SelectedShipMethodsSupplierView = sellerShipEstimates != null ? MapSelectedShipMethod(sellerShipEstimates) : null,
                 }
             };
 
