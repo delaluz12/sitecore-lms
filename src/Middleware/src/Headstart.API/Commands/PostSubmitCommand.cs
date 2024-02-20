@@ -588,10 +588,8 @@ namespace Headstart.API.Commands
                 return false;
             }
             return true;
-            
-
-
         }
+
         private static Boolean ContainsCertProducts(HSOrderWorksheet orderWorksheet)
         {
             return orderWorksheet.LineItems.Any(li => li.xp.IsCertification == true);

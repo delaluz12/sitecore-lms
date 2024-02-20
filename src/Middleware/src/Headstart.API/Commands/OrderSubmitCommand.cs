@@ -43,7 +43,7 @@ namespace Headstart.API.Commands
             var worksheet = await _oc.IntegrationEvents.GetWorksheetAsync<HSOrderWorksheet>(OrderDirection.Incoming, orderID);
             await ValidateOrderAsync(worksheet, stripePaymentDetails, userToken);
             var incrementedOrderID = await IncrementOrderAsync(worksheet);
-            var internalUser = worksheet.Order.FromUser.Email.Contains("@sitecore.com") && String.IsNullOrEmpty(stripePaymentDetails.OrderID);
+            var internalUser = !IsExternalBuyer(worksheet.Order.FromUser.Email);
             string stripeTransactionID = "";
 
             // Charge the credit card
@@ -214,5 +214,16 @@ namespace Headstart.API.Commands
             });
             return order.ID;
         }
+
+        private static Boolean IsExternalBuyer(string email)
+        {
+            var domain = email.Split("@")[1];
+            if (domain == "sitecore.com" || domain == "sitecore.net")
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }
