@@ -8,7 +8,7 @@ namespace ordercloud.integrations.docebo.Mappers
 {
     public static class DoceboMapper
     {
-        public static DoceboEnrollmentRequest MapRequest(List<DoceboItem> lineItems) 
+        public static DoceboEnrollmentRequest MapRequest(List<DoceboItem> lineItems, bool isInternal) 
         {
             var dr = new DoceboEnrollmentRequest()
             {
@@ -17,7 +17,7 @@ namespace ordercloud.integrations.docebo.Mappers
                 { 
                     enroll_disabled_users = true,
                     duplicates_as_recertification = true,
-                    enable_waitinglist = true,
+                    enable_waitinglist = !isInternal,
                     enrollment_date_now = true,
                     trigger_certifications = true,
                     trigger_notifications = true

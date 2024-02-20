@@ -106,16 +106,16 @@ namespace Headstart.API.Commands
             var results = new List<ProcessResult>();
 
             //STEP 1
-            //var (supplierOrders, buyerOrder, activities) = await HandlingForwarding(orderWorksheet);
-            //results.Add(new ProcessResult()
-            //{
-            //    Type = ProcessType.Forwarding,
-            //    Activity = activities
-            //});
-            ////step 1 failed.we don't want to attempt the integrations. return error for further action
+            var (supplierOrders, buyerOrder, activities) = await HandlingForwarding(orderWorksheet);
+            results.Add(new ProcessResult()
+            {
+                Type = ProcessType.Forwarding,
+                Activity = activities
+            });
+            //step 1 failed.we don't want to attempt the integrations. return error for further action
 
-            //if (activities.Any(a => !a.Success))
-            //    return await CreateOrderSubmitResponse(results, new List<HSOrder> { orderWorksheet.Order });
+            if (activities.Any(a => !a.Success))
+                return await CreateOrderSubmitResponse(results, new List<HSOrder> { orderWorksheet.Order });
 
             // STEP 2 (integrations)
             var integrations = await HandleIntegrations(orderWorksheet);
@@ -182,45 +182,27 @@ namespace Headstart.API.Commands
                 else return results;
             }
 
-           
-
-            // SendGrid notifications
-            //var notifications = await ProcessActivityCall(
-            //    ProcessType.Notification,
-            //    "Sending Order Submit Emails",
-            //    _sendgridService.SendPurchaseOrderUpload(orderWorksheet, orderWorksheet.Order.xp?.POFileID));
-            //results.Add(new ProcessResult()
-            //{
-            //    Type = ProcessType.Notification,
-            //    Activity = new List<ProcessResultAction>() { notifications }
-            //});
-
-            
-
             //// STEP 2: Tax transaction
-            //var tax = await ProcessActivityCall(
-            //    ProcessType.Tax,
-            //    "Creating Tax Transaction",
-            //    HandleTaxTransactionCreationAsync(orderWorksheet.Reserialize<OrderWorksheet>()));
-            //results.Add(new ProcessResult()
-            //{
-            //    Type = ProcessType.Tax,
-            //    Activity = new List<ProcessResultAction>() { tax }
-            //});
+            var tax = await ProcessActivityCall(
+                ProcessType.Tax,
+                "Creating Tax Transaction",
+                HandleTaxTransactionCreationAsync(orderWorksheet.Reserialize<OrderWorksheet>()));
+            results.Add(new ProcessResult()
+            {
+                Type = ProcessType.Tax,
+                Activity = new List<ProcessResultAction>() { tax }
+            });
 
-            // STEP 3: Zoho orders
-            //if(_settings.ZohoSettings.PerformOrderSubmitTasks) { results.Add(await this.PerformZohoTasks(orderWorksheet, supplierOrders)); }
-
-            // STEP 4: Validate shipping
-            //var shipping = await ProcessActivityCall(
-            //    ProcessType.Shipping,
-            //    "Validate Shipping",
-            //    ValidateShipping(orderWorksheet));
-            //results.Add(new ProcessResult()
-            //{
-            //    Type = ProcessType.Shipping,
-            //    Activity = new List<ProcessResultAction>() { shipping }
-            //});
+            // STEP 3: Validate shipping
+            var shipping = await ProcessActivityCall(
+                ProcessType.Shipping,
+                "Validate Shipping",
+                ValidateShipping(orderWorksheet));
+            results.Add(new ProcessResult()
+            {
+                Type = ProcessType.Shipping,
+                Activity = new List<ProcessResultAction>() { shipping }
+            });
 
             return results;
         }
@@ -411,7 +393,7 @@ namespace Headstart.API.Commands
             var supplierIDs = new List<string>();
             var lineItems = await _oc.LineItems.ListAllAsync(OrderDirection.Incoming, buyerOrder.Order.ID);
             var shipFromAddressIDs = lineItems.DistinctBy(li => li.ShipFromAddressID).Select(li => li.ShipFromAddressID).ToList();
-
+            var region = FindRegion(buyerOrder.Order.BillingAddress.Country);
             foreach (var supplierOrder in supplierOrders)
             {
                 supplierIDs.Add(supplierOrder.ToCompanyID);
@@ -467,8 +449,8 @@ namespace Headstart.API.Commands
                     SubmittedOrderStatus = SubmittedOrderStatus.Open,
                     HasSellerProducts = buyerOrder.LineItems.Any(li => li.SupplierID == null),
                     PaymentMethod = payment.Type == PaymentType.CreditCard ? "Credit Card" : "Purchase Order",
-                    //  If we have seller ship estimates for a seller owned product save selected method on buyer order.
-                    SelectedShipMethodsSupplierView = sellerShipEstimates != null ? MapSelectedShipMethod(sellerShipEstimates) : null,
+                    OrderOnBehalfOf = buyerOrder.Order.xp.OrderOnBehalfOf ?? false,
+                    Region = region,
                 }
             };
 
@@ -489,6 +471,41 @@ namespace Headstart.API.Commands
                 };
             }).ToList();
             return selectedShipMethods;
+        }
+
+        private string FindRegion(string countryCode)
+        {
+            List<string> AMS = new List<string>(){"ag", "ai", "aw", "bb", "bm", "bo", "br", "bs", "bz",
+                "ca", "cl", "co", "cr", "cu", "dm", "do", "ec", "gd", "gf",
+                "gp", "gt", "gy", "hn", "ht", "jm", "kn", "ky", "lc", "mf",
+                "mq", "ms", "mx", "ni", "pa", "pe", "pr", "py", "sv", "tc",
+                "tt", "us", "uy", "vc", "ve", "vg", "vi"};
+            
+            List<string> APJ = new List<string>(){"as", "bn", "fj", "fm", "gu", "hm", "id", "io", "jp",
+                "ki", "la", "mh", "mm", "mn", "mo", "mp", "my", "nc", "nf",
+                "nr", "nu", "nz", "pg", "ph", "pk", "pn", "pw", "sb", "sg",
+                "sh", "tk", "tl", "to", "tv", "tw", "um", "vn", "vu", "wf", "ws"};
+            
+            List<string> EMEA = new List<string>(){"ad", "ae", "af", "al", "am", "ao", "aq", "ar", "at",
+                "ax", "az", "ba", "be", "bf", "bg", "bh", "bi", "bj", "bl",
+                "bv", "bw", "by", "cd", "cf", "cg", "ch", "ci", "ck", "cv",
+                "cx", "cy", "cz", "de", "dj", "dk", "dz", "eh", "er", "es",
+                "et", "fi", "fk", "fo", "fr", "ga", "gb", "ge", "gg", "gh",
+                "gi", "gl", "gm", "gn", "gp", "gq", "gr", "gs", "gw", "hm",
+                "hr", "hu", "ie", "il", "im", "iq", "ir", "is", "it", "je",
+                "jo", "ke", "kg", "km", "kw", "lb", "li", "lr", "ls", "lt",
+                "lu", "lv", "ly", "ma", "mc", "md", "me", "mg", "mk", "ml",
+                "mr", "mt", "mu", "mv", "mw", "na", "ne", "ng", "nl", "no",
+                "np", "om", "pl", "pm", "ps", "pt", "qa", "re", "ro", "rs",
+                "ru", "rw", "sa", "sc", "sd", "se", "sh", "si", "sk", "sl",
+                "sm", "sn", "so", "ss", "st", "sx", "sy", "sz", "td", "tf",
+                "tg", "tn", "tz", "ua", "ug", "va", "ye", "yt", "za", "zm", "zw"};
+
+            if (AMS.Contains(countryCode.ToLower())) return "AMS";
+            if (APJ.Contains(countryCode.ToLower())) return "APJ";
+            if (EMEA.Contains(countryCode.ToLower())) return "EMEA";
+            else { return "N/A"; }
+
         }
 
         private async Task HandleTaxTransactionCreationAsync(OrderWorksheet orderWorksheet)
@@ -551,10 +568,8 @@ namespace Headstart.API.Commands
                 return false;
             }
             return true;
-            
-
-
         }
+
         private static Boolean ContainsCertProducts(HSOrderWorksheet orderWorksheet)
         {
             return orderWorksheet.LineItems.Any(li => li.xp.IsCertification == true);

@@ -20,6 +20,7 @@ export const salesOrderDetail = [
   { value: 'ID', path: 'Data.ID' },
   { value: 'Brand ID', path: 'Data.BillingAddress.ID' },
   { value: 'Brand Name', path: 'BrandName' },
+  { value: 'Behalf of Others', path: 'Data.xp.OrderOnBehalfOf' },
   { value: 'Order Type', path: 'Data.xp.OrderType' },
   { value: 'Order Date', path: 'Data.DateSubmitted' },
   { value: 'Date Completed', path: 'Data.DateCompleted' },
@@ -60,6 +61,7 @@ export const salesOrderDetail = [
   { value: 'Shipping State', path: 'Data.xp.ShippingAddress.State' },
   { value: 'Shipping Zip', path: 'Data.xp.ShippingAddress.Zip' },
   { value: 'Shipping Country', path: 'Data.xp.ShippingAddress.Country' },
+  { value: 'Region', path:'Data.xp.Region'}
 ]
 
 export const purchaseOrderDetail = [
@@ -99,6 +101,8 @@ export const purchaseOrderDetail = [
   { value: 'Shipping Country', path: 'Data.xp.ShippingAddress.Country' },
   { value: 'Ship From Address', path: 'ShipFromAddressID' },
   { value: 'Ship Method', path: 'ShipMethod' },
+  { value: 'Behalf of Others', path: 'Data.xp.OrderOnBehalfOf' },
+  { value: 'Region', path:'Data.xp.Region'}
 ]
 
 export const lineItemDetail = [
@@ -122,6 +126,8 @@ export const lineItemDetail = [
     path: 'HSOrder.xp.SubmittedOrderStatus',
   },
   { value: 'Payment Method', path: 'HSOrder.xp.PaymentMethod' },
+  { value: 'Behalf of Others', path: 'HSOrder.xp.OrderOnBehalfOf' },
+  { value: 'Learners', path: 'HSLineItem.xp.OrderOnBehalfOf' },
   { value: 'Line Item ID', path: 'HSLineItem.ID' },
   { value: 'Line Unit Price', path: 'HSLineItem.UnitPrice' },
   { value: 'Line Total', path: 'HSLineItem.LineTotal' },
@@ -174,6 +180,7 @@ export const lineItemDetail = [
     value: 'Shipping Country',
     path: 'HSLineItem.ShippingAddress.Country',
   },
+  { value: 'Region', path:'HSOrder.xp.Region'},
   {
     value: 'Billing Street 1',
     path: 'HSOrder.BillingAddress.Street1',
@@ -277,6 +284,8 @@ export const productDetail = [
   { value: '3 Month Order Total', path: 'ProductSales.ThreeMonthTotal' },
   { value: '6 Month Order Total', path: 'ProductSales.SixMonthTotal' },
   { value: '12 Month Order Total', path: 'ProductSales.TwelveMonthTotal' },
+  { value: 'Behalf of Others', path: 'Data.xp.OrderOnBehalfOf' },
+  { value: 'Region', path:'Data.xp.Region'},
 ]
 
 export const rmaDetail = [

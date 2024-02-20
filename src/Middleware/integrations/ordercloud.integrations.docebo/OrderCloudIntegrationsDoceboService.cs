@@ -15,9 +15,10 @@ namespace ordercloud.integrations.docebo
     public interface IOrderCloudIntegrationsDoceboService
     {
         Task<DoceboToken> GetToken();
-        Task<DoceboEnrollmentResponse> EnrollUsers(List<DoceboItem> lineItems);
+        Task<DoceboEnrollmentResponse> EnrollUsers(List<DoceboItem> lineItems, bool isInternal);
         Task<DoceboSubscriptionResponse> SubscribeUsers(DoceboSubscriptionRequest request, string uuid);
         Task<DoceboUserSearchResponse> SearchUsers(string email);
+        Task<DoceboEnrollmentResponse> UnEnrollUsers(List<DoceboItem> lineItems);
     }
 
     public class OrderCloudIntegrationsDoceboConfig
@@ -53,10 +54,10 @@ namespace ordercloud.integrations.docebo
                 .PostMultipartAsync(mp => mp.AddStringParts($"client_id={_config.ClientID}&client_secret={_config.ClientSecret}&grant_type=password&scope=api&username={_config.Username}&password={_config.Password}"))
                 .ReceiveJson<DoceboToken>();
         }
-        public async Task<DoceboEnrollmentResponse> EnrollUsers(List<DoceboItem> lineItems)
+        public async Task<DoceboEnrollmentResponse> EnrollUsers(List<DoceboItem> lineItems, bool isInternal)
         {
             DoceboToken token = await GetToken();
-            DoceboEnrollmentRequest request = DoceboMapper.MapRequest(lineItems);
+            DoceboEnrollmentRequest request = DoceboMapper.MapRequest(lineItems, isInternal);
             return await this.Request("learn/v1/enrollment/batch", token).PostJsonAsync(request).ReceiveJson<DoceboEnrollmentResponse>();
         }
         public async Task<DoceboSubscriptionResponse> SubscribeUsers(DoceboSubscriptionRequest request, string uuid)
@@ -69,5 +70,13 @@ namespace ordercloud.integrations.docebo
             DoceboToken token = await GetToken();
             return await this.Request($"manage/v1/user", token).SetQueryParam("search_text", email).GetJsonAsync<DoceboUserSearchResponse>();
         }
+
+        public async Task<DoceboEnrollmentResponse> UnEnrollUsers(List<DoceboItem> lineItems  )
+        {
+            DoceboToken token = await GetToken();
+            DoceboEnrollmentRequest unenrollRequest = DoceboMapper.MapRequest(lineItems, false);
+            return await this.Request("learn/v1/enrollment/batch", token).SendJsonAsync(System.Net.Http.HttpMethod.Delete, unenrollRequest).ReceiveJson<DoceboEnrollmentResponse>();
+        }
+
     }
 }
