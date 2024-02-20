@@ -62,6 +62,7 @@ export class OCMProductCard {
             this._product,
             this.context.currentUser.get()
           ),
+          IsCertification: this._product.xp?.IsCertification,
         },
       })
       this.isAddingToCart = false

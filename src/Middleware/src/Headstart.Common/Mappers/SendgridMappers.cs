@@ -38,6 +38,58 @@ namespace Headstart.Common.Mappers
             return supplierList;
         }
 
+        public static CertOrderTemplateData GetCertOrderTemplateData(HSOrder order, IList<HSLineItem> lineItems)
+        {
+            var productsList = lineItems?
+                .Where(lineItem => lineItem?.xp?.IsCertification == true)
+                .Select(lineItem =>
+    {
+                return new LineItemProductData()
+                {
+                    ProductName = lineItem?.Product?.Name,
+                    ImageURL = lineItem?.xp?.ImageUrl,
+                    ProductID = lineItem?.ProductID,
+                    Quantity = lineItem?.Quantity,
+                    LineTotal = lineItem?.LineTotal,
+                    SpecCombo = GetSpecCombo(lineItem?.Specs)
+                };
+            });
+            return new CertOrderTemplateData()
+            {
+                FirstName = order?.FromUser?.FirstName,
+                LastName = order?.FromUser?.LastName,
+                OrderID = order?.ID,
+                Products = productsList,
+            };
+        }
+
+        public static PoOrderUploadTemplateData GetCertAndPoOrderData(HSOrder order, IList<HSLineItem> lineItems, bool includesCerts)
+        {
+            var productsList = lineItems?
+                .Where(lineItem => lineItem?.xp?.IsCertification == true)
+                .Select(lineItem =>
+                {
+                    return new LineItemProductData()
+                    {
+                        ProductName = lineItem?.Product?.Name,
+                        ImageURL = lineItem?.xp?.ImageUrl,
+                        ProductID = lineItem?.ProductID,
+                        Quantity = lineItem?.Quantity,
+                        LineTotal = lineItem?.LineTotal,
+                        SpecCombo = GetSpecCombo(lineItem?.Specs),
+                        IsCertification = lineItem?.xp?.IsCertification
+                    };
+                });
+            return new PoOrderUploadTemplateData()
+            {
+                FirstName = order?.FromUser?.FirstName,
+                LastName = order?.FromUser?.LastName,
+                OrderID = order?.ID,
+                Products = productsList,
+                IncludesCerts = includesCerts
+            };
+        }
+
         public static OrderTemplateData GetOrderTemplateData(HSOrder order, IList<HSLineItem> lineItems)
         {
             var productsList = lineItems?.Select(lineItem =>

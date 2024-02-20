@@ -42,6 +42,8 @@
   "OrderCloudSettings:MarketplaceName": "",
   "SendGridSettings:ApiKey": "",
   "SendgridSettings:FromEmail": "",
+  "SendgridSettings:POUploadEmail": "",
+  "SendgridSettings:CertOrderEmail": "",
   "SendgridSettings:CriticalSupportEmails": "",
   "SendgridSettings:SupportCaseEmail": "",
   "SendgridSettings:BillingEmail": "",

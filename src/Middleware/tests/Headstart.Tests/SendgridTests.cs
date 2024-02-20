@@ -20,6 +20,7 @@ using SendGrid;
 using Headstart.Common.Services.ShippingIntegration.Models;
 using Avalara.AvaTax.RestClient;
 using ordercloud.integrations.library;
+using Headstart.Common.Services.CMS;
 
 namespace Headstart.Tests
 {
@@ -29,6 +30,7 @@ namespace Headstart.Tests
         private AppSettings _settings;
         private ISendGridClient _sendGridClient;
         private ISendgridService _command;
+        private IAssetClient _assetClient;
         private const string ORDER_SUBMIT_TEMPLATE_ID = "order_submit_template_id";
         private const string LINE_ITEM_STATUS_CHANGE = "line_item_status_change";
         private const string QUOTE_ORDER_SUBMIT_TEMPLATE_ID = "quote_order_submit_template_id";
@@ -43,8 +45,9 @@ namespace Headstart.Tests
             _oc = Substitute.For<IOrderCloudClient>();
             _settings = Substitute.For<AppSettings>();
             _sendGridClient = Substitute.For<ISendGridClient>();
+            _assetClient = Substitute.For<IAssetClient>();
 
-            _command = new SendgridService(_settings, _oc, _sendGridClient);
+            _command = new SendgridService(_settings, _oc, _sendGridClient, _assetClient);
         }
 
         public class TestConstants

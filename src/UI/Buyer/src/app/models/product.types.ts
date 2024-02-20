@@ -59,5 +59,6 @@ export interface LineItemToAdd {
   Price: number // adding for display purposes
   xp: {
     ImageUrl: string
+    IsCertification?: boolean
   }
 }

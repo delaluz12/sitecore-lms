@@ -2,11 +2,10 @@ using Headstart.Common.Extensions;
 using Headstart.Common.Services.CMS.Models;
 using Headstart.Models;
 using ordercloud.integrations.library;
+using SendGrid.Helpers.Mail;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Headstart.Common.Services.CMS
@@ -15,6 +14,7 @@ namespace Headstart.Common.Services.CMS
     {
         Task<ImageAsset> CreateImage(AssetUpload asset);
         Task DeleteAsset(string id);
+        Task<Attachment> GetAssetByName(string fileName);
         Task<DocumentAsset> CreateDocument(AssetUpload asset);
         Task DeleteAssetByUrl(string assetUrl);
     }
@@ -23,6 +23,8 @@ namespace Headstart.Common.Services.CMS
     {
         private readonly IOrderCloudIntegrationsBlobService _blob;
         private readonly AppSettings _settings;
+        
+        private const string uploadContainer = "po-uploads";
 
         public AssetClient(IOrderCloudIntegrationsBlobService blob, AppSettings settings)
         {
@@ -53,8 +55,8 @@ namespace Headstart.Common.Services.CMS
 
         public async Task<DocumentAsset> CreateDocument(AssetUpload asset)
         {
-            var container = _blob.Container.Name;
-            var assetGuid = Guid.NewGuid().ToString();
+            var container = uploadContainer;
+            var assetGuid = Guid.NewGuid().ToString(); //change here if you want to name the file something else other than GUID
             await _blob.Save(assetGuid, asset.File, "application/pdf");
             return new DocumentAsset()
             {
@@ -70,6 +72,32 @@ namespace Headstart.Common.Services.CMS
             {
                 await _blob.Delete($"{id}-s");
             } catch { }
+        }
+
+        public async Task<Attachment> GetAssetByName(string assetName)
+        {
+            try
+            {
+                var blockBlob = await _blob.GetBlobReference(assetName);
+
+                await blockBlob.FetchAttributesAsync();
+                long fileByteLength = blockBlob.Properties.Length;
+                byte[] fileContent = new byte[fileByteLength];
+
+                await blockBlob.DownloadToByteArrayAsync(fileContent, 0);
+
+                return new Attachment
+                {
+                    Filename = assetName,
+                    Content = Convert.ToBase64String(fileContent),
+                    Type = "application/pdf",
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching blob from Azure Storage: {ex.Message}");
+                return null; 
+            }
         }
 
         public async Task DeleteAssetByUrl(string assetUrl)
