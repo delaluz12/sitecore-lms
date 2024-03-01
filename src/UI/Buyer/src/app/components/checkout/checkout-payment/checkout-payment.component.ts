@@ -100,7 +100,6 @@ export class OCMCheckoutPayment implements OnInit {
     this.ListAddressesForBilling()
     const lineItems = this.context.order.getLineItems()
     lineItems.Items.forEach((line) => {
-      console.log(line?.Product?.xp?.lms_SubscriptionUuid)
       if (line?.Product?.xp?.lms_SubscriptionUuid && line.UnitPrice > 0) {
         this.disablePO = true
       }
