@@ -49,17 +49,18 @@ export default class Upload {
     )
   }
 
-  async DeleteAsset(
+ async DeleteAsset(
     assetID: string,
     accessToken?: string
   ): Promise<RequiredDeep<ImageAsset>> {
     return await httpClient.delete(`/assets/${assetID}}`, { params: { accessToken } })
+  }
 
   private mapFileToFormData(file: FileData) {
     const data = new FormData()
     Object.keys(file).forEach(key => {
-      data.append(key, file[key])
+        data.append(key, file[key])
     })
-    return data
-  }
+    return data;
+}
 }
