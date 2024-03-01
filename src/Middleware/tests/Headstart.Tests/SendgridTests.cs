@@ -30,7 +30,7 @@ namespace Headstart.Tests
         private AppSettings _settings;
         private ISendGridClient _sendGridClient;
         private ISendgridService _command;
-        private IAssetClient _assetClient;
+        private IUploadsClient _uploadsClient;
         private const string ORDER_SUBMIT_TEMPLATE_ID = "order_submit_template_id";
         private const string LINE_ITEM_STATUS_CHANGE = "line_item_status_change";
         private const string QUOTE_ORDER_SUBMIT_TEMPLATE_ID = "quote_order_submit_template_id";
@@ -45,9 +45,9 @@ namespace Headstart.Tests
             _oc = Substitute.For<IOrderCloudClient>();
             _settings = Substitute.For<AppSettings>();
             _sendGridClient = Substitute.For<ISendGridClient>();
-            _assetClient = Substitute.For<IAssetClient>();
+            _uploadsClient = Substitute.For<IUploadsClient>();
 
-            _command = new SendgridService(_settings, _oc, _sendGridClient, _assetClient);
+            _command = new SendgridService(_settings, _oc, _sendGridClient, _uploadsClient);
         }
 
         public class TestConstants

@@ -1,12 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Dynamitey;
-using Flurl.Http;
-using Flurl.Http.Configuration;
 using Microsoft.AspNetCore.Http;
 using Headstart.Common.Constants;
 using Headstart.Common.Services.ShippingIntegration.Models;
@@ -21,7 +16,6 @@ using Headstart.Common.Mappers;
 using Newtonsoft.Json;
 using ordercloud.integrations.cardconnect;
 using Headstart.Common.Models.Misc;
-using ordercloud.integrations.library;
 using Headstart.Models.Headstart;
 using OrderCloud.Catalyst;
 using System.Net;
@@ -77,14 +71,15 @@ namespace Headstart.Common.Services
         private readonly AppSettings _settings;
         private readonly IOrderCloudClient _oc;
         private readonly ISendGridClient _client;
-        private readonly IAssetClient _assetClient;
+        private readonly IUploadsClient _uploadsClient;
+        
 
-        public SendgridService(AppSettings settings, IOrderCloudClient ocClient, ISendGridClient client, IAssetClient assetClient)
+        public SendgridService(AppSettings settings, IOrderCloudClient ocClient, ISendGridClient client, IUploadsClient uploadsClient)
         {
             _oc = ocClient;
             _client = client;
             _settings = settings;
-            _assetClient = assetClient;
+            _uploadsClient = uploadsClient;
         }
 
         public async Task SendQuoteRequestConfirmationEmail(HSOrder order, HSLineItem lineItem, string buyerEmail)
@@ -188,7 +183,7 @@ namespace Headstart.Common.Services
             var msg = MailHelper.CreateSingleTemplateEmail(fromEmail, toEmail, _settings?.SendgridSettings?.POUploadEmail, templateData);
             if (fileName != null)
             {
-                var asset = await _assetClient.GetAssetByName(fileName);
+                var asset = await _uploadsClient.GetAssetByName(fileName);
                 
                  msg.AddAttachment(asset);
             }

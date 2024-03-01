@@ -8,6 +8,7 @@ import { ShopperContextService } from 'src/app/services/shopper-context/shopper-
 })
 export class OCMPaymentList implements OnInit {
   @Input() payments: any
+  @Input() url: string
   _userCurrency: string
 
   constructor(private context: ShopperContextService) { }

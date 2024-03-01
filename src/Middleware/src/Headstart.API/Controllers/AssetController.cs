@@ -12,9 +12,12 @@ namespace Headstart.API.Controllers
     public class AssetController : CatalystController
     {
         private readonly IAssetClient _command;
-        public AssetController(IAssetClient command)
+        private readonly IUploadsClient _uploadsClient;
+
+        public AssetController(IAssetClient command, IUploadsClient uploadsClient)
         {
             _command = command;
+            _uploadsClient = uploadsClient;
         }
 
         /// <summary>
@@ -42,6 +45,25 @@ namespace Headstart.API.Controllers
         public async Task<DocumentAsset> CreateDocument([FromForm] AssetUpload asset)
         {
             return await _command.CreateDocument(asset);
+        }
+
+        /// <summary>
+        /// Create PO Document
+        /// </summary>
+        [HttpPost, Route("po-uploads"), OrderCloudUserAuth()]
+        public async Task<DocumentAsset> CreatePODocument([FromForm] AssetUpload asset)
+        {
+            return await _uploadsClient.CreateUpload(asset);
+        }
+
+        // <summary>
+        /// Retrieve document url from blob container
+        /// </summary>
+        [HttpGet, Route("po-uploads/download-url/{id}"), OrderCloudUserAuth()]
+        public async Task<string> GetPOUpload(string id)
+        {
+            //var container = _blob.Container.
+            return await _uploadsClient.GetUploadUrlAsync(id);
         }
     }
 }

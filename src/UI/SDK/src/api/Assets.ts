@@ -12,6 +12,14 @@ export default class Assets {
     constructor() {
         this.CreateImage = this.CreateImage.bind(this);
         this.Delete = this.Delete.bind(this);
+        this.GetDocumentUrl = this.GetDocumentUrl.bind(this);
+    }
+
+     /**
+    * @param id required: string
+    */
+    public async GetDocumentUrl(id: string): Promise<Promise<string>> {
+        return await httpClient.get(`/assets/po-uploads/download-url/${id}`)
     }
 
    /**

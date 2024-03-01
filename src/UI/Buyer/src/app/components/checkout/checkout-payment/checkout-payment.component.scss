@@ -6,3 +6,28 @@
 .po-info {
   font-size: 14px;
 }
+
+.custom-file-input-wrapper {
+  &:hover {
+    color: #212529;
+    background-color: #969696;
+    border-color: #969696;
+
+    .custom-file-input {
+      background-color: #969696;
+      color: #212529; 
+    }
+
+    .custom-file-label::after{
+      background-color: #969696;
+      color: #212529  ; 
+    }
+  }
+}
+
+.custom-file-label::after{
+  background-color: #f9fafc;
+  color: #969696  ; 
+}
+
+

@@ -1,13 +1,14 @@
 import httpClient from '../utils/HttpClient'
 import { AssetUpload } from '../models/AssetUpload'
 import { RequiredDeep } from '../models/RequiredDeep'
-import { ImageAsset } from '../models/Asset'
+import { DocumentAsset, FileData, ImageAsset } from '../models/Asset'
 
 export default class Upload {
   constructor() {
     this.UploadImage = this.UploadImage.bind(this)
     this.UploadDocument = this.UploadDocument.bind(this)
     this.DeleteAsset = this.DeleteAsset.bind(this)
+    this.UploadPO = this.UploadPO.bind(this)
   }
 
   async UploadImage(
@@ -33,7 +34,19 @@ export default class Upload {
         form.append(prop, asset[prop])
       }
     }
-    return await httpClient.post(`/assets/document`, form, { params: { accessToken } })
+    return await httpClient.post(`/assets/document`, form, {
+      params: { accessToken },
+    })
+  }
+
+  async UploadPO(asset: FileData): Promise<RequiredDeep<DocumentAsset>> {
+    return await httpClient.post(
+      `/assets/po-uploads`,
+      this.mapFileToFormData(asset),
+      {
+        params: {},
+      }
+    )
   }
 
   async DeleteAsset(
@@ -41,5 +54,12 @@ export default class Upload {
     accessToken?: string
   ): Promise<RequiredDeep<ImageAsset>> {
     return await httpClient.delete(`/assets/${assetID}}`, { params: { accessToken } })
+
+  private mapFileToFormData(file: FileData) {
+    const data = new FormData()
+    Object.keys(file).forEach(key => {
+      data.append(key, file[key])
+    })
+    return data
   }
 }

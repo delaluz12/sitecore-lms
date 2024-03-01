@@ -76,6 +76,7 @@
     <ocm-payment-list
       *ngIf="payments && !isOrderToApprove"
       [payments]="payments"
+      [url]="url"
     ></ocm-payment-list>
     <hr *ngIf="approvals?.length" />
     <ul>
