@@ -62,7 +62,6 @@ namespace Headstart.API.Controllers
         [HttpGet, Route("po-uploads/download-url/{id}"), OrderCloudUserAuth()]
         public async Task<string> GetPOUpload(string id)
         {
-            //var container = _blob.Container.
             return await _uploadsClient.GetUploadUrlAsync(id);
         }
     }
