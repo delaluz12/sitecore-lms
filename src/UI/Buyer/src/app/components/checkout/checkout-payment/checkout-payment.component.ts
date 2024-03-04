@@ -1,4 +1,11 @@
-import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core'
+import {
+  Component,
+  Output,
+  EventEmitter,
+  OnInit,
+  Input,
+  ChangeDetectorRef,
+} from '@angular/core'
 import {
   Address,
   BuyerAddress,
@@ -24,7 +31,7 @@ import {
 import { AcceptedPaymentTypes } from 'src/app/models/checkout.types'
 import { OrderSummaryMeta } from 'src/app/models/order.types'
 import { AppConfig } from 'src/app/models/environment.types'
-import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
+import { faCheckCircle, faCheck } from '@fortawesome/free-solid-svg-icons'
 import { getSuggestedAddresses } from 'src/app/services/address-suggestion.helper'
 import { StripeConfig } from 'src/app/config/stripe.class'
 
@@ -46,6 +53,7 @@ export class OCMCheckoutPayment implements OnInit {
   selectedPaymentMethod: AcceptedPaymentTypes
   POTermsAccepted: boolean
   faCheckCircle = faCheckCircle
+  faCheck = faCheck
   existingBillingAddresses: ListPage<BuyerAddress>
   selectedBillingAddress: BuyerAddress
   showNewAddressForm = false
@@ -64,13 +72,15 @@ export class OCMCheckoutPayment implements OnInit {
   selectedFileName: string | null = null
   poUploadSuccess = false
   isSitecorian: boolean
+  isHovered = false
   stripeCountry: EventEmitter<BuyerAddress> = new EventEmitter<BuyerAddress>()
   stripeCountries = StripeConfig.getStripeCountries()
   stripeKeyMap = StripeConfig.getStripeKeyMap()
 
   constructor(
     private context: ShopperContextService,
-    private appConfig: AppConfig
+    private appConfig: AppConfig,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -96,6 +106,22 @@ export class OCMCheckoutPayment implements OnInit {
     })
     if (_order?.xp?.PONumber) {
       this.poNumber = _order.xp.PONumber
+    }
+  }
+
+  OnMouseEnter(): void {
+    this.isHovered = true
+  }
+
+  OnMouseLeave(): void {
+    this.isHovered = false
+  }
+
+  get buttonText(): string {
+    if (this.isHovered) {
+      return this.poUploadSuccess ? 'File uploaded' : 'No file uploaded'
+    } else {
+      return 'Upload PDF'
     }
   }
 
@@ -288,19 +314,14 @@ export class OCMCheckoutPayment implements OnInit {
 
   async uploadPdf(): Promise<void> {
     if (this.poOrderUpload) {
-      // const formData = new FormData()
-      // for (const prop in this.poOrderUpload) {
-      //   if (this.poOrderUpload.hasOwnProperty(prop)) {
-      //     formData.append(prop, this.poOrderUpload[prop])
-      //   }
-      // }
       try {
-        const results = await HeadStartSDK.Assets.CreateDocument({
+        const results = await HeadStartSDK.Upload.UploadPO({
           File: this.poOrderUpload.File,
           Filename: this.poOrderUpload.FileName,
         })
         if (results && results.Url && results.FileName) {
           this.poUploadSuccess = true
+          this.cdr.detectChanges()
           //set the fileName on order to pull file on orderSumbit for email sending
           const currentOrder = this.context.order.get()
           currentOrder.xp.POFileID = this.GetAssetIDFromUr(results.Url)

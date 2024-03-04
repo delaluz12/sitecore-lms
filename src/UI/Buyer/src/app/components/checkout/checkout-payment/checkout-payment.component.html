@@ -61,14 +61,6 @@
       selectedPaymentMethod === 'PurchaseOrder'
     "
   >
-    <div class="alert alert-warning" role="alert">
-      For purchase order payments, please send an electronic copy of your
-      purchase order or purchase order email to
-      <a href="mailto:GlobalTraining@sitecore.com" target="_blank"
-        >GlobalTraining@sitecore.com</a
-      >
-      for processing.
-    </div>
     <small class="d-block font-italic text-muted">
       The price reflected on this order includes an estimate for sales tax and
       shipping costs. Actual final cost may vary slightly as a result. By
@@ -114,30 +106,42 @@
       <div class="custom-file">
         <input
           type="file"
-          class="custom-file-input"
+          class=""
           id="po-upload-input"
           aria-describedby="po-upload-btn"
           (change)="onFileSelected($event)"
           accept=".pdf"
         />
-        <label class="custom-file-label" for="po-upload-input">{{
-          poUploadLabelText
-        }}</label>
+        <div class="custom-file-input-wrapper">
+          <label class="custom-file-label" for="po-upload-input">{{
+            poUploadLabelText
+          }}</label>
+        </div>
       </div>
+
       <div class="input-group-append">
         <button
-          class="btn btn-outline-secondary"
+          class="btn btn-success"
           type="button"
           id="po-upload-btn"
           (click)="uploadPdf(uploadFile)"
+          (mouseenter)="OnMouseEnter()"
+          (mouseleave)="OnMouseLeave()"
         >
-          Upload PDF
+          {{ buttonText }}
         </button>
       </div>
     </div>
     <small id="ponumberhelp" class="form-text text-muted"
       >Please upload PDFs only.</small
     >
+
+    <small
+      *ngIf="poUploadSuccess"
+      id="poUploadSuccessText"
+      class="alert-success"
+      >Upload Successful <fa-icon [icon]="faCheck"> </fa-icon
+    ></small>
   </div>
   <div class="mt-3 form-group" *ngIf="!isAnon">
     <label for="selectAddress">Billing Address</label>

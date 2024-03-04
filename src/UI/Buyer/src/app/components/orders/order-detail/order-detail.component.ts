@@ -4,7 +4,12 @@ import {
   faExchangeAlt,
   faTruck,
 } from '@fortawesome/free-solid-svg-icons'
-import { HSOrder, OrderDetails, HSLineItem } from '@ordercloud/headstart-sdk'
+import {
+  HSOrder,
+  OrderDetails,
+  HSLineItem,
+  HeadStartSDK,
+} from '@ordercloud/headstart-sdk'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { isQuoteOrder } from '../../../services/orderType.helper'
 import {
@@ -37,6 +42,7 @@ export class OCMOrderDetails implements OnInit {
   isAnon: boolean
   isQuoteOrder = isQuoteOrder
   doceboURL: string
+  uploadDocUrl: string
 
   constructor(
     private context: ShopperContextService,
@@ -52,6 +58,7 @@ export class OCMOrderDetails implements OnInit {
       OrderViewContext.Approve
     this.orderDetails = await this.context.orderHistory.getOrderDetails()
     this.order = this.orderDetails.Order
+    this.uploadDocUrl = await this.getDocumentUrl(this.order)
     this.validateReorder(this.order.ID, this.orderDetails.LineItems)
   }
 
@@ -76,6 +83,15 @@ export class OCMOrderDetails implements OnInit {
     return this.context.currentUser.get().FavoriteOrderIDs.includes(orderID)
   }
 
+  async getDocumentUrl(order: HSOrder): Promise<string> {
+    if (order.xp.POFileID) {
+      const results = await HeadStartSDK.Assets.GetDocumentUrl(
+        order.xp.POFileID
+      )
+      return results
+    }
+    return null
+  }
   getOrderStatus(): string {
     // AwaitingApproval is the one status order xp doesn't account for. If order.status is AwaitingApproval, take that.
     if (this.order?.Status === 'AwaitingApproval') {

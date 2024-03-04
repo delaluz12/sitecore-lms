@@ -95,6 +95,7 @@ export class OrderDetailsComponent {
   }
   orderAvatarInitials: string
   rmas: RMA[]
+  url = null
 
   @Input()
   set order(order: Order) {
@@ -255,6 +256,7 @@ export class OrderDetailsComponent {
   async setData(order: Order): Promise<void> {
     this._buyerQuoteAddress = null
     this._order = order
+    this.url = await this.getDocumentUrl()
     this.exchangeRates = (await HeadStartSDK.ExchangeRates.GetRateList()).Items
     this.supplierCurrency = this.exchangeRates?.find(
       (r) => r.Currency === order.xp?.Currency
@@ -359,6 +361,15 @@ export class OrderDetailsComponent {
         .toPromise()
     }
     this.handleSelectedOrderChange(order)
+  }
+  async getDocumentUrl(): Promise<string> {
+    if (this._order.xp?.POFileID) {
+      const results = await HeadStartSDK.Assets.GetDocumentUrl(
+        this._order.xp?.POFileID
+      )
+      return results
+    }
+    return null
   }
 
   toggleCreateShipment(createShipment: boolean): void {

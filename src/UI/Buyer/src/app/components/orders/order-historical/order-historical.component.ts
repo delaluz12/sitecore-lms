@@ -29,6 +29,9 @@ export class OCMOrderHistorical implements OnInit {
     this.getBuyerLocation(this.order.BillingAddressID)
     this.supplierMail = "mailto:" + this.order.xp.QuoteSellerContactEmail
   }
+  @Input() set uploadDocUrl(value: string) {
+    this.url = value.toString()
+  }
   order: HSOrder
   lineItems: HSLineItem[] = []
   promotions: OrderPromotion[] = []
@@ -38,6 +41,7 @@ export class OCMOrderHistorical implements OnInit {
   buyerLocation: HSAddressBuyer
   _userCurrency: string
   supplierMail: string
+  url: string
 
   constructor(
     private context: ShopperContextService,
