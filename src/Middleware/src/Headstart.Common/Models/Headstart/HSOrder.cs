@@ -52,7 +52,7 @@ namespace Headstart.Models
         public bool? InstructorLeadAcknowledgment { get; set; }
         public bool? OrderOnBehalfOf { get; set; }
         public string POFileID { get; set; }
-        public string Region { get; set; }
+
     }
 
     

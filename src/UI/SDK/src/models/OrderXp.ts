@@ -73,6 +73,4 @@ export interface OrderXp {
   InstructorLeadAcknowledgment?: boolean
   OrderedOnBehalfOfOthers?: boolean
   POFileID?: string
-  Region: string
-  OrderOnBehalfOf?: boolean
 }
