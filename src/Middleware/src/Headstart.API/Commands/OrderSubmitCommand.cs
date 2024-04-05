@@ -93,14 +93,14 @@ namespace Headstart.API.Commands
                         {
                             course_id = Int32.Parse(courseID),
                             user_id = userID,
-                            status = !String.IsNullOrEmpty(stripePaymentDetails.OrderID) ? "subscribed" : internalUser ? "subscribed" : "waiting",
+                            status = GetStatus(stripePaymentDetails, internalUser),
                             field_2 = incrementedOrderID
 
                         };
                         doceboItems.Add(lineItem);
                     }
                 }
-                if (!String.IsNullOrEmpty(subscriptionID) )
+                if (!String.IsNullOrEmpty(subscriptionID) && (!String.IsNullOrEmpty(stripePaymentDetails.OrderID) || internalUser))
                 {
                     var doceboSubscription = new DoceboSubscriptionRequest()
                     {
@@ -223,6 +223,15 @@ namespace Headstart.API.Commands
                 return false;
             }
             return true;
+        }
+
+        private static String GetStatus(StripePaymentDetails payment, Boolean internalUser)
+        {
+            if (!String.IsNullOrEmpty(payment.OrderID))
+            {
+                return "subscribed";
+            }
+            return internalUser ? "subscribed" : "waiting";
         }
 
     }
