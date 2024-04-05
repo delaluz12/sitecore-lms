@@ -100,7 +100,7 @@ namespace Headstart.API.Commands
                         doceboItems.Add(lineItem);
                     }
                 }
-                if (!String.IsNullOrEmpty(subscriptionID) && !String.IsNullOrEmpty(stripePaymentDetails.OrderID))
+                if (!String.IsNullOrEmpty(subscriptionID) && (!String.IsNullOrEmpty(stripePaymentDetails.OrderID) || internalUser))
                 {
                     var doceboSubscription = new DoceboSubscriptionRequest()
                     {
