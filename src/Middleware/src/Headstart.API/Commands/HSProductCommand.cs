@@ -414,12 +414,6 @@ namespace Headstart.API.Commands.Crud
 			};
 			// If applicable, update OR create the Product PriceSchedule
 			var tasks = new List<Task>();
-			Task<PriceSchedule> _priceScheduleReq = null;
-			if (superProduct.PriceSchedule != null)
-			{
-				_priceScheduleReq = UpdateRelatedPriceSchedules(superProduct.PriceSchedule, token);
-				tasks.Add(_priceScheduleReq);
-			}
 			// List Variants
 			var _variantsReq = _oc.Products.ListVariantsAsync<HSVariant>(id, pageSize: 100, accessToken: token);
 			tasks.Add(_variantsReq);
@@ -432,7 +426,6 @@ namespace Headstart.API.Commands.Crud
 			return new SuperHSProduct
 			{
 				Product = _updatedProduct,
-				PriceSchedule = _priceScheduleReq?.Result,
 				Specs = _specsReq?.Result?.Items,
 				Variants = _variantsReq?.Result?.Items,
 			};
