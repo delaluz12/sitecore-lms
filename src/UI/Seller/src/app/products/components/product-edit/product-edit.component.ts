@@ -708,11 +708,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
   // TODO: Remove duplicate function, function exists in resource-crud.component.ts (minus the files check);
   checkForChanges(): void {
-    console.log(this.productForm.dirty)
-    console.log(this._superHSProductEditable)
-    console.log(this._superHSProductStatic)
-
-    console.log(this.productForm)
     this.areChanges =
       JSON.stringify(this._superHSProductEditable) !==
         JSON.stringify(this._superHSProductStatic) ||
