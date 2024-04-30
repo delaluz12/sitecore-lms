@@ -1037,7 +1037,7 @@
                     ADMIN.PRODUCT_EDIT.DESCRIPTION
                   </h6>
                   <reactive-quill-editor-component
-                    [readonly]="readonly"
+                    
                     [resourceInSelection]="resourceInSelection"
                     [formControlForText]="productForm?.controls?.Description"
                     resourceField="Description"
@@ -1492,7 +1492,7 @@
           class="btn btn-primary"
           type="submit"
           [disabled]="
-            productForm?.status === 'INVALID' ||
+            (productForm?.status === 'INVALID' && productForm?.controls.Description.pristine) ||
             !variantsValid ||
             !specsValid ||
             dataIsSaving

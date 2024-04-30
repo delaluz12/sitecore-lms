@@ -46,6 +46,8 @@ export class OrderStateService {
       },
       ClaimStatus: ClaimStatus.NoClaim,
       ShippingStatus: ShippingStatus.Processing,
+      Region: "N/A",
+      OrderOnBehalfOf: false,
     },
   }
   private orderSubject = new BehaviorSubject<HSOrder>(this.DefaultOrder)

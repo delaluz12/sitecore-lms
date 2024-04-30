@@ -295,8 +295,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
             Validators.min(0),
           ]),
           Price: new FormControl(
-            _get(superHSProduct.PriceSchedule, 'PriceBreaks[0].Price', null),
-            Validators.required
+            _get(superHSProduct.PriceSchedule, 'PriceBreaks[0].Price', null)
           ),
           MinQuantity: new FormControl(
             superHSProduct.PriceSchedule?.MinQuantity,
@@ -691,12 +690,21 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     const updateProductResourceCopy = this.productService.copyResource(
       this._superHSProductEditable || this.productService.emptyResource
     )
-    updateProductResourceCopy.Product = {
+    if (field = "xp.description"){
+      updateProductResourceCopy.Product.xp = {
+      ...updateProductResourceCopy.Product.xp,
+      ["description"]: value,
+    }
+    }
+    else {
+      updateProductResourceCopy.Product = {
       ...updateProductResourceCopy.Product,
       [field]: value,
     }
+  }
     this._superHSProductEditable = updateProductResourceCopy
     this.checkForChanges()
+
   }
   // TODO: Remove duplicate function, function exists in resource-crud.component.ts (minus the files check);
   checkForChanges(): void {
@@ -883,7 +891,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     if (!superHSProduct.Product.xp) {
       superHSProduct.Product.xp = {}
     }
-    if (superHSProduct.PriceSchedule.PriceBreaks.length === 0)
+    if (!superHSProduct.PriceSchedule)
       superHSProduct.PriceSchedule = null
     superHSProduct.Product.xp.Status = 'Draft'
     if (this.imageFiles.length > 0) {

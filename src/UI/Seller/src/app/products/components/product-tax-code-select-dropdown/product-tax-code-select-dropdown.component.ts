@@ -72,8 +72,8 @@ export class ProductTaxCodeSelectDropdown implements OnChanges {
   }
 
   handleScrollEnd(event) {
-    if (event.target.classList.value.includes('active')) {
+    // if (event.target.classList.value.includes('active')) {
     
-    }
+    // }
   }
 }
