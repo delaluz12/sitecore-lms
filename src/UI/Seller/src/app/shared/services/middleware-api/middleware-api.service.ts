@@ -73,6 +73,12 @@ export class MiddlewareAPIService {
       .toPromise()
   }
 
+  async checkCourseCategory(
+    id: string
+  ): Promise<any> {
+    return await this.http.get(this.appConfig.middlewareUrl + `/products/checkproductcategory/${id}`).toPromise() 
+  }
+
   batchShipmentUpload(
     formData: FormData,
     headers: HttpHeaders
