@@ -118,5 +118,14 @@ namespace Headstart.Common.Controllers
 		{
 			return await _command.ListAllPriceSchedules(id, UserContext.AccessToken);
 		}
-	}
+
+        /// <summary>
+        /// Checks product categories
+        /// </summary>
+        [HttpGet, Route("checkproductcategory/{id}"), OrderCloudUserAuth(ApiRole.ProductAdmin)]
+        public async Task<bool> CheckProductCategory(string id)
+        {
+            return await _command.CheckProductCategory(id);
+        }
+    }
 }

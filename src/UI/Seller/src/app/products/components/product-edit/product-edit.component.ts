@@ -70,6 +70,8 @@ import { AppConfig } from '@app-seller/models/environment.types'
 import { AssetService } from '@app-seller/shared/services/assets/asset.service'
 import { getProductMediumImageUrl } from '@app-seller/shared/services/assets/asset.helper'
 import { TranslateService } from '@ngx-translate/core'
+import { MiddlewareAPIService } from '@app-seller/shared/services/middleware-api/middleware-api.service'
+import { HttpHeaders } from '@angular/common/http'
 
 @Component({
   selector: 'app-product-edit',
@@ -145,6 +147,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   alive = true
   sizeTierSubscription: Subscription
   inventoryValidatorSubscription: Subscription
+  isILT: boolean
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -154,6 +157,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private sanitizer: DomSanitizer,
     private modalService: NgbModal,
+    private middlewareService: MiddlewareAPIService,
     private appAuthService: AppAuthService,
     @Inject(applicationConfiguration) private appConfig: AppConfig,
     private toastrService: ToastrService,
@@ -171,6 +175,16 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     await this.getAvailableProductTypes()
     await getTaxCategoriesPromise
     this.setProductEditTab()
+    this.checkCourseCategory()
+  }
+
+  checkCourseCategory(): void {
+    const routeUrl = this.router.routerState.snapshot.url
+    const splitUrl = routeUrl.split('/')
+    this.middlewareService.checkCourseCategory(splitUrl[2]).then(val => {
+      this.isILT = val;
+    })
+    
   }
 
   setResourceType(): void {
@@ -933,6 +947,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     const accessToken = await this.appAuthService.fetchToken().toPromise()
     const hsProduct = await HeadStartSDK.Products.Get(product.ID, accessToken)
     void this.refreshProductData(hsProduct)
+    this.checkCourseCategory()
   }
 
   getTotalMarkup = (specOptions: SpecOption[]): number => {

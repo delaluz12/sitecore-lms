@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Headstart.Common;
+using Headstart.Common.Controllers;
 using Headstart.Common.Helpers;
 using Headstart.Common.Services.CMS;
 using Headstart.Common.Services.CMS.Models;
@@ -27,6 +28,7 @@ namespace Headstart.API.Commands.Crud
 		Task<HSPriceSchedule> CreatePricingOverride(string id, string buyerID, HSPriceSchedule pricingOverride, string token);
 		Task<Product> FilterOptionOverride(string id, string supplierID, IDictionary<string, object> facets, DecodedToken decodedToken);
 		Task<List<HSPriceSchedule>> ListAllPriceSchedules(string id, string token);
+		Task<bool> CheckProductCategory(string id);
 	}
 
 	public class DefaultOptionSpecAssignment
@@ -593,7 +595,19 @@ namespace Headstart.API.Commands.Crud
 			return updatedProduct;
 		}
 
-		private async Task<string> GetSupplierNameForXpFacet(string supplierID, string accessToken)
+		public async Task<bool> CheckProductCategory(string id)
+        {
+            var catalogId = _settings.EnvironmentSettings.Environment == AppEnvironment.Production ? "0001" : "HAGXImx4r0iqUEmA7qsA6g";
+            var categories = await _oc.Categories.ListAllAsync(catalogId);
+			var categoryId = categories.FirstOrDefault(cat => cat.Name == "Instructor-led Training").ID;
+            var productAssignments = await _oc.Categories.ListAllProductAssignmentsAsync(catalogId,categoryId);
+
+			if (productAssignments.Any(assignment => assignment.ProductID == id)) return true;
+          
+            else return false;
+        }
+
+        private async Task<string> GetSupplierNameForXpFacet(string supplierID, string accessToken)
 		{
 			var supplier = await _oc.Suppliers.GetAsync(supplierID, accessToken);
 			return supplier.Name;

@@ -1037,7 +1037,7 @@
                     ADMIN.PRODUCT_EDIT.DESCRIPTION
                   </h6>
                   <reactive-quill-editor-component
-                    
+                    [readonly]="isILT"
                     [resourceInSelection]="resourceInSelection"
                     [formControlForText]="productForm?.controls?.Description"
                     resourceField="Description"
