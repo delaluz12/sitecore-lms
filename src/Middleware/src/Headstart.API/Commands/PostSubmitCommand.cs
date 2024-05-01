@@ -481,7 +481,7 @@ namespace Headstart.API.Commands
                 "mq", "ms", "mx", "ni", "pa", "pe", "pr", "py", "sv", "tc",
                 "tt", "us", "uy", "vc", "ve", "vg", "vi"};
             
-            List<string> APJ = new List<string>(){"as", "bn", "fj", "fm", "gu", "hm", "id", "io", "jp",
+            List<string> APJ = new List<string>(){"as", "bn", "fj", "fm", "gu", "hm", "in", "io", "jp",
                 "ki", "la", "mh", "mm", "mn", "mo", "mp", "my", "nc", "nf",
                 "nr", "nu", "nz", "pg", "ph", "pk", "pn", "pw", "sb", "sg",
                 "sh", "tk", "tl", "to", "tv", "tw", "um", "vn", "vu", "wf", "ws"};
