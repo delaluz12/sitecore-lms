@@ -10,6 +10,7 @@ import { ShipFromSourcesDic } from '../models/shipping.types'
 
 @Component({
   template: `
+    <ocm-promo-banner *ngIf="showCustModal"></ocm-promo-banner>
     <ocm-product-list
       *ngIf="products"
       [products]="products"
@@ -23,6 +24,7 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
   shipFromSources: ShipFromSourcesDic = {}
   alive = true
   isProductListLoading = true
+  showCustModal
 
   constructor(
     public context: ShopperContextService,
@@ -37,6 +39,13 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
     this.context.productFilters.activeFiltersSubject
       .pipe(takeWhile(() => this.alive))
       .subscribe(this.handleFiltersChange)
+    // only show for userGroups = 0001-0008 or 0001-0005 (PROD)
+    const user = this.context.currentUser.get()
+    this.showCustModal = user?.UserGroups.find(
+      (item) => item.ID === '0001-0008' || item.ID === '0001-0005'
+    )
+      ? true
+      : false
   }
 
   ngOnDestroy(): void {

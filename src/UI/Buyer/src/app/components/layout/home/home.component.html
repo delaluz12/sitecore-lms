@@ -1,8 +1,12 @@
 <ng-container>
   <div class="container">
+    <ocm-promo-modal></ocm-promo-modal>
     <!-- Featured products can be managed in the seller application -->
-    <ocm-product-carousel *ngIf="featuredProducts?.length" [displayTitle]="'Featured Products'"
-      [products]="featuredProducts">
+    <ocm-product-carousel
+      *ngIf="featuredProducts?.length"
+      [displayTitle]="'Featured Products'"
+      [products]="featuredProducts"
+    >
     </ocm-product-carousel>
   </div>
 </ng-container>
