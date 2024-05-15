@@ -4,6 +4,7 @@ import { ShopperContextService } from 'src/app/services/shopper-context/shopper-
 import { HSMeProduct } from '@ordercloud/headstart-sdk'
 import { PromoModalComponent } from '../../promo-modal/promo-modal.component'
 import { MatDialog } from '@angular/material/dialog'
+import { AppConfig } from 'src/app/models/environment.types'
 
 @Component({
   templateUrl: './home.component.html',
@@ -17,7 +18,8 @@ export class OCMHomePage implements OnInit {
 
   constructor(
     private context: ShopperContextService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private appConfig: AppConfig
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -32,15 +34,26 @@ export class OCMHomePage implements OnInit {
     }
 
     const shownModal = sessionStorage.getItem('modalShown')
-    // only show for customers - userGroup = 0001-0008 or 0001-0005 (PROD)
-    const showCustModal = user?.UserGroups.find(
-      (item) => item.ID === '0001-0008' || item.ID === '0001-0005'
-    )
-      ? true
-      : false
+    const showCustModal = this.checkUserGroups()
     if (!shownModal && showCustModal) {
       this.openAlertDialog()
       sessionStorage.setItem('modalShown', 'true')
+    }
+  }
+
+  checkUserGroups(): boolean {
+    const env =
+      this.appConfig.sellerName == 'Sitecore LMS TEST' ? 'test' : 'prod'
+    // only show for userGroups = 0001-0008 or 0001-0005 (PROD)
+    const user = this.context.currentUser.get()
+    if (env === 'prod') {
+      return user?.UserGroups.some(
+        (item) => item.ID === '0001-0008' || item.ID === '0001-0005'
+      )
+    } else {
+      return user?.UserGroups.some(
+        (item) => item.ID === '0002-0008' || item.ID === '0002-0005'
+      )
     }
   }
 
