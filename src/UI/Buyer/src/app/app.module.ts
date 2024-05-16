@@ -210,6 +210,9 @@ import { ProductPriceDisplayComponent } from './components/products/product-pric
 import { StripePaymentComponent } from './components/payments/stripe-payment/stripe-payment.component'
 import { CheckoutProcessingComponent } from './components/checkout/checkout-processing/checkout-processing.component'
 import { FaqComponent } from './components/faq/faq.component'
+import { PromoModalComponent } from './components/promo-modal/promo-modal.component'
+import { MatDialogModule } from '@angular/material/dialog'
+import { PromoBannerComponent } from './components/promoBanner/promoBanner.component'
 
 export function HttpLoaderFactory(
   http: HttpClient,
@@ -322,6 +325,7 @@ const components = [
   OCMLocationManagement,
   OCMProductAttachments,
   ProductPriceDisplayComponent,
+  PromoBannerComponent,
 ]
 
 // @dynamic
@@ -348,6 +352,7 @@ const components = [
     StripePaymentComponent,
     CheckoutProcessingComponent,
     FaqComponent,
+    PromoModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -367,6 +372,7 @@ const components = [
     ReactiveFormsModule,
     FormsModule,
     MatListModule,
+    MatDialogModule,
     MatCardModule,
     MatTableModule,
     MatCheckboxModule,

@@ -7,9 +7,11 @@ import { isEmpty as _isEmpty, uniq as _uniq } from 'lodash'
 import { SupplierFilterService } from '../services/supplier-filter/supplier-filter.service'
 import { HSMeProduct } from '@ordercloud/headstart-sdk'
 import { ShipFromSourcesDic } from '../models/shipping.types'
+import { AppConfig } from '../models/environment.types'
 
 @Component({
   template: `
+    <ocm-promo-banner *ngIf="showCustModal"></ocm-promo-banner>
     <ocm-product-list
       *ngIf="products"
       [products]="products"
@@ -23,11 +25,13 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
   shipFromSources: ShipFromSourcesDic = {}
   alive = true
   isProductListLoading = true
+  showCustModal
 
   constructor(
     public context: ShopperContextService,
     private supplierFilterService: SupplierFilterService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private appConfig: AppConfig
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +41,24 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
     this.context.productFilters.activeFiltersSubject
       .pipe(takeWhile(() => this.alive))
       .subscribe(this.handleFiltersChange)
+
+    this.displayBanner()
+  }
+
+  displayBanner(): void {
+    const env =
+      this.appConfig.sellerName == 'Sitecore LMS TEST' ? 'test' : 'prod'
+    // only show for userGroups = 0001-0008 or 0001-0005 (PROD)
+    const user = this.context.currentUser.get()
+    if (env === 'prod') {
+      this.showCustModal = user?.UserGroups.some(
+        (item) => item.ID === '0001-0008' || item.ID === '0001-0005'
+      )
+    } else {
+      this.showCustModal = user?.UserGroups.find(
+        (item) => item.ID === '0002-0008' || item.ID === '0002-0005'
+      )
+    }
   }
 
   ngOnDestroy(): void {
