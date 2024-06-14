@@ -104,7 +104,7 @@ export class CheckoutService {
   }
 
   async setOrderOnBehalfOfOrderFlag(flag: boolean): Promise<void> {
-    const patch = { xp: { OrderedOnBehalfOfOthers: flag } }
+    const patch = { xp: { OrderOnBehalfOf: flag } }
     try {
       this.order = await this.patch(patch as HSOrder)
     } catch (ex) {

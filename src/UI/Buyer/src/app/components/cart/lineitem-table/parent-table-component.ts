@@ -366,7 +366,7 @@ export abstract class OCMParentTableComponent implements OnInit {
         xp,
       })
     } finally {
-      if (!currentOrder.xp.OrderedOnBehalfOfOthers) {
+      if (!currentOrder.xp.OrderOnBehalfOf) {
         await this.context.order.checkout.setOrderOnBehalfOfOrderFlag(true)
       }
       // REMOVE SPINNER/ENABLE INPUT IF QTY NO LONGER BEING UPDATED
