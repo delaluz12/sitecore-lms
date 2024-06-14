@@ -116,6 +116,8 @@ namespace Headstart.Common.Models
             "HSOrder.BillingAddress.State",
             "HSOrder.BillingAddress.Zip",
             "HSOrder.BillingAddress.Country",
+            "HSOrder.xp.Region",
+            "HSOrder.xp.OrderOnBehalfOf",
             "HSLineItem.ShippingAddress.xp.BillingNumber",
             "HSLineItem.ShippingAddress.xp.LocationID",
             "HSLineItem.ShippingAddress.CompanyName",
