@@ -2,6 +2,7 @@
 using Headstart.Models.Extended;
 using Headstart.Models.Headstart;
 using ordercloud.integrations.exchangerates;
+using OrderCloud.Catalyst;
 using OrderCloud.SDK;
 using System;
 using System.Collections.Generic;
@@ -63,10 +64,9 @@ namespace Headstart.Common.Mappers
             };
         }
 
-        public static PoOrderUploadTemplateData GetCertAndPoOrderData(HSOrder order, IList<HSLineItem> lineItems, bool includesCerts)
+        public static PoOrderUploadTemplateData GetPoOrderData(HSOrder order, IList<HSLineItem> lineItems)
         {
             var productsList = lineItems?
-                .Where(lineItem => lineItem?.xp?.IsCertification == true)
                 .Select(lineItem =>
                 {
                     return new LineItemProductData()
@@ -77,7 +77,8 @@ namespace Headstart.Common.Mappers
                         Quantity = lineItem?.Quantity,
                         LineTotal = lineItem?.LineTotal,
                         SpecCombo = GetSpecCombo(lineItem?.Specs),
-                        IsCertification = lineItem?.xp?.IsCertification
+                        IsCertification = lineItem?.xp?.IsCertification,
+                        IsSubOrBundle = (bool)(lineItem?.xp?.lms_SubscriptionUuid.IsNullOrEmpty())
                     };
                 });
             return new PoOrderUploadTemplateData()
@@ -85,8 +86,7 @@ namespace Headstart.Common.Mappers
                 FirstName = order?.FromUser?.FirstName,
                 LastName = order?.FromUser?.LastName,
                 OrderID = order?.ID,
-                Products = productsList,
-                IncludesCerts = includesCerts
+                Products = productsList
             };
         }
 

@@ -37,7 +37,7 @@ namespace Headstart.Common.Services
 
         Task SendNewUserEmail(MessageNotification<PasswordResetEventBody> payload);
 
-        Task SendPurchaseOrderUpload(HSOrderWorksheet worksheet, string fileName, bool includesCerts);
+        Task SendPurchaseOrderUpload(HSOrderWorksheet worksheet, string fileName);
 
         Task SendCertOrderEmail(HSOrderWorksheet worksheet);
 
@@ -171,14 +171,14 @@ namespace Headstart.Common.Services
             }
         }
 
-        public async Task SendPurchaseOrderUpload(HSOrderWorksheet worksheet, string fileName, bool includesCerts)
+        public async Task SendPurchaseOrderUpload(HSOrderWorksheet worksheet, string fileName)
         {
             var fromEmail = new EmailAddress("no-reply@po-orders.com");
-            var toEmail = new EmailAddress("globaltraining@sitecore.com");
-            var certAndPoOrderData = SendgridMappers.GetCertAndPoOrderData(worksheet.Order, worksheet.LineItems, includesCerts);
+            var toEmail = new EmailAddress(_settings?.SendgridSettings?.ToLMSTeamEmail);
+            var PoOrderData = SendgridMappers.GetPoOrderData(worksheet.Order, worksheet.LineItems);
             var templateData = new EmailTemplate<PoOrderUploadTemplateData>()
             {
-                Data = certAndPoOrderData
+                Data = PoOrderData
             };
             var msg = MailHelper.CreateSingleTemplateEmail(fromEmail, toEmail, _settings?.SendgridSettings?.POUploadEmail, templateData);
             if (fileName != null)
@@ -197,7 +197,7 @@ namespace Headstart.Common.Services
         public async Task SendCertOrderEmail(HSOrderWorksheet worksheet)
         {
             var fromEmail = new EmailAddress("no-reply@certification-exam-orders.com");
-            var toEmail = new EmailAddress("globaltraining@sitecore.com");
+            var toEmail = new EmailAddress(_settings?.SendgridSettings?.ToLMSTeamEmail);
             var certOrderData = SendgridMappers.GetCertOrderTemplateData(worksheet.Order, worksheet.LineItems);
             var certTemplateData = new EmailTemplate<CertOrderTemplateData>()
             {
