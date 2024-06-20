@@ -48,6 +48,7 @@ namespace Headstart.Common.Models
             public string SpecCombo { get; set; }
             public string MessageToBuyer { get; set; }
             public bool? IsCertification { get; set; }
+            public bool IsSubOrBundle { get; set; }
         }
 
         public class NewUserData

@@ -45,8 +45,9 @@
 |        SendgridSettings:CriticalSupportEmails         | (Optional) Comma delimited list of emails that should be contacted when criticial failures occur that require manual intervention                                                                                           |
 |           SendgridSettings:SupportCaseEmail           | (Optional) Email to send support cases to                                                                                                                                                                                   |
 |             SendgridSettings:BillingEmail             | (Optional) Email to send for payment, billing, or refund queries                                                                                                                                                            |
-			SendgridSettings:POUploadEmail					Email used to send LMS team PO pdfs that were uploaded by Users using PO as payment
-			SendgridSettings:CertOrderEmail					Email used to send LMS team notifiations when User places an order containing certification products
+			SendgridSettings:POUploadEmail					Email template used to send LMS team PO pdfs that were uploaded by Users using PO as payment
+			SendgridSettings:CertOrderEmail					Email template used to send LMS team notifiations when User places an order containing certification products
+			SendgridSettings:ToLMSTeamEmail				| The email of whom will recieve the notifications for certification and po emails 
 |        SendgridSettings:OrderSubmitTemplateID         | (Optional) (Optional but required to send OrderSubmit emails) ID for the template to be used for OrderSubmit emails                                                                                                         |
 |       SendgridSettings:OrderApprovalTemplateID        | (Optional but required to send OrderApproval emails) ID for template to be used for OrderApproval emails                                                                                                                    |
 |    SendgridSettings:LineItemStatusChangeTemplateID    | (Optional but required to send LineItemStatusChange emails) ID for template to be used for LineItemStatusChange emails                                                                                                      |

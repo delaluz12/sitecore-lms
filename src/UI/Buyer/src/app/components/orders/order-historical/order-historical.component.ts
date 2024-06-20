@@ -30,7 +30,7 @@ export class OCMOrderHistorical implements OnInit {
     this.supplierMail = "mailto:" + this.order.xp.QuoteSellerContactEmail
   }
   @Input() set uploadDocUrl(value: string) {
-    this.url = value.toString()
+    this.url = value?.toString()
   }
   order: HSOrder
   lineItems: HSLineItem[] = []

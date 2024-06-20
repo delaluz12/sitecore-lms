@@ -98,12 +98,12 @@ export class OCMCheckoutPayment implements OnInit {
       this.disableCC = true
     }
     this.ListAddressesForBilling()
-    const lineItems = this.context.order.getLineItems()
-    lineItems.Items.forEach((line) => {
-      if (line?.Product?.xp?.lms_SubscriptionUuid && line.UnitPrice > 0) {
-        this.disablePO = true
-      }
-    })
+    //const lineItems = this.context.order.getLineItems()
+    // lineItems.Items.forEach((line) => {
+    //   if (line?.Product?.xp?.lms_SubscriptionUuid && line.UnitPrice > 0) {
+    //     this.disablePO = true
+    //   }
+    // })
     if (_order?.xp?.PONumber) {
       this.poNumber = _order.xp.PONumber
     }

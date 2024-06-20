@@ -34,6 +34,7 @@ namespace Headstart.Models.Headstart
         public bool? CanValidateDocebo { get; set; }
         public int? QuantityAdded { get; set; }
         public bool? IsCertification { get; set; }
+        public string? lms_SubscriptionUuid { get; set; }
     }
 
     

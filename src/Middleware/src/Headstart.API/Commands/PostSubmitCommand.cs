@@ -153,26 +153,13 @@ namespace Headstart.API.Commands
                         Activity = new List<ProcessResultAction>() { notifications }
                     });
 
-                } else if(!isCCPayment && includesCert)
+                } else if(!isCCPayment)
                 {
-                    //send template/data for PO + certs
+                    //send template/data for all POs
                     var notifications = await ProcessActivityCall(
                     ProcessType.Notification,
                     "Sending Order Submit Emails",
-                    _sendgridService.SendPurchaseOrderUpload(orderWorksheet, orderWorksheet.Order.xp?.POFileID, true));
-                    results.Add(new ProcessResult()
-                    {
-                        Type = ProcessType.Notification,
-                        Activity = new List<ProcessResultAction>() { notifications }
-                    });
-
-                } else if (!isCCPayment && !includesCert)
-                {
-                    // send data for PO only
-                    var notifications = await ProcessActivityCall(
-                    ProcessType.Notification,
-                    "Sending Order Submit Emails",
-                    _sendgridService.SendPurchaseOrderUpload(orderWorksheet, orderWorksheet.Order.xp?.POFileID, false));
+                    _sendgridService.SendPurchaseOrderUpload(orderWorksheet, orderWorksheet.Order.xp?.POFileID));
                     results.Add(new ProcessResult()
                     {
                         Type = ProcessType.Notification,
