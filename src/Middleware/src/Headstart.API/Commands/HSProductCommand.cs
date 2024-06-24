@@ -588,7 +588,7 @@ namespace Headstart.API.Commands.Crud
 
 			//Update the product with a supplier token
 			var updatedProduct = await ocClient.Products.PatchAsync(
-				id,
+				id, 
 				new PartialProduct() { xp = new { Facets = facetDataFormattedDynamic } },
 				accessToken: token
 				);
@@ -601,7 +601,10 @@ namespace Headstart.API.Commands.Crud
             var categories = await _oc.Categories.ListAllAsync(catalogId);
 			var categoryId = categories.FirstOrDefault(cat => cat.Name == "Instructor-led Training").ID;
             var productAssignments = await _oc.Categories.ListAllProductAssignmentsAsync(catalogId,categoryId);
-
+			if (id == "qKAiTD2dyUilKUNH91kQTA" ||id == "mD_ppS7LpU2lFQ2N6G-eRg")
+			{
+				return false;
+			}
 			if (productAssignments.Any(assignment => assignment.ProductID == id)) return true;
           
             else return false;
