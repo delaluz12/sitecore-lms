@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29230.47
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Headstart.Common", "src\Headstart.Common\Headstart.Common.csproj", "{487E6294-64B7-4D14-A906-71513D5C49E4}"
 EndProject
@@ -49,7 +49,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ordercloud.integrations.tax
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ordercloud.integrations.stripe", "integrations\ordercloud.integrations.stripe\ordercloud.integrations.stripe.csproj", "{6C626BCC-A0A5-4F2F-8602-575CF2C7C22B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ordercloud.integrations.docebo", "integrations\ordercloud.integrations.docebo\ordercloud.integrations.docebo.csproj", "{362BDF54-376F-4D04-9149-68E6B61F5D10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ordercloud.integrations.docebo", "integrations\ordercloud.integrations.docebo\ordercloud.integrations.docebo.csproj", "{362BDF54-376F-4D04-9149-68E6B61F5D10}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Headstart.Jobs", "src\Headstart.Jobs\Headstart.Jobs.csproj", "{CF5386C4-0055-4FEB-ABB6-12FA7852BE52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,6 +139,10 @@ Global
 		{362BDF54-376F-4D04-9149-68E6B61F5D10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{362BDF54-376F-4D04-9149-68E6B61F5D10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{362BDF54-376F-4D04-9149-68E6B61F5D10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF5386C4-0055-4FEB-ABB6-12FA7852BE52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF5386C4-0055-4FEB-ABB6-12FA7852BE52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF5386C4-0055-4FEB-ABB6-12FA7852BE52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF5386C4-0055-4FEB-ABB6-12FA7852BE52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

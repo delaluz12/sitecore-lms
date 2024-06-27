@@ -36,6 +36,26 @@ jobs:
         displayName: Build solution src/Middleware/Headstart.sln
         inputs:
           solution: src/Middleware/Headstart.sln
+      - task: VSTest@2
+        displayName: Run C# Unit tests
+        inputs:
+          testAssemblyVer2: >-
+            **\*.tests.dll
+
+            !**\obj\**
+      - task: DotNetCoreCLI@2
+        displayName: Build Jobs
+        inputs:
+          projects: '**/Headstart.Jobs.csproj'
+          arguments: '--configuration Release'
+      - task: DotNetCoreCLI@2
+        displayName: 'Publish Jobs'
+        inputs:
+          command: publish
+          publishWebProjects: false
+          projects: '**/Headstart.Jobs.csproj'
+          arguments: '--configuration Release --output jobs'
+          zipAfterPublish: false
       - task: DotNetCoreCLI@2
         displayName: Build Middleware
         inputs:
@@ -54,6 +74,11 @@ jobs:
         inputs:
           PathtoPublish: middleware
           ArtifactName: middleware
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Jobs Artifacts'
+        inputs:
+          PathtoPublish: jobs
+          ArtifactName: jobs
   - job: Build_Buyer
     pool:
         vmImage: windows-2019
