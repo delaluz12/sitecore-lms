@@ -6,7 +6,7 @@ resources:
 jobs:
   - job: Build_MiddleWare
     pool:
-      vmImage: windows-latest
+      vmImage: windows-2022
     displayName: Build Middleware
     steps:
       - checkout: self
@@ -20,18 +20,6 @@ jobs:
           feedsToUse: 'config'
           nugetConfigPath: 'nuget.config'
         displayName: NuGet restore
-      - task: CmdLine@2
-        displayName: Azure Storage for tests
-        inputs:
-          script: >-
-            sqllocaldb create MSSQLLocalDB
-
-            sqllocaldb start MSSQLLocalDB
-
-            sqllocaldb info MSSQLLocalDB
-
-
-            "C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
       - task: VSBuild@1
         displayName: Build solution src/Middleware/Headstart.sln
         inputs:
