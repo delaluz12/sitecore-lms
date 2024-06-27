@@ -74,7 +74,7 @@ jobs:
           ArtifactName: jobs
   - job: Build_Buyer
     pool:
-        vmImage: windows-2022
+        vmImage: windows-2019
     displayName: Build Buyer
     steps:
     - task: NodeTool@0
@@ -125,7 +125,7 @@ jobs:
         ArtifactName: buyer
   - job: Build_Seller
     pool:
-          vmImage: windows-2022
+          vmImage: windows-2019
     displayName: Build Seller
     steps:
     - task: NodeTool@0
