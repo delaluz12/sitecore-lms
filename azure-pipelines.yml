@@ -12,11 +12,6 @@ jobs:
     steps:
       - checkout: self
       - template: version.yml
-      - task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '3.1.x'
-    installationPath: $(Agent.ToolsDirectory)/dotnet
       - task: NuGetToolInstaller@1
         displayName: "Use NuGet "
       - task: NuGetCommand@2
