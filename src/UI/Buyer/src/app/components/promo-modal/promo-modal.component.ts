@@ -11,7 +11,7 @@ import {
 })
 export class PromoModalComponent {
   message =
-    '<strong>Spring into Sitecore Learning with an exclusive 25% promotion!</strong><br> Use promo code <strong>SPRING25</strong> at checkout for 25% off your entire order. This offer is valid through June 30th, 2024.'
+    '<strong>Sitecore Summer Savings:</strong> Don’t miss this chance to certify your skills with our <strong>20%</strong> promotion on all Sitecore certification exams all summer long! Use promo code <strong>CERTIFY20</strong> at checkout.<br> <em>Valid from July 1st through September 30th, 2024.</em>'
   cancelButtonText = 'Close'
 
   constructor(

@@ -8,6 +8,8 @@ import { SupplierFilterService } from '../services/supplier-filter/supplier-filt
 import { HSMeProduct } from '@ordercloud/headstart-sdk'
 import { ShipFromSourcesDic } from '../models/shipping.types'
 import { AppConfig } from '../models/environment.types'
+import { PromoModalComponent } from '../components/promo-modal/promo-modal.component'
+import { MatDialog } from '@angular/material/dialog'
 
 @Component({
   template: `
@@ -26,12 +28,37 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
   alive = true
   isProductListLoading = true
   showCustModal
+  userGroup
+  customerGroups = {
+    prod: ['0001-0008', '0001-0005'],
+    test: ['0002-0008', '0002-0005'],
+  }
+
+  partnerGroups = {
+    prod: [
+      '0001-0002',
+      '0001-0003',
+      '0001-0001',
+      '2jWUqkAai02Z3JJP3ta79A',
+      '0001-0007',
+      '0001-0009',
+    ],
+    test: [
+      '0002-0002',
+      '0002-0003',
+      '0002-0001',
+      'E5YsxYZ_ykeEdHC9s9w_jQ',
+      '0002-0007',
+      '0002-0009',
+    ],
+  }
 
   constructor(
     public context: ShopperContextService,
     private supplierFilterService: SupplierFilterService,
     private activatedRoute: ActivatedRoute,
-    private appConfig: AppConfig
+    private appConfig: AppConfig,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -42,27 +69,45 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.alive))
       .subscribe(this.handleFiltersChange)
 
-    this.displayBanner()
+    this.displayPromo()
+
+    const shownModal = sessionStorage.getItem('modalShown')
+
+    if (!shownModal && this.showCustModal) {
+      this.openAlertDialog()
+      sessionStorage.setItem('modalShown', 'true')
+    }
   }
 
-  displayBanner(): void {
+  displayPromo(): void {
     const env =
       this.appConfig.sellerName == 'Sitecore LMS TEST' ? 'test' : 'prod'
-    // only show for userGroups = 0001-0008 or 0001-0005 (PROD)
     const user = this.context.currentUser.get()
-    if (env === 'prod') {
-      this.showCustModal = user?.UserGroups.some(
-        (item) => item.ID === '0001-0008' || item.ID === '0001-0005'
-      )
-    } else {
-      this.showCustModal = user?.UserGroups.find(
-        (item) => item.ID === '0002-0008' || item.ID === '0002-0005'
-      )
+    const userGroups = user?.UserGroups.map((group) => group.ID)
+
+    const getGroups = (groupType, env) => {
+      const groups = groupType[env]
+      return groups ? groups : []
     }
+
+    const belongsToGroup = (groupType, env) => {
+      return userGroups?.some((id) => getGroups(groupType, env).includes(id))
+    }
+
+    this.showCustModal =
+      belongsToGroup(this.customerGroups, env) ||
+      belongsToGroup(this.partnerGroups, env)
   }
 
   ngOnDestroy(): void {
     this.alive = false
+  }
+
+  openAlertDialog(): void {
+    const dialogRef = this.dialog.open(PromoModalComponent, {
+      height: 'auto',
+      width: 'auto',
+    })
   }
 
   private handleFiltersChange = async (): Promise<void> => {
