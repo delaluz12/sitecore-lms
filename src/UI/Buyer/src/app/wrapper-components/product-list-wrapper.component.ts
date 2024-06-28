@@ -35,8 +35,22 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
   }
 
   partnerGroups = {
-    prod: ['0001-0002', '0001-0003', '0001-0001', '2jWUqkAai02Z3JJP3ta79A'],
-    test: ['0002-0002', '0002-0003', '0002-0001', 'E5YsxYZ_ykeEdHC9s9w_jQ'],
+    prod: [
+      '0001-0002',
+      '0001-0003',
+      '0001-0001',
+      '2jWUqkAai02Z3JJP3ta79A',
+      '0001-0007',
+      '0001-0009',
+    ],
+    test: [
+      '0002-0002',
+      '0002-0003',
+      '0002-0001',
+      'E5YsxYZ_ykeEdHC9s9w_jQ',
+      '0002-0007',
+      '0002-0009',
+    ],
   }
 
   constructor(
