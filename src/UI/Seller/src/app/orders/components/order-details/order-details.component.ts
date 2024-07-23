@@ -180,6 +180,12 @@ export class OrderDetailsComponent {
     }
   }
 
+  async handlePurchaseOrderLI(order: HSOrder): Promise<void> {
+    console.log(order)
+    const results = await HeadStartSDK.Orders.ProcessPOLineItems(order.ID)
+    console.log(results)
+  }
+
   setCardType(payment): string {
     if (!payment.xp.cardType || payment.xp.cardType === null) {
       return 'Card'

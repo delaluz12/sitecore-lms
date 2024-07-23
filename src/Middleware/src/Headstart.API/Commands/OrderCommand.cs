@@ -14,6 +14,10 @@ using Headstart.Common;
 using Headstart.Models.Headstart;
 using Headstart.Common.Services;
 using System.Net;
+using ordercloud.integrations.docebo;
+using Microsoft.ApplicationInsights;
+using ordercloud.integrations.docebo.Models;
+using Newtonsoft.Json;
 
 namespace Headstart.API.Commands
 {
@@ -31,6 +35,9 @@ namespace Headstart.API.Commands
         Task<HSLineItem> OverrideQuotePrice(string orderID, string lineItemID, decimal quotePrice);
         Task<ListPage<HSOrder>> ListQuoteOrders(MeUser me, QuoteStatus quoteStatus);
         Task<HSOrder> GetQuoteOrder(MeUser me, string orderID);
+        Task<Boolean> ProcessPurchaseOrderLineItems(string orderID);
+        Task<HSOrder> UpdatePurchaseOrder(string orderID);
+        
     }
 
     public class OrderCommand : IOrderCommand
@@ -41,6 +48,8 @@ namespace Headstart.API.Commands
         private readonly IRMACommand _rmaCommand;
         private readonly AppSettings _settings;
         private readonly ISendgridService _sendgridService;
+        private readonly IOrderCloudIntegrationsDoceboService _docebo;
+        private readonly TelemetryClient _telemetry;
 
         public OrderCommand(
             ILocationPermissionCommand locationPermissionCommand,
@@ -48,16 +57,20 @@ namespace Headstart.API.Commands
             IPromotionCommand promotionCommand,
             IRMACommand rmaCommand,
             AppSettings settings,
-            ISendgridService sendgridService
+            ISendgridService sendgridService,
+            IOrderCloudIntegrationsDoceboService docebo,
+            TelemetryClient telemetry
             )
         {
-			_oc = oc;
+            _oc = oc;
             _locationPermissionCommand = locationPermissionCommand;
             _promotionCommand = promotionCommand;
             _rmaCommand = rmaCommand;
             _settings = settings;
             _sendgridService = sendgridService;
-		}
+            _docebo = docebo;
+            _telemetry = telemetry;
+        }
 
         public async Task<HSLineItem> SendQuoteRequestToSupplier(string orderID, string lineItemID)
         {
@@ -232,7 +245,135 @@ namespace Headstart.API.Commands
             await _promotionCommand.AutoApplyPromotions(orderID);
             return await _oc.Orders.GetAsync<HSOrder>(OrderDirection.Incoming, orderID);
         }
+        public async Task<Boolean> ProcessPurchaseOrderLineItems(string orderID)
+        {
+            try
+            {
+                var worksheet = await _oc.IntegrationEvents.GetWorksheetAsync<HSOrderWorksheet>(
+                    OrderDirection.Incoming,
+                    orderID
+                );
+                List<DoceboItem> doceboItems = new List<DoceboItem>();
+                for (int i = 0; i < worksheet.LineItems.Count; i++)
+                {
+                    var courseID = worksheet.LineItems[i].Product?.xp?.lms_course_id;
+                    var subscriptionID = worksheet.LineItems[i].Product?.xp?.lms_SubscriptionUuid;
+                    var orderOnBehalfOfEmails = worksheet.LineItems[i]?.xp?.OrderOnBehalfOf;
+                    var orderOnBehalfOfIDs = new List<string>();
 
+                    if (orderOnBehalfOfEmails != null)
+                    {
+                        foreach (var email in orderOnBehalfOfEmails)
+                        {
+                            // build up a list of ID's
+                            if (email != worksheet?.Order.FromUser.Email)
+                            {
+                                var doceboUsers = await _docebo.SearchUsers(email);
+                                orderOnBehalfOfIDs.Add(doceboUsers.data.items[0].user_id);
+                            }
+                            else
+                            {
+                                orderOnBehalfOfIDs.Add(worksheet?.Order.FromUser?.xp?.lms_user_id);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        orderOnBehalfOfIDs.Add(worksheet?.Order.FromUser?.xp?.lms_user_id);
+                    }
+
+                    if (!String.IsNullOrEmpty(courseID))
+                    {
+                        foreach (var userID in orderOnBehalfOfIDs)
+                        {
+                            var lineItem = new DoceboItem()
+                            {
+                                course_id = Int32.Parse(courseID),
+                                user_id = userID,
+                                status = "subscribed",
+                                field_2 = orderID
+                            };
+                            doceboItems.Add(lineItem);
+                        }
+                    }
+                    if (!String.IsNullOrEmpty(subscriptionID))
+                    {
+                        var doceboSubscription = new DoceboSubscriptionRequest()
+                        {
+                            user_ids = new List<int>()
+                        };
+                        foreach (var userID in orderOnBehalfOfIDs)
+                        {
+                            doceboSubscription.user_ids.Add(Int32.Parse(userID));
+                        }
+                        try
+                        {
+                            var subscriptions = subscriptionID.Split("|");
+                            foreach (var subscription in subscriptions)
+                            {
+                                await _docebo.SubscribeUsers(doceboSubscription, subscription);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // track in app insights
+                            // to find go to Transaction Search > Event Type = Event > Filter by any of these custom properties or event name
+                            var customProperties = new Dictionary<string, string>
+                            {
+                                { "Message", "Attempt to subscribe User to subscription failed" },
+                                { "OrderID", orderID },
+                                { "UserID", worksheet.Order.FromUserID },
+                                { "SubscriptionID(s)", subscriptionID },
+                                {
+                                    "ErrorResponse",
+                                    JsonConvert.SerializeObject(
+                                        ex.Message,
+                                        Newtonsoft.Json.Formatting.Indented
+                                    )
+                                }
+                            };
+                            _telemetry.TrackEvent(
+                                "ProcessPurchaseOrderLI.DoceboSubscriptionFailed",
+                                customProperties
+                            );
+                        }
+                    }
+                }
+
+                if (doceboItems.Count > 0)
+                {
+                    await _docebo.UpdateUserEnrollment(doceboItems);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // track in app insights
+                var customProperties = new Dictionary<string, string>
+                {
+                    {
+                        "Message",
+                        "Attempt to subscribe User to subscription(s), bundle(s) or ILT(s) failed"
+                    },
+                    { "OrderID", orderID },
+                    {
+                        "ErrorResponse",
+                        JsonConvert.SerializeObject(ex.Message, Newtonsoft.Json.Formatting.Indented)
+                    }
+                };
+                _telemetry.TrackEvent("ProcessPurchaseOrderLI.Failure", customProperties);
+                return false;
+            }
+        }
+        public async Task<HSOrder> UpdatePurchaseOrder (string orderID)
+        {
+                await ProcessPurchaseOrderLineItems(orderID);
+                var partialOrder = new PartialOrder() { xp = new { ProcessedPO = true } };
+                var order = await _oc.Orders.PatchAsync<HSOrder>(OrderDirection.Incoming, orderID, partialOrder);
+                return order;
+
+        }
         private async Task EnsureUserCanAccessLocationOrders(string locationID, DecodedToken decodedToken, string overrideErrorMessage = "")
         {
             var hasAccess = await _locationPermissionCommand.IsUserInAccessGroup(locationID, UserGroupSuffix.ViewAllOrders.ToString(), decodedToken);
