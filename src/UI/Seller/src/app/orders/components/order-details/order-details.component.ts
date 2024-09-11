@@ -1,4 +1,10 @@
-import { Component, Input, Inject, OnInit } from '@angular/core'
+import {
+  Component,
+  Input,
+  Inject,
+  OnInit,
+  ChangeDetectorRef,
+} from '@angular/core'
 import { OrderService } from '@app-seller/orders/order.service'
 import {
   Address,
@@ -115,6 +121,7 @@ export class OrderDetailsComponent {
     private ocAddressService: OcAddressService,
     private rmaService: RMAService,
     private currentUserService: CurrentUserService,
+    private cdr: ChangeDetectorRef,
     @Inject(applicationConfiguration) private appConfig: AppConfig
   ) {
     this.isSellerUser = this.appAuthService.getOrdercloudUserType() === SELLER
@@ -181,9 +188,16 @@ export class OrderDetailsComponent {
   }
 
   async handlePurchaseOrderLI(order: HSOrder): Promise<void> {
-    console.log(order)
-    const results = await HeadStartSDK.Orders.ProcessPOLineItems(order.ID)
-    console.log(results)
+    try {
+      const results = await HeadStartSDK.Orders.ProcessPOLineItems(order.ID)
+      if (results) {
+        this._order.xp.ProcessedPO = true
+        this.cdr.detectChanges()
+      }
+    } catch (error) {
+      console.error('Error processing PO Line Items: ', error)
+      throw error
+    }
   }
 
   setCardType(payment): string {

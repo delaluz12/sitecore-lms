@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -77,7 +77,7 @@ namespace ordercloud.integrations.docebo
         {
             DoceboToken token = await GetToken();
             DoceboEnrollmentRequest request = DoceboMapper.MapRequest(lineItems, true);
-            return await this.Request("learn/v1/enrollment/batch", token).SendJsonAsync(System.Net.Http.HttpMethod.Delete, request).ReceiveJson<DoceboEnrollmentResponse>();
+            return await this.Request("learn/v1/enrollment/batch", token).PostJsonAsync(request).ReceiveJson<DoceboEnrollmentResponse>();
         }
 
         public async Task<DoceboEnrollmentResponse> UnEnrollUsers(List<DoceboItem> lineItems  )
