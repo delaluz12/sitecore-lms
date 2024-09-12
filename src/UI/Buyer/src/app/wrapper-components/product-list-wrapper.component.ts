@@ -94,9 +94,7 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
       return userGroups?.some((id) => getGroups(groupType, env).includes(id))
     }
 
-    this.showCustModal =
-      belongsToGroup(this.customerGroups, env) ||
-      belongsToGroup(this.partnerGroups, env)
+    this.showCustModal = belongsToGroup(this.customerGroups, env) // '|| belongsToGroup(this.partnerGroups, env)' removed per Azure:28864
   }
 
   ngOnDestroy(): void {
