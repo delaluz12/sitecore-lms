@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using ordercloud.integrations.docebo.Models;
 using ordercloud.integrations.docebo.Mappers;
 using OrderCloud.SDK;
+using static OrderCloud.SDK.WebhookPayloads;
 
 namespace ordercloud.integrations.docebo
 {
@@ -19,6 +20,7 @@ namespace ordercloud.integrations.docebo
         Task<DoceboSubscriptionResponse> SubscribeUsers(DoceboSubscriptionRequest request, string uuid);
         Task<DoceboUserSearchResponse> SearchUsers(string email);
         Task<DoceboEnrollmentResponse> UnEnrollUsers(List<DoceboItem> lineItems);
+        Task<DoceboEnrollmentResponse> UpdateUserEnrollment(List<DoceboItem> lineItems);
     }
 
     public class OrderCloudIntegrationsDoceboConfig
@@ -69,6 +71,13 @@ namespace ordercloud.integrations.docebo
         {
             DoceboToken token = await GetToken();
             return await this.Request($"manage/v1/user", token).SetQueryParam("search_text", email).GetJsonAsync<DoceboUserSearchResponse>();
+        }
+
+        public async Task<DoceboEnrollmentResponse> UpdateUserEnrollment(List<DoceboItem>  lineItems)
+        {
+            DoceboToken token = await GetToken();
+            DoceboEnrollmentRequest request = DoceboMapper.MapRequest(lineItems, true);
+            return await this.Request("learn/v1/enrollment/batch", token).PostJsonAsync(request).ReceiveJson<DoceboEnrollmentResponse>();
         }
 
         public async Task<DoceboEnrollmentResponse> UnEnrollUsers(List<DoceboItem> lineItems  )

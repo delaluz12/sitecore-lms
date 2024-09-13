@@ -50,6 +50,14 @@ namespace Headstart.Common.Controllers
         {
             return await _command.AcknowledgeQuoteOrder(orderID);
         }
+        /// <summary>
+        /// POST Process Purchase Order Line Items - i.e. subscribe or enroll user via Docebo API
+        /// </summary>
+        [HttpPost, Route("processpolineitems/{orderID}"), OrderCloudUserAuth(ApiRole.OrderAdmin)]
+        public async Task<Order> UpdatePOLineItems(string orderID)
+        {
+            return await _command.UpdatePurchaseOrder(orderID);
+        }
 
         /// <summary>
         /// LIST orders for a specific location as a buyer, ensures user has access to location orders

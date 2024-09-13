@@ -183,6 +183,16 @@ export default class Orders {
         return await httpClient.get(`/order/getquoteorder/${orderID}`, { params: {  accessToken, impersonating } });
       }
 
+      /**
+    * @param orderID ID of the order.
+    * @param accessToken Provide an alternative token to the one stored in the sdk instance (useful for impersonation).
+    */
+    public async ProcessPOLineItems(orderID: string, accessToken?: string ): Promise<RequiredDeep<HSOrder>> {
+        const impersonating = this.impersonating;
+        this.impersonating = false;
+        return await httpClient.post(`/order/processpolineitems/${orderID}`, {}, { params: {  accessToken, impersonating } });
+      }
+
    /**
     * @param locationID ID of the location.
     * @param options.search Word or phrase to search for.

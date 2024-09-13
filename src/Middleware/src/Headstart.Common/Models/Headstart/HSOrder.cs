@@ -53,6 +53,7 @@ namespace Headstart.Models
         public bool? OrderOnBehalfOf { get; set; }
         public string POFileID { get; set; }
         public string Region { get; set; }
+        public bool? ProcessedPO { get; set; }
 
     }
 

@@ -75,7 +75,7 @@ export const SUMMARY_RESOURCE_INFO_PATHS_DICTIONARY: SummaryResourceInfoPathsDic
     },
     orders: {
       toPrimaryHeader: 'ID',
-      toSecondaryHeader: 'xp.SubmittedOrderStatus',
+      toSecondaryHeader: 'xp.PaymentMethod',
       toImage: '',
       toExpandable: false,
     },
