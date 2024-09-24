@@ -4,6 +4,7 @@ import { SuperHSMeProduct } from '../models/SuperHSMeProduct';
 import { RequiredDeep } from '../models/RequiredDeep';
 import { ListArgs } from '../models/ListArgs'
 import httpClient from '../utils/HttpClient';
+import { HSPromotion } from '../models/HSPromotion';
 
 export default class Mes {
     private impersonating:boolean = false;
@@ -16,6 +17,7 @@ export default class Mes {
         this.ListMeProducts = this.ListMeProducts.bind(this);
         this.GetSuperProduct = this.GetSuperProduct.bind(this);
         this.RequestProductInfo = this.RequestProductInfo.bind(this);
+        this.GetPromoContent = this.GetPromoContent.bind(this);
     }
 
    /**
@@ -51,6 +53,15 @@ export default class Mes {
         const impersonating = this.impersonating;
         this.impersonating = false;
         return await httpClient.post(`/me/products/requestinfo`, {}, { params: { template,  accessToken, impersonating } } );
+    }
+
+    /**
+    * @param accessToken Provide an alternative token to the one stored in the sdk instance (useful for impersonation).
+    */
+    public async GetPromoContent( accessToken?: string ): Promise<HSPromotion[]> {
+        const impersonating = this.impersonating;
+        this.impersonating = false;
+        return await httpClient.get(`/me/promotion-content`, { params: { accessToken, impersonating } } );
     }
 
     /**
