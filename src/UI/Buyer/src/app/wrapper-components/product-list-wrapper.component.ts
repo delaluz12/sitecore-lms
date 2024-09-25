@@ -65,7 +65,6 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
     if (this.eligiblePromos.length > 0) {
       // currently User can only see banner/modal for 1 promotion i.e. if there are 2 available only the first will display
       const promoToDisplay = this.eligiblePromos.find((_) => _)
-      console.log(promoToDisplay)
       this.promoMessage = promoToDisplay.xp?.PromoContent
       this.showCustModal = true
     }

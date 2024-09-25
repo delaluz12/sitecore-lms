@@ -38,17 +38,10 @@ export class PromoService {
 
   public async applyPromo(promoCode: string): Promise<OrderPromotion> {
     try {
-      // send request to middleware to check if user is able to apply promo to order
       const newPromo = await HeadStartSDK.Orders.AddPromotion(
         this.order?.ID,
         promoCode
       )
-      console.log(newPromo)
-      // const newPromo = await Orders.AddPromotion(
-      //   'Outgoing',
-      //   this.order?.ID,
-      //   promoCode
-      // )
       this.onAdd.next(newPromo)
       return newPromo
     } finally {

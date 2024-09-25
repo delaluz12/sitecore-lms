@@ -1,10 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import {
-  ListPageWithFacets,
-  Tokens,
-  Promotion,
-} from 'ordercloud-javascript-sdk'
+import { ListPageWithFacets, Tokens } from 'ordercloud-javascript-sdk'
 import {
   ListArgs,
   HSOrder,
@@ -13,7 +9,6 @@ import {
 } from '@ordercloud/headstart-sdk'
 import { ListPage } from '@ordercloud/headstart-sdk'
 import { AppConfig } from 'src/app/models/environment.types'
-import { PromotionXp } from 'src/app/models/promo-types'
 
 // WHOPLE FILE TO BE REPLACED BY SDK
 @Injectable({
@@ -83,17 +78,5 @@ export class TempSdk {
     return await this.http
       .post<HSOrder>(url, { headers: this.buildHeaders() })
       .toPromise()
-  }
-
-  async getPromotion(promotionID: string): Promise<Promotion<PromotionXp>> {
-    console.log('inside sdk service', promotionID)
-    const url = `${this.appConfig.middlewareUrl}/order/promotions/${promotionID}`
-    return await this.http
-      .get<Promotion>(url, { headers: this.buildHeaders() })
-      .toPromise()
-  }
-
-  async getActivePromotion(userID: string) {
-    console.log('call to middelware that will return active promos')
   }
 }

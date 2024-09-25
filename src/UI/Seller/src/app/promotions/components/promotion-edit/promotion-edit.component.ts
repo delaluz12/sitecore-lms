@@ -53,15 +53,12 @@ import {
   Suppliers,
   Supplier,
   Buyers,
-  Categories,
-  Catalogs,
 } from 'ordercloud-javascript-sdk'
 import { OcUserGroupService } from '@ordercloud/angular-sdk'
 import { ToastrService } from 'ngx-toastr'
 import { BehaviorSubject } from 'rxjs'
 import { applicationConfiguration } from '@app-seller/config/app.config'
 import { AppConfig } from '@app-seller/shared'
-import { ResourceCrudService } from '@app-seller/shared/services/resource-crud/resource-crud.service'
 @Component({
   selector: 'app-promotion-edit',
   templateUrl: './promotion-edit.component.html',
@@ -70,7 +67,6 @@ import { ResourceCrudService } from '@app-seller/shared/services/resource-crud/r
 export class PromotionEditComponent implements OnInit, OnChanges {
   @ViewChild('popover', { static: false })
   public popover: NgbPopover
-  @Input() promoContentForm: FormGroup
   @Input()
   set resourceInSelection(promotion: Promotion<PromotionXp>) {
     if (promotion?.xp?.Type === HSPromoType.BOGO) {
@@ -125,7 +121,6 @@ export class PromotionEditComponent implements OnInit, OnChanges {
   buyerSearchTerm = ''
   productSearchTerm = ''
   userGroupSearchTerm = ''
-  categorySearchTerm = ''
   faTimesCircle = faTimesCircle
   faExclamationCircle = faExclamationCircle
   faQuestionCircle = faQuestionCircle
@@ -153,7 +148,6 @@ export class PromotionEditComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     const splitUrl = this.router.routerState.snapshot.url.split('/')
-    // console.log(splitUrl)
     if (splitUrl[splitUrl.length - 2] === 'clone') {
       this.isCreatingNew = true
       this.isCloning = true
@@ -200,7 +194,6 @@ export class PromotionEditComponent implements OnInit, OnChanges {
     this.buyProductsCollapsed = this.selectedBuySKU ? true : false
     this.getProductsCollapsed = this.selectedGetSKU ? true : false
     this.createPromotionForm(promo)
-    //add this.createPromoContentForm(promo)
   }
 
   async setUpSuppliers(existingSupplierID?: string): Promise<void> {
@@ -322,23 +315,6 @@ export class PromotionEditComponent implements OnInit, OnChanges {
     this.productSearchTerm = productSearchText
   }
 
-  // async listProductResources(pageNumber = 1, searchText = ''): Promise<void> {
-  //   const options: ListArgs<any> = {
-  //     page: pageNumber,
-  //     search: searchText,
-  //     pageSize: 25,
-  //     filters: {},
-  //   }
-  //   const resourceResponse = await Products.List(options)
-
-  //   const buyerResourceResponse = await Buyers.List(options as any)
-  //   if (pageNumber === 1) {
-  //     this.setNewResources(resourceResponse, buyerResourceResponse)
-  //   } else {
-  //     this.addResources(resourceResponse, buyerResourceResponse)
-  //   }
-  // }
-
   async listResources(pageNumber = 1, searchText = ''): Promise<void> {
     const options: ListArgs<any> = {
       page: pageNumber,
@@ -348,8 +324,6 @@ export class PromotionEditComponent implements OnInit, OnChanges {
       filters: {},
     }
     let resourceResponse
-    // eslint-disable-next-line no-debugger
-    //debugger;
     if (
       this._promotionEditable?.xp?.AppliesTo ===
       HSPromoEligibility.SpecificSupplier
@@ -363,17 +337,15 @@ export class PromotionEditComponent implements OnInit, OnChanges {
         filters: {},
       })
     }
-    // get UserGroups as well
-    //console.log(this.appConfig.orderCloudApiUrl)
+
     const buyerID =
       this.appConfig.orderCloudApiUrl == 'https://sandboxapi.ordercloud.io'
         ? '0002'
         : '0001'
-    //console.log(buyerID)
-    // get catalog to filter on
+
     // should only be 1 catalog per environment
     const catalogs = await this.ocCatalogService.List().toPromise()
-    //console.log(catalogs.Items[0].ID)
+
     const userGroupResourceResponse = await this.ocUserGroupService
       .List(buyerID, {
         pageSize: 100,
@@ -382,9 +354,9 @@ export class PromotionEditComponent implements OnInit, OnChanges {
         },
       })
       .toPromise()
-    //console.log(userGroupResourceResponse)
+
     const buyerResourceResponse = await Buyers.List(options as any)
-    //const userGroupResourceResponse = await UserGroup
+
     if (pageNumber === 1) {
       this.setNewResources(
         resourceResponse,
@@ -471,14 +443,12 @@ export class PromotionEditComponent implements OnInit, OnChanges {
     this.cdr.detectChanges()
   }
 
-  //send in product
   addSKU(sku: string, product: Product): void {
     if (this._promotionEditable?.xp?.SKUs.includes(sku)) {
       this.toastrService.warning('You have already selected this product')
     } else {
       const newSKUs = [...this._promotionEditable?.xp?.SKUs, sku]
       this.productList = [...this.productList, product]
-      console.log(this.productList)
       this.handleUpdatePromo({ target: { value: newSKUs } }, 'xp.SKUs')
     }
   }
@@ -488,14 +458,12 @@ export class PromotionEditComponent implements OnInit, OnChanges {
       (s) => s !== sku
     )
     this.productList = this.productList.filter((p) => p.ID !== sku)
-    console.log(this.productList)
     this.handleUpdatePromo({ target: { value: modifiedSkus } }, 'xp.SKUs')
   }
 
   addUserGroup(userGroupID: string): void {
-    // console.log(typeof userGroupID)
     if (this._promotionEditable?.xp?.UserGroups?.includes(userGroupID)) {
-      this.toastrService.warning('You have already selected this buyer')
+      this.toastrService.warning('You have already selected this User Group')
     } else {
       const newUserGroupIDs = [
         ...(this._promotionEditable?.xp?.UserGroups || []),
@@ -635,13 +603,11 @@ export class PromotionEditComponent implements OnInit, OnChanges {
       })
       if (event) {
         this._promotionEditable.xp.Buyers = []
-        // console.log(this._promotionEditable)
       }
     }
     if (field === 'xp.AllowAllUserGroups') {
       this.updatePromoResource({ field: 'xp.AllowAllUserGroups', value: event })
       if (event) {
-        // console.log(this._promotionEditable)
         this._promotionEditable.xp.UserGroups = []
       }
     } else {
@@ -708,7 +674,6 @@ export class PromotionEditComponent implements OnInit, OnChanges {
     if (!skus || skus.length === 0) return
     // Clear the productList before adding new products
     this.productList = []
-    // Fetch product details for each SKU asynchronously
     for (const sku of skus) {
       try {
         const product = await this.ocProductService.Get(sku).toPromise()
@@ -717,7 +682,6 @@ export class PromotionEditComponent implements OnInit, OnChanges {
         console.error(`Error fetching product for SKU ${sku}:`, error)
       }
     }
-    console.log('Updated productList:', this.productList)
   }
 
   getValueDisplay(): string {

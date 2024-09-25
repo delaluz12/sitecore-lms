@@ -240,17 +240,18 @@ namespace Headstart.API.Commands
                 var promotion = await _oc.Promotions.GetAsync<LmsPromotion>(promoCode);
                 var order = await _oc.Orders.GetAsync<HSOrder>(OrderDirection.Incoming, orderID);
                 var user = await _oc.Users.GetAsync<User>(order.FromCompanyID, order.FromUserID);
-                var userGroupAssignments = await _oc.UserGroups.ListUserAssignmentsAsync(order.FromCompanyID, null, user.ID); // e-learning shop Buyer Users will only be assigned to 1 UserGroup
-                                                                                                                              // check promo.xp.AllowAllUserGroups ; should always be false since promos don't apply to Buyer Group = Internal 
+                var userGroupAssignments = await _oc.UserGroups.ListUserAssignmentsAsync(order.FromCompanyID, null, user.ID); 
+
                 if ((bool)(promotion.xp?.AllowAllUserGroups))
                 {
-                      // Throw specific exception if the user is not eligible
+                        // promo.xp.AllowAllUserGroups should always be false since promos don't apply to Buyer Group = Internal 
                         throw new CatalystBaseException("Promotion.AllowAllUserGroups", "Promotions do not apply to all user groups.");
                 }
                 var eligibleUserGroups = promotion.xp?.UserGroups;
-                // check if user belongs to the userGroups in promo.xp.UserGroups
+                // e-learning shop Buyer Users will only be assigned to 1 UserGroup
                 var userAssignment = userGroupAssignments.Items.FirstOrDefault();
                 var userEligible = eligibleUserGroups.Contains(userAssignment.UserGroupID);
+
                 Require.That(userEligible, new ErrorCode("Insufficient Access", $"User does not belong to eligible user group", HttpStatusCode.Forbidden));
                 await _oc.Orders.AddPromotionAsync(OrderDirection.Incoming, orderID, promoCode);
                 return await _oc.Orders.GetAsync<HSOrder>(OrderDirection.Incoming, orderID);

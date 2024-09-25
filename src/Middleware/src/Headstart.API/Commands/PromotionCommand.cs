@@ -49,7 +49,6 @@ namespace Headstart.API.Commands
             var meUserGroups = await _oc.Me.ListUserGroupsAsync<HSMeUserGroup>(null, null, null, 1, 20, null, decodedToken.AccessToken);
             // users only belong to 1 user group
             var meUG = meUserGroups.Items.FirstOrDefault().ID;
-            // active promotions
             var currentDate = DateTime.Now;
             var activePromotions = await _oc.Promotions.ListAsync<LmsPromotion>(filters: new { Active = true, Expiration = $">{currentDate:yyyy-MM-dd}" });
             
@@ -68,7 +67,6 @@ namespace Headstart.API.Commands
                     }
                 }
             }
-            // send back promoList if, non eligible, empty list should be returned
             return promoList;
         }
 
