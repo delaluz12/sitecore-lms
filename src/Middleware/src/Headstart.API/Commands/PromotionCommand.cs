@@ -50,7 +50,7 @@ namespace Headstart.API.Commands
             // users only belong to 1 user group
             var meUG = meUserGroups.Items.FirstOrDefault().ID;
             var currentDate = DateTime.Now;
-            var activePromotions = await _oc.Promotions.ListAsync<LmsPromotion>(filters: new { Active = true, Expiration = $">{currentDate:yyyy-MM-dd}" });
+            var activePromotions = await _oc.Promotions.ListAsync<LmsPromotion>(filters: new { Active = true, StartDate = $"<={currentDate:yyyy-MM-dd}", ExpirationDate = $">={currentDate:yyyy-MM-dd}" });
             
             if (activePromotions.Items.Count > 0 && !string.IsNullOrEmpty(meUG))
             {
