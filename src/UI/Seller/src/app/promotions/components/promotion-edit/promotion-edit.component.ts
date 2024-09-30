@@ -8,8 +8,9 @@ import {
   ChangeDetectorRef,
   OnChanges,
   ComponentFactoryResolver,
+  Inject,
 } from '@angular/core'
-import { get as _get } from 'lodash'
+import { get as _get, forEach, isNull } from 'lodash'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
 import {
   faTimesCircle,
@@ -25,6 +26,7 @@ import {
   ListPage,
   OcProductService,
   OcBuyerService,
+  OcCatalogService,
 } from '@ordercloud/angular-sdk'
 import { PromotionService } from '@app-seller/promotions/promotion.service'
 import {
@@ -41,6 +43,7 @@ import {
   HSSupplier,
   HSProduct,
   HSBuyer,
+  HSUserGroup,
 } from '@ordercloud/headstart-sdk'
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap'
 import { TranslateService } from '@ngx-translate/core'
@@ -51,8 +54,11 @@ import {
   Supplier,
   Buyers,
 } from 'ordercloud-javascript-sdk'
+import { OcUserGroupService } from '@ordercloud/angular-sdk'
 import { ToastrService } from 'ngx-toastr'
 import { BehaviorSubject } from 'rxjs'
+import { applicationConfiguration } from '@app-seller/config/app.config'
+import { AppConfig } from '@app-seller/shared'
 @Component({
   selector: 'app-promotion-edit',
   templateUrl: './promotion-edit.component.html',
@@ -71,7 +77,11 @@ export class PromotionEditComponent implements OnInit, OnChanges {
       this.refreshPromoData(promotion)
     }
     if (promotion.ID) {
+      // Reset productList for each promotion click
+      this.productList = []
+
       this.setUpSuppliers(promotion.xp?.Supplier)
+      this.getProductName(promotion.xp?.SKUs)
       this.refreshPromoData(promotion)
     } else {
       this.setUpSuppliers()
@@ -88,6 +98,8 @@ export class PromotionEditComponent implements OnInit, OnChanges {
   productMeta: Meta
   buyers = new BehaviorSubject<HSBuyer[]>([])
   buyerMeta: Meta
+  userGroups = new BehaviorSubject<HSUserGroup[]>([])
+  userGroupMeta: Meta
   selectedSupplier: HSSupplier
   selectedBuySKU: HSProduct
   selectedGetSKU: HSProduct
@@ -107,6 +119,8 @@ export class PromotionEditComponent implements OnInit, OnChanges {
   isCloning = false
   searchTerm = ''
   buyerSearchTerm = ''
+  productSearchTerm = ''
+  userGroupSearchTerm = ''
   faTimesCircle = faTimesCircle
   faExclamationCircle = faExclamationCircle
   faQuestionCircle = faQuestionCircle
@@ -115,12 +129,17 @@ export class PromotionEditComponent implements OnInit, OnChanges {
   buyProductsCollapsed = false
   getProductsCollapsed = true
   currentDateTime: string
+  productList = []
+
   constructor(
+    @Inject(applicationConfiguration) private appConfig: AppConfig,
     public promotionService: PromotionService,
     private ocPromotionService: OcPromotionService,
     private ocSupplierService: OcSupplierService,
     private ocProductService: OcProductService,
     private ocBuyerService: OcBuyerService,
+    private ocCatalogService: OcCatalogService,
+    private ocUserGroupService: OcUserGroupService,
     private router: Router,
     private translate: TranslateService,
     private toastrService: ToastrService,
@@ -283,6 +302,19 @@ export class PromotionEditComponent implements OnInit, OnChanges {
     this.buyerSearchTerm = buyerSearchText
   }
 
+  searchedUserGroupResources(userGroupSearchText: string): void {
+    void this.listResources(1, userGroupSearchText).then(() =>
+      this.cdr.detectChanges()
+    )
+    this.userGroupSearchTerm = userGroupSearchText
+  }
+  searchedProductResources(productSearchText: string): void {
+    void this.listResources(1, productSearchText).then(() =>
+      this.cdr.detectChanges()
+    )
+    this.productSearchTerm = productSearchText
+  }
+
   async listResources(pageNumber = 1, searchText = ''): Promise<void> {
     const options: ListArgs<any> = {
       page: pageNumber,
@@ -298,19 +330,52 @@ export class PromotionEditComponent implements OnInit, OnChanges {
     ) {
       resourceResponse = await Suppliers.List(options as any) // Issue with the SDK
     } else {
-      resourceResponse = await Products.List(options)
+      resourceResponse = await Products.List({
+        page: pageNumber,
+        search: searchText,
+        pageSize: 25,
+        filters: {},
+      })
     }
+
+    const buyerID =
+      this.appConfig.orderCloudApiUrl == 'https://sandboxapi.ordercloud.io'
+        ? '0002'
+        : '0001'
+
+    // should only be 1 catalog per environment
+    const catalogs = await this.ocCatalogService.List().toPromise()
+
+    const userGroupResourceResponse = await this.ocUserGroupService
+      .List(buyerID, {
+        pageSize: 100,
+        filters: {
+          'xp.CatalogAssignments': catalogs.Items[0].ID,
+        },
+      })
+      .toPromise()
+
     const buyerResourceResponse = await Buyers.List(options as any)
+
     if (pageNumber === 1) {
-      this.setNewResources(resourceResponse, buyerResourceResponse)
+      this.setNewResources(
+        resourceResponse,
+        buyerResourceResponse,
+        userGroupResourceResponse
+      )
     } else {
-      this.addResources(resourceResponse, buyerResourceResponse)
+      this.addResources(
+        resourceResponse,
+        buyerResourceResponse,
+        userGroupResourceResponse
+      )
     }
   }
 
   setNewResources(
     resourceResponse: ListPage<any>,
-    buyerResourceResponse: ListPage<HSBuyer>
+    buyerResourceResponse: ListPage<HSBuyer>,
+    userGroupResourceResponse: ListPage<HSUserGroup>
   ): void {
     if (
       this._promotionEditable?.xp?.AppliesTo ===
@@ -324,11 +389,15 @@ export class PromotionEditComponent implements OnInit, OnChanges {
     }
     this.buyerMeta = buyerResourceResponse?.Meta
     this.buyers.next(buyerResourceResponse?.Items)
+
+    this.userGroupMeta = userGroupResourceResponse?.Meta
+    this.userGroups.next(userGroupResourceResponse?.Items)
   }
 
   addResources(
     resourceResponse: ListPage<Product>,
-    buyerResourceResponse: ListPage<HSBuyer>
+    buyerResourceResponse: ListPage<HSBuyer>,
+    userGroupResourceResponse: ListPage<HSUserGroup>
   ): void {
     if (
       this._promotionEditable?.xp?.AppliesTo ===
@@ -342,12 +411,18 @@ export class PromotionEditComponent implements OnInit, OnChanges {
     }
     this.buyers.next([...this.buyers.value, ...buyerResourceResponse?.Items])
     this.buyerMeta = buyerResourceResponse?.Meta
+
+    this.userGroups.next([
+      ...this.userGroups.value,
+      ...userGroupResourceResponse?.Items,
+    ])
+    this.userGroupMeta = userGroupResourceResponse?.Meta
   }
 
   handleScrollEnd(event: any): void {
     // This event check prevents the scroll-end event from firing when dropdown is closed
     // It limits the action within the if block to only fire when you truly hit the scroll-end
-    if (event.target.classList.value.includes('active')) {
+    if (event?.target?.classList.value.includes('active')) {
       let totalPages, nextPageNumber
       if (
         this._promotionEditable?.xp?.AppliesTo ===
@@ -368,11 +443,12 @@ export class PromotionEditComponent implements OnInit, OnChanges {
     this.cdr.detectChanges()
   }
 
-  addSKU(sku: string): void {
+  addSKU(sku: string, product: Product): void {
     if (this._promotionEditable?.xp?.SKUs.includes(sku)) {
       this.toastrService.warning('You have already selected this product')
     } else {
       const newSKUs = [...this._promotionEditable?.xp?.SKUs, sku]
+      this.productList = [...this.productList, product]
       this.handleUpdatePromo({ target: { value: newSKUs } }, 'xp.SKUs')
     }
   }
@@ -381,7 +457,36 @@ export class PromotionEditComponent implements OnInit, OnChanges {
     const modifiedSkus = this._promotionEditable?.xp?.SKUs?.filter(
       (s) => s !== sku
     )
+    this.productList = this.productList.filter((p) => p.ID !== sku)
     this.handleUpdatePromo({ target: { value: modifiedSkus } }, 'xp.SKUs')
+  }
+
+  addUserGroup(userGroupID: string): void {
+    if (this._promotionEditable?.xp?.UserGroups?.includes(userGroupID)) {
+      this.toastrService.warning('You have already selected this User Group')
+    } else {
+      const newUserGroupIDs = [
+        ...(this._promotionEditable?.xp?.UserGroups || []),
+        userGroupID,
+      ]
+      this.handleUpdatePromo(
+        { target: { value: newUserGroupIDs } },
+        'xp.UserGroups'
+      )
+    }
+  }
+
+  userGroupAlreadySelected(userGroupID: string): boolean {
+    return this._promotionEditable?.xp?.UserGroups?.includes(userGroupID)
+  }
+
+  removeUserGroup(userGroupID: string): void {
+    const modifiedUserGroupIDs =
+      this._promotionEditable?.xp?.UserGroups?.filter((b) => b !== userGroupID)
+    this.handleUpdatePromo(
+      { target: { value: modifiedUserGroupIDs } },
+      'xp.UserGroups'
+    )
   }
 
   addBuyer(buyerID: string): void {
@@ -450,6 +555,10 @@ export class PromotionEditComponent implements OnInit, OnChanges {
       ExpirationDate: new FormControl(promotion.ExpirationDate),
       Automatic: new FormControl(_get(promotion, 'xp.Automatic')),
       AllowAllBuyers: new FormControl(promotion.AllowAllBuyers),
+      AllowAllUserGroups: new FormControl(
+        _get(promotion, 'xp.AllowAllUserGroups')
+      ),
+      PromoContent: new FormControl(_get(promotion, 'xp.PromoContent')),
       MinReqType: new FormControl(_get(promotion, 'xp.MinReq.Type')),
       MinReqInt: new FormControl(
         _get(promotion, 'xp.MinReq.Int'),
@@ -486,6 +595,7 @@ export class PromotionEditComponent implements OnInit, OnChanges {
       this.updatePromoResource({ field: 'LineItemLevel', value: true })
       this.productsCollapsed = false
     }
+
     if (field === 'AllowAllBuyers') {
       this.updatePromoResource({
         field: 'AllowAllBuyers',
@@ -493,6 +603,12 @@ export class PromotionEditComponent implements OnInit, OnChanges {
       })
       if (event) {
         this._promotionEditable.xp.Buyers = []
+      }
+    }
+    if (field === 'xp.AllowAllUserGroups') {
+      this.updatePromoResource({ field: 'xp.AllowAllUserGroups', value: event })
+      if (event) {
+        this._promotionEditable.xp.UserGroups = []
       }
     } else {
       const promoUpdate = {
@@ -536,6 +652,36 @@ export class PromotionEditComponent implements OnInit, OnChanges {
 
   promoEligibilityCheck(eligibility: HSPromoEligibility): boolean {
     return eligibility === this._promotionEditable?.xp?.AppliesTo
+  }
+  // Used only for Promotion.xp.PromoContent coming out of quill editor (no 'event.target'.)
+  updateResourceFromFieldValue(field: string, value: any): void {
+    let updatePromoResourceCopy = this.copyResource(this._promotionEditable)
+    if ((field = 'xp.PromoContent')) {
+      updatePromoResourceCopy.xp = {
+        ...updatePromoResourceCopy.xp,
+        ['PromoContent']: value,
+      }
+    } else {
+      updatePromoResourceCopy = {
+        ...updatePromoResourceCopy,
+        [field]: value,
+      }
+    }
+    this._promotionEditable = updatePromoResourceCopy
+  }
+
+  async getProductName(skus: string[]): Promise<void> {
+    if (!skus || skus.length === 0) return
+    // Clear the productList before adding new products
+    this.productList = []
+    for (const sku of skus) {
+      try {
+        const product = await this.ocProductService.Get(sku).toPromise()
+        this.productList.push(product)
+      } catch (error) {
+        console.error(`Error fetching product for SKU ${sku}:`, error)
+      }
+    }
   }
 
   getValueDisplay(): string {
@@ -672,6 +818,19 @@ export class PromotionEditComponent implements OnInit, OnChanges {
     return eligibilityString
   }
 
+  getUserGroupEligibilityDisplay(): string {
+    let eligibilityString = this.translate.instant(
+      'ADMIN.PROMOTIONS.DISPLAY.ELIGIBILITY.FOR'
+    )
+    if (this._promotionEditable.xp.AllowAllUserGroups) {
+      eligibilityString = `${eligibilityString} all user groups`
+    } else {
+      eligibilityString = `${eligibilityString} selected user groups`
+    }
+    // In the future, there will be other considerations for finer grained eligibility
+    return eligibilityString
+  }
+
   getUsageLimitDisplay(): string {
     let usageLimitString = this.translate.instant(
       'ADMIN.PROMOTIONS.DISPLAY.USAGE.LIMIT_OF'
@@ -760,8 +919,10 @@ export class PromotionEditComponent implements OnInit, OnChanges {
       this.dataIsSaving = true
       // Set promotion.Name to promotion.Code automatically
       promo.Name = promo.Code
+      // Set promotion.ID to promotion.Code automatically
+      promo.ID = promo.Code
       const newPromo = await this.ocPromotionService.Create(promo).toPromise()
-      if (!promo.AllowAllBuyers) {
+      if (!promo.AllowAllBuyers || !promo.xp?.AllowAllUserGroups) {
         await this.handlePromotionAssignments(newPromo)
       }
       this.refreshPromoData(newPromo)
@@ -776,39 +937,68 @@ export class PromotionEditComponent implements OnInit, OnChanges {
   async handlePromotionAssignments(
     promo: Promotion<PromotionXp>
   ): Promise<void> {
-    // Assemble assignment data
-    const promoBuyers = promo.xp?.Buyers
+    // Assemble assignment data for Buyers and UserGroups
+    const promoBuyers = promo.xp?.Buyers || []
+    const promoUserGroups = promo.xp?.UserGroups || []
     const listOptions = {
       page: 1,
       pageSize: 100,
       promotionID: promo.ID,
     }
+
     const currentPromotionAssignments = await this.ocPromotionService
       .ListAssignments(listOptions)
       .toPromise()
-    const assignmentsToDelete: string[] = []
-    const assignmentsToAdd: string[] = []
 
-    // Identify assignments to add
+    const assignmentsToDeleteBuyers: string[] = []
+    const assignmentsToAddBuyers: string[] = []
+    const assignmentsToDeleteUserGroups: string[] = []
+    const assignmentsToAddUserGroups: string[] = []
+
+    // --- Handle Buyer Assignments ---
+
+    // Identify assignments to add for Buyers
     if (promoBuyers.length > 0) {
       for (const buyerIDToAssign of promoBuyers) {
         const matchingAssignment = currentPromotionAssignments.Items.find(
           (assignment) => assignment?.BuyerID == buyerIDToAssign
         )
         if (!matchingAssignment) {
-          assignmentsToAdd.push(buyerIDToAssign)
+          assignmentsToAddBuyers.push(buyerIDToAssign)
         }
       }
     }
 
-    // Identify assignments to delete
-    if (currentPromotionAssignments.Items.length > 0) {
-      for (const currentAssignment of currentPromotionAssignments.Items) {
-        const matchingAssignment = promoBuyers.find(
-          (assignment) => assignment == currentAssignment.BuyerID
+    // Identify assignments to add for UserGroups
+    if (promoUserGroups.length > 0) {
+      for (const userGroupIDToAssign of promoUserGroups) {
+        const matchingAssignment = currentPromotionAssignments.Items.find(
+          (assignment) => assignment?.UserGroupID == userGroupIDToAssign
         )
         if (!matchingAssignment) {
-          assignmentsToDelete.push(currentAssignment.BuyerID)
+          assignmentsToAddUserGroups.push(userGroupIDToAssign)
+        }
+      }
+    }
+
+    // Identify assignments to delete for Buyers & User Groups
+    if (currentPromotionAssignments.Items.length > 0) {
+      for (const currentAssignment of currentPromotionAssignments.Items) {
+        if (currentAssignment.BuyerID) {
+          const matchingAssignment = promoBuyers.find(
+            (buyerID) => buyerID == currentAssignment.BuyerID
+          )
+          if (!matchingAssignment) {
+            assignmentsToDeleteBuyers.push(currentAssignment.BuyerID)
+          }
+        }
+        if (currentAssignment.UserGroupID) {
+          const matchingAssignment = promoBuyers.find(
+            (UserGroupID) => UserGroupID == currentAssignment.UserGroupID
+          )
+          if (!matchingAssignment) {
+            assignmentsToDeleteUserGroups.push(currentAssignment.UserGroupID)
+          }
         }
       }
     }
@@ -816,9 +1006,9 @@ export class PromotionEditComponent implements OnInit, OnChanges {
     const assignmentsToAddRequests: Promise<void>[] = []
     const assignmentsToDeleteRequests: Promise<void>[] = []
 
-    // Add assignments
-    if (assignmentsToAdd.length > 0) {
-      for (const assignment of assignmentsToAdd) {
+    // --- Process Buyer Assignments ---
+    if (assignmentsToAddBuyers.length > 0) {
+      for (const assignment of assignmentsToAddBuyers) {
         assignmentsToAddRequests.push(
           this.ocPromotionService
             .SaveAssignment({
@@ -829,9 +1019,8 @@ export class PromotionEditComponent implements OnInit, OnChanges {
         )
       }
     }
-    // Delete assignments
-    if (assignmentsToDelete.length > 0) {
-      for (const assignment of assignmentsToDelete) {
+    if (assignmentsToDeleteBuyers.length > 0) {
+      for (const assignment of assignmentsToDeleteBuyers) {
         assignmentsToDeleteRequests.push(
           this.ocPromotionService
             .DeleteAssignment(promo.ID, {
@@ -842,6 +1031,42 @@ export class PromotionEditComponent implements OnInit, OnChanges {
       }
     }
 
+    // --- Process UserGroup Assignments ---
+    if (assignmentsToAddUserGroups.length > 0) {
+      for (const assignment of assignmentsToAddUserGroups) {
+        assignmentsToAddRequests.push(
+          this.ocPromotionService
+            .SaveAssignment({
+              PromotionID: promo.ID,
+              UserGroupID: assignment,
+              BuyerID:
+                this.appConfig.orderCloudApiUrl ==
+                'https://sandboxapi.ordercloud.io'
+                  ? '0002'
+                  : '0001',
+            })
+            .toPromise()
+        )
+      }
+    }
+    if (assignmentsToDeleteUserGroups.length > 0) {
+      for (const assignment of assignmentsToDeleteUserGroups) {
+        assignmentsToDeleteRequests.push(
+          this.ocPromotionService
+            .DeleteAssignment(promo.ID, {
+              userGroupID: assignment,
+              buyerID:
+                this.appConfig.orderCloudApiUrl ==
+                'https://sandboxapi.ordercloud.io'
+                  ? '0002'
+                  : '0001',
+            })
+            .toPromise()
+        )
+      }
+    }
+
+    // Wait for all requests to complete
     await Promise.all([
       ...assignmentsToAddRequests,
       ...assignmentsToDeleteRequests,
@@ -883,5 +1108,13 @@ export class PromotionEditComponent implements OnInit, OnChanges {
       )
     }
     return this.resourceForm?.status === 'INVALID' || this.dataIsSaving
+  }
+
+  /** ****************************************
+   *  **** HELPER FUNCTIONS ****
+   * ******************************************/
+
+  copyResource<T>(resource: T): T {
+    return JSON.parse(JSON.stringify(resource))
   }
 }

@@ -18,6 +18,11 @@ namespace Headstart.Models
     {
     }
 
+    public class HSMeUserGroup : UserGroup<UserGroupXp>, IHSObject
+    {
+
+    }
+
     
     public class UserGroupXp
     {

@@ -25,12 +25,14 @@ namespace Headstart.Common.Controllers
         private readonly IOrderSubmitCommand _orderSubmitCommand;
         private readonly ILineItemCommand _lineItemCommand;
         private readonly IOrderCloudClient _oc;
-        public OrderController(IOrderCommand command, ILineItemCommand lineItemCommand, IOrderSubmitCommand orderSubmitCommand, IOrderCloudClient oc)
+        private readonly IPromotionCommand _promotionCommand;
+        public OrderController(IOrderCommand command, ILineItemCommand lineItemCommand, IOrderSubmitCommand orderSubmitCommand, IOrderCloudClient oc, IPromotionCommand promotionCommand)
         {
             _command = command;
             _lineItemCommand = lineItemCommand;
             _orderSubmitCommand = orderSubmitCommand;
             _oc = oc;
+            _promotionCommand = promotionCommand;
         }
 
         /// <summary>
@@ -107,6 +109,15 @@ namespace Headstart.Common.Controllers
             await _lineItemCommand.DeleteLineItem(orderID, lineItemID, UserContext);
         }
 
+        /// <summary>
+        /// Apply a promotion to an order
+        /// </summary>
+        [HttpGet, Route("{orderID}/promotions/{promoCode}"), OrderCloudUserAuth(ApiRole.Shopper)]
+        public async Task<LmsPromotion>  Promotion(string promoCode, string orderID)
+        {
+            var promo = await _promotionCommand.GetPromotion(promoCode, orderID);
+            return promo;
+        }
         /// <summary>
         /// Apply a promotion to an order
         /// </summary>

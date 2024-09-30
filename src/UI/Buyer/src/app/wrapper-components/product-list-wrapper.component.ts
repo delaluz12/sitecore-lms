@@ -5,15 +5,18 @@ import { takeWhile } from 'rxjs/operators'
 import { ListPage } from 'ordercloud-javascript-sdk'
 import { isEmpty as _isEmpty, uniq as _uniq } from 'lodash'
 import { SupplierFilterService } from '../services/supplier-filter/supplier-filter.service'
-import { HSMeProduct } from '@ordercloud/headstart-sdk'
+import { HeadStartSDK, HSMeProduct } from '@ordercloud/headstart-sdk'
 import { ShipFromSourcesDic } from '../models/shipping.types'
-import { AppConfig } from '../models/environment.types'
 import { PromoModalComponent } from '../components/promo-modal/promo-modal.component'
 import { MatDialog } from '@angular/material/dialog'
+import { HSPromotion } from '@ordercloud/headstart-sdk/dist/models/HSPromotion'
 
 @Component({
   template: `
-    <ocm-promo-banner *ngIf="showCustModal"></ocm-promo-banner>
+    <ocm-promo-banner
+      *ngIf="showCustModal"
+      [message]="promoMessage"
+    ></ocm-promo-banner>
     <ocm-product-list
       *ngIf="products"
       [products]="products"
@@ -28,40 +31,17 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
   alive = true
   isProductListLoading = true
   showCustModal
-  userGroup
-  customerGroups = {
-    prod: ['0001-0008', '0001-0005'],
-    test: ['0002-0008', '0002-0005'],
-  }
-
-  partnerGroups = {
-    prod: [
-      '0001-0002',
-      '0001-0003',
-      '0001-0001',
-      '2jWUqkAai02Z3JJP3ta79A',
-      '0001-0007',
-      '0001-0009',
-    ],
-    test: [
-      '0002-0002',
-      '0002-0003',
-      '0002-0001',
-      'E5YsxYZ_ykeEdHC9s9w_jQ',
-      '0002-0007',
-      '0002-0009',
-    ],
-  }
+  eligiblePromos: HSPromotion[]
+  promoMessage = ''
 
   constructor(
     public context: ShopperContextService,
     private supplierFilterService: SupplierFilterService,
     private activatedRoute: ActivatedRoute,
-    private appConfig: AppConfig,
     private dialog: MatDialog
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (_isEmpty(this.activatedRoute.snapshot.queryParams)) {
       this.context.categories.setActiveCategoryID(null)
     }
@@ -69,7 +49,7 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => this.alive))
       .subscribe(this.handleFiltersChange)
 
-    this.displayPromo()
+    await this.displayPromo()
 
     const shownModal = sessionStorage.getItem('modalShown')
 
@@ -79,22 +59,15 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
     }
   }
 
-  displayPromo(): void {
-    const env =
-      this.appConfig.sellerName == 'Sitecore LMS TEST' ? 'test' : 'prod'
-    const user = this.context.currentUser.get()
-    const userGroups = user?.UserGroups.map((group) => group.ID)
-
-    const getGroups = (groupType, env) => {
-      const groups = groupType[env]
-      return groups ? groups : []
+  private async displayPromo(): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    this.eligiblePromos = await HeadStartSDK.Mes.GetPromoContent()
+    if (this.eligiblePromos.length > 0) {
+      // currently User can only see banner/modal for 1 promotion i.e. if there are 2 available only the first will display
+      const promoToDisplay = this.eligiblePromos.find((_) => _)
+      this.promoMessage = promoToDisplay.xp?.PromoContent
+      this.showCustModal = true
     }
-
-    const belongsToGroup = (groupType, env) => {
-      return userGroups?.some((id) => getGroups(groupType, env).includes(id))
-    }
-
-    this.showCustModal = belongsToGroup(this.customerGroups, env) // '|| belongsToGroup(this.partnerGroups, env)' removed per Azure:28864
   }
 
   ngOnDestroy(): void {
@@ -105,6 +78,9 @@ export class ProductListWrapperComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(PromoModalComponent, {
       height: 'auto',
       width: 'auto',
+      data: {
+        message: this.promoMessage,
+      },
     })
   }
 

@@ -7,12 +7,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OrderCloud.Catalyst;
+using Headstart.Common.Models;
+using Headstart.Models;
 
 namespace Headstart.API.Commands
 {
     public interface IPromotionCommand
     {
         Task AutoApplyPromotions(string orderID);
+        Task<LmsPromotion> GetPromotion(string promotionId, string orderID);
+        Task<List<LmsPromotion>> GetPromoContent(DecodedToken decodedToken);
     }
 
     public class PromotionCommand : IPromotionCommand
@@ -29,6 +33,41 @@ namespace Headstart.API.Commands
             var autoEligiblePromos = await _oc.Promotions.ListAsync(filters: "xp.Automatic=true");
             var requests = autoEligiblePromos.Items.Select(p => TryApplyPromoAsync(orderID, p.Code));
             await Task.WhenAll(requests);
+        }
+
+        public async Task<LmsPromotion> GetPromotion(string promotionId, string orderID)
+        {
+            var promotion = await _oc.Promotions.GetAsync<LmsPromotion>(promotionId);
+            var order = await _oc.Orders.GetAsync(OrderDirection.Incoming, orderID);
+            var user = await _oc.Users.GetAsync<User>(order.FromCompanyID, order.FromUserID);
+            return promotion;
+        }
+
+        public async Task<List<LmsPromotion>> GetPromoContent(DecodedToken decodedToken)
+        {
+            var promoList = new List<LmsPromotion>();
+            var meUserGroups = await _oc.Me.ListUserGroupsAsync<HSMeUserGroup>(null, null, null, 1, 20, null, decodedToken.AccessToken);
+            // users only belong to 1 user group
+            var meUG = meUserGroups.Items.FirstOrDefault().ID;
+            var currentDate = DateTime.Now;
+            var activePromotions = await _oc.Promotions.ListAsync<LmsPromotion>(filters: new { Active = true, StartDate = $"<={currentDate:yyyy-MM-dd}", ExpirationDate = $">={currentDate:yyyy-MM-dd}" });
+            
+            if (activePromotions.Items.Count > 0 && !string.IsNullOrEmpty(meUG))
+            {
+                foreach (var promotion in activePromotions.Items)
+                {
+                    // Check if UserGroups is null, if it is, assign an empty list to avoid null reference
+                    var eligibleUG = promotion.xp?.UserGroups ?? new List<string>();
+                    var hasPromoContent = promotion.xp?.PromoContent;
+                    var userEligilble = eligibleUG.Contains(meUG);
+
+                    if (userEligilble && !string.IsNullOrEmpty(hasPromoContent))
+                    {
+                        promoList.Add(promotion);
+                    }
+                }
+            }
+            return promoList;
         }
 
         private async Task RemoveAllPromotionsAsync(string orderID)

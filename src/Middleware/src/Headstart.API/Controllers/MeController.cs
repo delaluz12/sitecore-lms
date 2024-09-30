@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Headstart.API.Commands;
 using Headstart.API.Commands.Crud;
+using Headstart.Common.Models;
 using Headstart.Models;
 using Headstart.Models.Attributes;
 using Headstart.Models.Misc;
@@ -19,9 +21,11 @@ namespace Headstart.Common.Controllers
 	public class MeController : CatalystController
 	{
 		private readonly IMeProductCommand _meProductCommand;
-		public MeController(IMeProductCommand meProductCommand)
+		private readonly IPromotionCommand _promotionCommand;
+		public MeController(IMeProductCommand meProductCommand, IPromotionCommand promotionCommand)
 		{
 			_meProductCommand = meProductCommand;
+			_promotionCommand = promotionCommand;
 		}
 
 		/// <summary>
@@ -50,6 +54,15 @@ namespace Headstart.Common.Controllers
         {
 			await _meProductCommand.RequestProductInfo(template);
         }
+
+		/// <summary>
+		/// GET promotion messaging for User
+		/// </summary>
+		[HttpGet, Route("promotion-content"), OrderCloudUserAuth(ApiRole.Shopper)]
+		public async Task<List<LmsPromotion>> GetPromoContent()
+		{
+			return await _promotionCommand.GetPromoContent(UserContext);
+		}
 
 	}
 }

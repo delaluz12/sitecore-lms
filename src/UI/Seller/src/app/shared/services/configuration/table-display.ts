@@ -43,6 +43,12 @@ export const SUMMARY_RESOURCE_INFO_PATHS_DICTIONARY: SummaryResourceInfoPathsDic
       toImage: '',
       toExpandable: false,
     },
+    userGroups: {
+      toPrimaryHeader: 'Name',
+      toSecondaryHeader: 'ID',
+      toImage: '',
+      toExpandable: false,
+    },
     locations: {
       toPrimaryHeader: 'AddressName',
       toSecondaryHeader: 'ID',

@@ -83,6 +83,20 @@
           >
         </div>
         <div class="card bg-white shadow-sm p-4 mt-3">
+          <h6 class="font-weight-medium">Banner/Modal Message</h6>
+          <reactive-quill-editor-component
+            [readonly]="false"
+            [resourceInSelection]="resourceInSelection"
+            [formControlForText]="resourceForm?.controls?.PromoContent"
+            resourceField="xp"
+            pathOnResource="xp.PromoContent"
+            (resourceUpdated)="
+              updateResourceFromFieldValue($event.field, $event.value)
+            "
+          >
+          </reactive-quill-editor-component>
+        </div>
+        <div class="card bg-white shadow-sm p-4 mt-3">
           <h6 class="mb-0" translate>ADMIN.PROMOTIONS.TYPE</h6>
           <div class="form-group mt-3 mb-0">
             <div class="form-check">
@@ -116,7 +130,7 @@
                 ADMIN.PROMOTIONS.FIXED_AMOUNT
               </label>
             </div>
-            <div class="form-check">
+            <!-- <div class="form-check">
               <input
                 class="form-check-input"
                 type="radio"
@@ -130,7 +144,7 @@
               <label class="form-check-label" for="FreeShipping" translate>
                 ADMIN.PROMOTIONS.FREE_SHIPPING
               </label>
-            </div>
+            </div> -->
             <div class="form-check">
               <input
                 class="form-check-input"
@@ -219,7 +233,7 @@
                     ADMIN.PROMOTIONS.ENTIRE_ORDER
                   </label>
                 </div>
-                <div class="form-check">
+                <!-- <div class="form-check">
                   <input
                     class="form-check-input"
                     type="radio"
@@ -237,7 +251,7 @@
                   >
                     ADMIN.PROMOTIONS.SPECIFIC_SUPPLIER
                   </label>
-                </div>
+                </div> -->
                 <div class="form-check">
                   <input
                     class="form-check-input"
@@ -257,6 +271,9 @@
             </div>
             <div class="col-md-8">
               <!-- TODO: MOVE TO SEPARATE COMPONENT WITH INPUTS/OUTPUTS -->
+              <!-- CATEGORY SELECT AND SEARCH -->
+
+              <!-- END CATEGORY SELECT AND SEARCH -->
               <!-- PRODUCT SELECT AND SEARCH -->
               <ng-container
                 *ngIf="_promotionEditable?.xp?.AppliesTo === 'SpecificSKUs'"
@@ -270,24 +287,19 @@
                     class="mr-3 w-100"
                     id="resource-search"
                     [placeholderText]="''"
-                    [searchTermInput]="buyerSearchTerm"
-                    (searched)="searchedBuyerResources($event)"
+                    [searchTermInput]="productSearchTerm"
+                    (searched)="searchedProductResources($event)"
                   >
                   </search-component>
                   <perfect-scrollbar
-                    class="
-                      dropdown-ps
-                      product-search-area
-                      border border-light
-                      shadow-sm
-                    "
+                    class="dropdown-ps product-search-area border border-light shadow-sm"
                     (psYReachEnd)="handleScrollEnd($event)"
                   >
                     <button
                       type="button"
                       ngbDropdownItem
                       *ngFor="let resource of products | async"
-                      (click)="addSKU(resource.ID)"
+                      (click)="addSKU(resource.ID, resource)"
                       [disabled]="alreadySelected(resource.ID)"
                       aria-label="select your SKU"
                     >
@@ -301,7 +313,7 @@
                     </button>
                     <p
                       class="mb-0"
-                      *ngIf="!products?.value?.length && searchTerm"
+                      *ngIf="!products?.value?.length && productSearchTerm"
                       ngbDropdownItem
                       disabled
                       translate
@@ -310,14 +322,11 @@
                     </p>
                   </perfect-scrollbar>
                 </div>
-                <div class="chip-bag">
-                  <div
-                    class="chip chip-sm"
-                    *ngFor="let sku of _promotionEditable?.xp?.SKUs"
-                  >
-                    {{ sku }}
+                <div class="chip-bag" *ngIf="productList.length > 0">
+                  <div class="chip chip-sm" *ngFor="let product of productList">
+                    {{ product.Name }}
                     <fa-icon
-                      (click)="removeSku(sku)"
+                      (click)="removeSku(product.ID)"
                       [icon]="faTimesCircle"
                     ></fa-icon>
                   </div>
@@ -335,11 +344,7 @@
                 >
                   <button
                     type="button"
-                    class="
-                      resource-btn
-                      btn btn-block btn-outline-medium
-                      text-left
-                    "
+                    class="resource-btn btn btn-block btn-outline-medium text-left"
                     id="supplierSelectDropdown"
                     ngbDropdownToggle
                   >
@@ -347,12 +352,7 @@
                   </button>
                   <div ngbDropdownMenu class="dropdown-inline shadow-sm mt-2">
                     <perfect-scrollbar
-                      class="
-                        dropdown-ps
-                        product-search-area
-                        border border-light
-                        shadow-sm
-                      "
+                      class="dropdown-ps product-search-area border border-light shadow-sm"
                       (psYReachEnd)="handleScrollEnd($event)"
                     >
                       <button
@@ -529,6 +529,7 @@
                     [value]="true"
                     formControlName="AllowAllBuyers"
                     (change)="handleUpdatePromo(true, 'AllowAllBuyers')"
+                    disabled="true"
                   />
                   <label
                     class="form-check-label"
@@ -547,6 +548,7 @@
                     [value]="false"
                     formControlName="AllowAllBuyers"
                     (change)="handleUpdatePromo(false, 'AllowAllBuyers')"
+                    disabled="true"
                   />
                   <label
                     class="form-check-label"
@@ -560,7 +562,7 @@
             </div>
             <!-- START SPECIFIC BUYERS -->
             <div class="col-md-8">
-              <ng-container *ngIf="!_promotionEditable?.AllowAllBuyers">
+              <!-- <ng-container *ngIf="!_promotionEditable?.AllowAllBuyers">
                 <div
                   id="buyersCollapsed"
                   [ngbCollapse]="buyersCollapsed"
@@ -575,12 +577,7 @@
                   >
                   </search-component>
                   <perfect-scrollbar
-                    class="
-                      dropdown-ps
-                      product-search-area
-                      border border-light
-                      shadow-sm
-                    "
+                    class="dropdown-ps product-search-area border border-light shadow-sm"
                     (psYReachEnd)="handleScrollEnd($event)"
                   >
                     <button
@@ -622,10 +619,111 @@
                     ></fa-icon>
                   </div>
                 </div>
-              </ng-container>
+              </ng-container> -->
             </div>
           </div>
           <!-- END SPECIFIC BUYERS -->
+        </div>
+        <div class="card bg-white shadow-sm p-4 mt-3">
+          <h6 class="mb-0">User Group Eligibility</h6>
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <div class="form-group mb-0">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="AllowAllUserGroups"
+                    id="AllowAllUserGroupsTrue"
+                    [value]="true"
+                    formControlName="AllowAllUserGroups"
+                    (change)="handleUpdatePromo(true, 'xp.AllowAllUserGroups')"
+                  />
+                  <label class="form-check-label" for="AllowAllUserGroups">
+                    All User Groups
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="AllowAllUserGroups"
+                    id="AllowAllUserGroupsFalse"
+                    [value]="false"
+                    formControlName="AllowAllUserGroups"
+                    (change)="handleUpdatePromo(false, 'xp.AllowAllUserGroups')"
+                  />
+                  <label class="form-check-label" for="SpecificUserGroups">
+                    Specific User Groups
+                  </label>
+                </div>
+              </div>
+            </div>
+            <!-- START SPECIFIC USER GROUPS -->
+            <div class="col-md-8">
+              <ng-container *ngIf="!_promotionEditable.xp?.AllowAllUserGroups">
+                <div
+                  id="buyersCollapsed"
+                  [ngbCollapse]="buyersCollapsed"
+                  aria-label="parent resource dropdown"
+                >
+                  <search-component
+                    class="mr-3 w-100"
+                    id="userGroup-search"
+                    [placeholderText]="''"
+                    [searchTermInput]="userGroupSearchText"
+                    (searched)="searchedUserGroupResources($event)"
+                  >
+                  </search-component>
+                  <perfect-scrollbar
+                    class="dropdown-ps product-search-area border border-light shadow-sm"
+                    (psYReachEnd)="handleScrollEnd($event)"
+                  >
+                    <button
+                      type="button"
+                      ngbDropdownItem
+                      *ngFor="let resource of userGroups | async"
+                      (click)="addUserGroup(resource.ID)"
+                      [disabled]="userGroupAlreadySelected(resource.ID)"
+                      aria-label="select your User Group"
+                    >
+                      <div class="overflow-hidden">
+                        <summary-resource-display-component
+                          [resource]="resource"
+                          [resourceType]="'userGroups'"
+                        >
+                        </summary-resource-display-component>
+                      </div>
+                    </button>
+                    <p
+                      class="mb-0"
+                      *ngIf="!userGroups?.value?.length && searchTerm"
+                      ngbDropdownItem
+                      disabled
+                      translate
+                    >
+                      ADMIN.PROMOTIONS.NO_RESULTS
+                    </p>
+                  </perfect-scrollbar>
+                </div>
+                <div class="chip-bag">
+                  <div
+                    class="chip chip-sm"
+                    *ngFor="
+                      let userGroupID of _promotionEditable?.xp?.UserGroups
+                    "
+                  >
+                    {{ userGroupID }}
+                    <fa-icon
+                      (click)="removeUserGroup(userGroupID)"
+                      [icon]="faTimesCircle"
+                    ></fa-icon>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <!-- END SPECIFIC USER GROUPS -->
         </div>
         <div class="card bg-white shadow-sm p-4 mt-3">
           <h6 class="font-weight-medium" translate>
@@ -826,6 +924,7 @@
                 {{ _promotionEditable?.xp?.MaxShipCost | currency }}
               </li>
               <li>{{ getEligibilityDisplay() }}</li>
+              <li>{{ getUserGroupEligibilityDisplay() }}</li>
               <li
                 *ngIf="
                   _promotionEditable?.RedemptionLimit ||
@@ -846,31 +945,50 @@
               </li>
             </ul>
           </ng-container>
-        </div>
-        <div class="d-flex flex-row justify-content-end mt-3">
-          <button
-            *ngIf="areChanges || isCreatingNew"
-            class="btn btn-primary mr-2"
-            type="submit"
-            [disabled]="isSaveDisabled()"
-            (click)="handleSave()"
-          >
-            {{ getSaveBtnText() }}
-          </button>
-          <button
-            class="btn brand-button ml-3"
-            (click)="handleDiscardChanges()"
-            *ngIf="areChanges && !isCreatingNew"
-            translate
-          >
-            ADMIN.PROMOTIONS.DISCARD_CHANGES
-          </button>
-          <delete-confirm-modal-component
-            *ngIf="!isCreatingNew"
-            buttonText="ADMIN.NAV.PROMOTION"
-            (deleteConfirmed)="handleDelete($event)"
-          >
-          </delete-confirm-modal-component>
+          <ng-container>
+            <hr />
+            <h6 class="font-weight-medium">Banner/Modal Message Preview</h6>
+            <div class="card py-2 px-3 bg-white">
+              <div>
+                <p *ngIf="!resourceForm.controls['PromoContent'].value">
+                  This promotion has no banner/modal message
+                </p>
+              </div>
+              <div
+                [innerHtml]="
+                  resourceForm.controls['PromoContent'].value == null
+                    ? ''
+                    : (resourceForm.controls['PromoContent'].value | safeHTML)
+                "
+              ></div>
+            </div>
+          </ng-container>
+
+          <div class="d-flex flex-row justify-content-end mt-3">
+            <button
+              *ngIf="areChanges || isCreatingNew"
+              class="btn btn-primary mr-2"
+              type="submit"
+              [disabled]="isSaveDisabled()"
+              (click)="handleSave()"
+            >
+              {{ getSaveBtnText() }}
+            </button>
+            <button
+              class="btn brand-button ml-3"
+              (click)="handleDiscardChanges()"
+              *ngIf="areChanges && !isCreatingNew"
+              translate
+            >
+              ADMIN.PROMOTIONS.DISCARD_CHANGES
+            </button>
+            <delete-confirm-modal-component
+              *ngIf="!isCreatingNew"
+              buttonText="ADMIN.NAV.PROMOTION"
+              (deleteConfirmed)="handleDelete($event)"
+            >
+            </delete-confirm-modal-component>
+          </div>
         </div>
       </div>
     </div>

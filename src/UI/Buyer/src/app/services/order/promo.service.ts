@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core'
 import { Orders, OrderPromotion } from 'ordercloud-javascript-sdk'
 import { Subject } from 'rxjs'
 import { OrderStateService } from './order-state.service'
-import { HSOrder, ListPage } from '@ordercloud/headstart-sdk'
+import { HSOrder, ListPage, HeadStartSDK } from '@ordercloud/headstart-sdk'
 import { TempSdk } from '../temp-sdk/temp-sdk.service'
-
 @Injectable({
   providedIn: 'root',
 })
@@ -39,8 +38,7 @@ export class PromoService {
 
   public async applyPromo(promoCode: string): Promise<OrderPromotion> {
     try {
-      const newPromo = await Orders.AddPromotion(
-        'Outgoing',
+      const newPromo = await HeadStartSDK.Orders.AddPromotion(
         this.order?.ID,
         promoCode
       )
