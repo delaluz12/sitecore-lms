@@ -202,7 +202,9 @@ export class PromotionEditComponent implements OnInit, OnChanges {
       .toPromise()
     this.suppliers.next(supplierResponse.Items)
     this.supplierMeta = supplierResponse.Meta
-    await this.selectSupplier(existingSupplierID || this.suppliers.value[0].ID)
+    await this.selectSupplier(
+      existingSupplierID || this.suppliers?.value[0]?.ID
+    )
   }
 
   async selectSupplier(supplierID: string): Promise<void> {

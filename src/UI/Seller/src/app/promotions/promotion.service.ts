@@ -82,19 +82,16 @@ export class PromotionService extends ResourceCrudService<Promotion> {
     selectedSupplier?: HSSupplier
   ): string {
     let eligibleExpression = ''
-    const skuArr = safeXp?.SKUs?.map((sku) => `item.ProductID = '${sku}'`)
+    const skuArr = safeXp?.SKUs?.map((sku) => `'${sku}'`)
     switch (safeXp?.AppliesTo) {
       case HSPromoEligibility.SpecificSupplier:
         eligibleExpression = `item.SupplierID = '${selectedSupplier?.ID}'`
         break
       case HSPromoEligibility.SpecificSKUs:
-        skuArr.forEach(
-          (exp, i) =>
-            (eligibleExpression =
-              i === 0
-                ? `${eligibleExpression} ${exp}`
-                : `${eligibleExpression} or ${exp}`)
-        )
+        eligibleExpression =
+          skuArr.length === 1
+            ? `item.ProductID = ${skuArr[0]}` // If only one SKU, use direct equality
+            : `item.ProductID.in(${skuArr.join(', ')})` // For multiple SKUs, use .in()
         break
       default:
         // NOTE: The default expression is "true", which will allow the promotion to be applied to any order
