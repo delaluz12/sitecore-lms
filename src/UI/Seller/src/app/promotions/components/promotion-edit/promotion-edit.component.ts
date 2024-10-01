@@ -80,11 +80,11 @@ export class PromotionEditComponent implements OnInit, OnChanges {
       // Reset productList for each promotion click
       this.productList = []
 
-      this.setUpSuppliers(promotion.xp?.Supplier)
+      //this.setUpSuppliers(promotion.xp?.Supplier)
       this.getProductName(promotion.xp?.SKUs)
       this.refreshPromoData(promotion)
     } else {
-      this.setUpSuppliers()
+      //this.setUpSuppliers()
       this.refreshPromoData(this.promotionService.emptyResource)
     }
   }
