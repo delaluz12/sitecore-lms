@@ -35,10 +35,10 @@ export class ProductPricingComponent {
   set superHSProductEditable(value: SuperHSProduct) {
     this.setData(value)
     if (value && this.readonly) {
-      this.setUpBuyers()
-      this.setUpExchangeRate()
-      this.buyerMarkedUpSupplierPrices =
-        this.getBuyerDisplayOfSupplierPriceSchedule()
+      //this.setUpBuyers()
+      //this.setUpExchangeRate()
+      // this.buyerMarkedUpSupplierPrices =
+      //   this.getBuyerDisplayOfSupplierPriceSchedule()
     }
   }
 
@@ -95,9 +95,9 @@ export class ProductPricingComponent {
           accessToken
         )
 
-      this.supplierPriceSchedule = JSON.parse(
-        JSON.stringify(value?.PriceSchedule)
-      ) as PriceSchedule
+      // this.supplierPriceSchedule = JSON.parse(
+      //   JSON.stringify(value?.PriceSchedule)
+      // ) as PriceSchedule
     }
   }
 
