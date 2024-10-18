@@ -33,15 +33,6 @@
     >
       ADMIN.NAV.SALES_ORDERS
     </button>
-    <button
-      type="button"
-      class="btn btn-outline-primary btn-sm"
-      [ngClass]="{ active: activeOrderDirectionButton === 'Outgoing' }"
-      (click)="setOrderDirection('Outgoing')"
-      translate
-    >
-      ADMIN.NAV.PURCHASE_ORDERS
-    </button>
   </div>
   <app-order-details class="resource-edit" [order]="resourceInSelection">
   </app-order-details>
