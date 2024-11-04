@@ -105,10 +105,9 @@ export class OCMCheckoutPayment implements OnInit {
       if (line?.Product?.xp?.lms_SubscriptionUuid && line.UnitPrice > 0) {
         this.disableCC = true
         this.containsSubscriptions = true
-        console.log('should set to true, value', this.disableCC)
       }
     })
-    console.log('this.disableCC', this.disableCC)
+
     if (_order?.xp?.PONumber) {
       this.poNumber = _order.xp.PONumber
     }
@@ -175,10 +174,6 @@ export class OCMCheckoutPayment implements OnInit {
     this.stripeCountry.emit(null)
     this.japanOrder = false
     this.poOnlyOrder = false
-    console.log(
-      'this.disableCC value in BillingAddress function',
-      this.disableCC
-    )
     this.showNewAddressForm = billingAddressID === this.NEW_ADDRESS_CODE
     this.selectedBillingAddress = this.existingBillingAddresses.Items.find(
       (address) => billingAddressID === address.ID
