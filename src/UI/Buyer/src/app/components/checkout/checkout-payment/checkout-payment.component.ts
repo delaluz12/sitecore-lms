@@ -66,6 +66,8 @@ export class OCMCheckoutPayment implements OnInit {
   disableCC = false
   japanOrder = false
   poOnlyOrder = false
+  containsSubscriptions = false
+  agreedToTerms = false
   poNumber: string
   poOrderUpload: AssetUpload
   poUploadLabelText = 'Choose file'
@@ -98,12 +100,15 @@ export class OCMCheckoutPayment implements OnInit {
       this.disableCC = true
     }
     this.ListAddressesForBilling()
-    //const lineItems = this.context.order.getLineItems()
-    // lineItems.Items.forEach((line) => {
-    //   if (line?.Product?.xp?.lms_SubscriptionUuid && line.UnitPrice > 0) {
-    //     this.disablePO = true
-    //   }
-    // })
+    const lineItems = this.context.order.getLineItems()
+    lineItems.Items.forEach((line) => {
+      if (line?.Product?.xp?.lms_SubscriptionUuid && line.UnitPrice > 0) {
+        this.disableCC = true
+        this.containsSubscriptions = true
+        console.log('should set to true, value', this.disableCC)
+      }
+    })
+    console.log('this.disableCC', this.disableCC)
     if (_order?.xp?.PONumber) {
       this.poNumber = _order.xp.PONumber
     }
@@ -123,6 +128,12 @@ export class OCMCheckoutPayment implements OnInit {
     } else {
       return 'Upload PDF'
     }
+  }
+
+  async onTermsChecked(event: any): Promise<void> {
+    const flag = event.target.checked as boolean
+    await this.context.order.checkout.subscriptionAcknowledgment(flag)
+    this.agreedToTerms = flag
   }
 
   getAcceptedPaymentMethods(): string[] {
@@ -164,6 +175,10 @@ export class OCMCheckoutPayment implements OnInit {
     this.stripeCountry.emit(null)
     this.japanOrder = false
     this.poOnlyOrder = false
+    console.log(
+      'this.disableCC value in BillingAddress function',
+      this.disableCC
+    )
     this.showNewAddressForm = billingAddressID === this.NEW_ADDRESS_CODE
     this.selectedBillingAddress = this.existingBillingAddresses.Items.find(
       (address) => billingAddressID === address.ID
@@ -203,8 +218,8 @@ export class OCMCheckoutPayment implements OnInit {
         this.poOnlyOrder = true
         this.disableCC = true
       } else {
-        if (_order.Total > 0) {
-          this.disableCC = false
+        if (_order.Total > 0 && !this.disableCC) {
+          //this.disableCC = false
           this.stripeCountry.emit(this.selectedBillingAddress)
         } else {
           this.selectedPaymentMethod = this
@@ -223,6 +238,7 @@ export class OCMCheckoutPayment implements OnInit {
     }
     return
   }
+
   async saveAddressesAndContinue(address: BuyerAddress): Promise<void> {
     await this.context.order.checkout.setOneTimeAddress(
       address as Address,

@@ -75,4 +75,5 @@ export interface OrderXp {
   POFileID?: string
   Region: string
   OrderOnBehalfOf: boolean
+  SubscriptionTermsAccepted: boolean
 }
