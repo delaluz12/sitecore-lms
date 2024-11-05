@@ -102,6 +102,7 @@ export class OrderDetailsComponent {
   orderAvatarInitials: string
   rmas: RMA[]
   url = null
+  subscriptionAcknowledgment: boolean
 
   @Input()
   set order(order: Order) {
@@ -388,6 +389,13 @@ export class OrderDetailsComponent {
         this._order.xp?.POFileID
       )
       return results
+    }
+    return null
+  }
+
+  getSubscriptionAcknowledgment(order: Order): string {
+    if (order?.xp?.SubscriptionTermsAccepted) {
+      return 'Subscription Terms and Conditions have been accepted'
     }
     return null
   }
