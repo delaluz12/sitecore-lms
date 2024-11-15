@@ -60,4 +60,5 @@ export interface ProductXp {
   description?: string
   TaxCode?: string
   IsCertification?: boolean
+  isSubscription?: boolean
 }
