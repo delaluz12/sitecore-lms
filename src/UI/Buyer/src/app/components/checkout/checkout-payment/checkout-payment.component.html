@@ -237,7 +237,7 @@
     [disabled]="
       !selectedBillingAddress ||
       (poUploadSuccess === false && !isSitecorian) ||
-      !agreedToTerms
+      (!agreedToTerms && !isSitecorian)
     "
   >
     Submit Order
