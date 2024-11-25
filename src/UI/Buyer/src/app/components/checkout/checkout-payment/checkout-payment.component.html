@@ -225,7 +225,7 @@
   </div>
 
   <!-- Add validation for the checkbox -->
-  <p *ngIf="!agreedToTerms" class="error-text">
+  <p *ngIf="!agreedToTerms && !isSitecorian" class="error-text">
     You must agree to the terms and conditions before submitting your order.
   </p>
 
